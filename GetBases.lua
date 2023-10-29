@@ -1,4 +1,4 @@
-local Link = 'https://ayarum.000webhostapp.com/Bases/'
+local Link = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
 local function GetFile(FileName)
 	return loadstring('return ' .. game:HttpGet(Link .. FileName .. '.txt', true))()
 end
