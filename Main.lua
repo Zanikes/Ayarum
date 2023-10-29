@@ -1,6 +1,6 @@
 repeat wait() until game:IsLoaded()
 
-local Host = 'https://ayarum.000webhostapp.com/'
+local Host = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
 local function HttpGet(Url)
 	if syn then
 		local Result = syn.request({
