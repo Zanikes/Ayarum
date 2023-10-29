@@ -8,7 +8,6 @@
 		"makefolder",
 		"listfiles",
 		"isfile",
-		"syn",
 		"mouse1press",
 		"mouse1release",
 		"getrawmetatable",
