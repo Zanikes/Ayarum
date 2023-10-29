@@ -18,7 +18,8 @@
 		"getnamecallmethod",
 		"firetouchinterest",
 		"delfile",
-		"getactors"
+		"getactors",
+		"syn"
 	],
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"
