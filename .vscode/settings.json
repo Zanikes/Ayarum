@@ -1,0 +1,27 @@
+{
+	"robloxLsp.diagnostics.globals": [
+		"getgenv",
+		"Drawing",
+		"readfile",
+		"writefile",
+		"isfolder",
+		"makefolder",
+		"listfiles",
+		"isfile",
+		"syn",
+		"mouse1press",
+		"mouse1release",
+		"getrawmetatable",
+		"getrenv",
+		"setreadonly",
+		"hookmetamethod",
+		"newcclosure",
+		"getnamecallmethod",
+		"firetouchinterest",
+		"delfile",
+		"getactors"
+	],
+	"robloxLsp.diagnostics.disable": [
+		"deprecated"
+	]
+}

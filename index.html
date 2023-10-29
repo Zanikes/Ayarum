@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Ayarum Hub</title>
+		<meta charset="utf-8">
+		<link rel="shortcut icon" type="image/x-icon" href="Icon.png">
+		<meta name="author" content="Ayarum Hub">
+		<meta name="description" content="Ayarum Hub">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			@font-face {
+				font-family: Nunito;
+				src: url('Nunito-Regular.ttf');
+			}
+			body {
+				background-color: rgb(25, 25, 25);
+				font-family: Nunito;
+				color: white;
+				background-image: url(Screenshot.png);
+				background-attachment: fixed;
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+			#textBox {
+				background-color: rgba(0, 0, 0, 0.3);
+				margin-left: auto;
+				margin-right: auto;
+				width: fit-content;
+				padding-left: 50px;
+				padding-right: 50px;
+				border-radius: 6px;
+				padding-bottom: 15px;
+			}
+			#copyPopup {
+				color: rgb(255, 255, 255);
+				background-color: rgb(45, 45, 45);
+				border: 0px;
+				border-radius: 6px;
+				text-align: center;
+				position: absolute;
+				width: 150px;
+				height: 25px;
+				font-family: Nunito;
+				display: none;
+			}
+			#scriptBtn {
+				color: rgb(255, 255, 255);
+				background-color: rgb(45, 45, 45);
+				border: 0px;
+				border-radius: 6px;
+				cursor: pointer;
+				width: 495px;
+				height: 30px;
+			}
+		</style>
+	</head>
+	<body>
+		<input id="copyPopup" type="text" value="Copied to clipboard!" readonly="">
+		<div style="text-align: center;">
+			<img src="NameIcon.png" alt="Ayarum Text" width="350px">
+			<div style="height: 25px;"></div>
+			<button id="scriptBtn">
+				<span style="color: rgb(97, 144, 190);">loadstring</span>(game<span style="color: rgb(99, 195, 195);">:</span>HttpGet(<span style="color: rgb(153, 204, 153);">'https://ayarum.000webhostapp.com/Main.lua'</span>, <span style="color: rgb(249, 145, 87);">true</span>))();
+			</button>
+			<div style="height: 25px;"></div>
+			<div id="textBox">
+				<h1 style="padding-top: 10px;">What is Ayarum Hub?</h1>
+				<p1 style="color: rgb(150, 150, 150); font-size: 18px;">
+					<span style="background: linear-gradient(to right, rgb(137, 0, 254), rgb(223, 0, 255));background-clip: unset; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ayarum Hub</span>
+					is a
+					<span style="color: rgb(0, 255, 100);">free</span>
+					Roblox script hub developed by
+					<span style="color: white">Zanikes</span>,
+					with UI inspiration from
+					<span style="color: white;">Erji</span>.
+					<br>
+					It currently has 4 games along with Universal features, although more are always being added.
+					<br>
+				</p1>
+			</div>
+			<div style="height: 25px;"></div>
+			<div id="textBox">
+				<h1 style="padding-top: 10px;">Supported Games</h1>
+				<a href="https://www.roblox.com/games/1600503" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Apocalypse Rising</a>
+				<br>
+				<a href="https://www.roblox.com/games/286090429" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Arsenal</a>
+				<br>
+				<a href="https://www.roblox.com/games/8054462345" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Michael's Zombies</a>
+				<br>
+				<a href="https://www.roblox.com/games/5490351219" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Clicker Madness</a>
+				<br>
+				<a href="https://www.roblox.com/games/292439477" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Phantom Forces</a>
+			</div>
+			<div style="height: 25px;"></div>
+			<div id="textBox">
+				<h1 style="padding-top: 10px;">Supported Exploits</h1>
+				<a href="https://x.synapse.to" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Synapse X</a>
+				<br>
+				<a href="https://ryos.lol" target="_blank" style="text-decoration: none; color: rgb(150, 150, 150);">Electron</a>
+			</div>
+		</div>
+		<script>
+			const scriptBtn = document.getElementById('scriptBtn');
+			const copyPopup = document.getElementById('copyPopup');
+
+			scriptBtn.addEventListener('click', () => {
+				const scriptBox = document.createElement('textarea');
+				scriptBox.value = 'loadstring(game:HttpGet(\'https://ayarum.000webhostapp.com/Main.lua\', true))();';
+				document.body.appendChild(scriptBox);
+				scriptBox.select();
+				document.execCommand('copy');
+				document.body.removeChild(scriptBox);
+				copyPopup.style.display = 'block';
+				setTimeout(() => {
+					copyPopup.style.display = 'none';
+				}, 1000);
+			});
+		</script>
+	</body>
+</html>
