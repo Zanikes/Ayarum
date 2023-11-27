@@ -2,15 +2,7 @@ repeat wait() until game:IsLoaded()
 
 local Host = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
 local function HttpGet(Url)
-	if syn then
-		local Result = syn.request({
-			Url = Host .. Url,
-			Method = 'GET'
-		})
-		return loadstring(Result.Body)()
-	else
-		return loadstring(game:HttpGet(Host .. Url, true))();
-	end
+	return loadstring(game:HttpGet(Host .. Url, true))();
 end
 
 local library = HttpGet('Library.lua')
@@ -36,8 +28,7 @@ local SupportedGames = {
 	['Apocalypse Rising'] = ApocIds,
 	['Arsenal'] = 286090429,
 	['Clicker Madness'] = 5490351219,
-	['Michael\'s Zombies'] = 9544666096,
-	['Phantom Forces'] = 292439477
+	['Michael\'s Zombies'] = 9544666096
 }
 
 local GameName = 'Universal'
@@ -144,52 +135,9 @@ local EspSettings = {
 	}
 }
 
-local CharList
-if GameName == 'Phantom Forces' and syn then
-	local EventID, Event = syn.create_comm_channel()
-	Event:Connect(function(List)
-		CharList = List
-	end)
-
-	for _, v in pairs(getactors()) do
-		syn.run_on_actor(v, [[
-			local Event = syn.get_comm_channel(...)
-			if not getrenv().shared.require then return end
-
-			local RunService = game:GetService('RunService')
-			local Cache = debug.getupvalues(getrenv().shared.require)[1]._cache if not Cache then return end
-			local ReplicationInterface = rawget(rawget(Cache, 'ReplicationInterface'), 'module') if not ReplicationInterface then return end
-			local getEntry = rawget(ReplicationInterface, 'getEntry')
-			if shared.UNPFHB then shared.UNPFHB:Disconnect() end
-			shared.UNPFHB = RunService.Heartbeat:Connect(function()
-				local CharacterList = {}
-
-				for Player, Entry in pairs(debug.getupvalues(getEntry)[1]) do
-					local TPO = rawget(Entry, '_thirdPersonObject') if not TPO then continue end
-					local Character = rawget(TPO, '_characterHash') if not Character then continue end
-					local Torso = rawget(Character, 'torso') if not Torso then continue end
-					local HealthState = rawget(Entry, '_healthstate')
-					CharacterList[Player.Name] = {
-						Character = Torso.Parent,
-						Health = HealthState and rawget(HealthState, 'health0') or 100,
-						Alive = rawget(Entry, '_alive')
-					}
-				end
-				Event:Fire(CharacterList)
-			end)
-		]], EventID)
-	end
-end
-
 local function GetCharacter(Player)
-	if GameName == 'Phantom Forces' and syn then -- Phantom Forces
-		if CharList and CharList[Player.Name] then
-			return CharList[Player.Name].Character
-		end
-	else
-		if Workspace:FindFirstChild(Player.Name) then
-			return Workspace[Player.Name]
-		end
+	if Workspace:FindFirstChild(Player.Name) then
+		return Workspace[Player.Name]
 	end
 end
 
@@ -231,10 +179,6 @@ local function GetHealth(Player, Char)
 		local NRPBS = Player:FindFirstChild('NRPBS')
 		if not NRPBS then return 0 end
 		return NRPBS.Health.Value
-	elseif GameName == 'Phantom Forces' and syn then -- Phantom Forces
-		if CharList and CharList[Player.Name] then
-			return CharList[Player.Name].Health
-		end
 	else
 		if Char then
 			if not Player:FindFirstChild('Humanoid') then return 0 end
@@ -252,8 +196,6 @@ local function GetMaxHealth(Player, Char)
 		local NRPBS = Player:FindFirstChild('NRPBS')
 		if not NRPBS then return 100 end
 		return NRPBS.MaxHealth.Value
-	elseif GameName == 'Phantom Forces' and syn then -- Phantom Forces
-		return 100
 	else
 		if Char then
 			if not Player:FindFirstChild('Humanoid') then return 0 end
@@ -266,15 +208,9 @@ local function GetMaxHealth(Player, Char)
 end
 
 local function IsDead(Player, Char)
-	if GameName == 'Phantom Forces' and syn then -- Phantom Forces
-		if CharList and CharList[Player.Name] then
-			return not CharList[Player.Name].Alive
-		end
-	else
-		local Health = GetHealth(Player, Char)
-		if Health > 0 then return false end
-		return true
-	end
+	local Health = GetHealth(Player, Char)
+	if Health > 0 then return false end
+	return true
 end
 
 local function GetClosestPlr()
