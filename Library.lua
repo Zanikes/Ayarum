@@ -2410,7 +2410,16 @@ end
 
 function Library:GetConfigs()
 	if not isfolder(Library.foldername) then
-		makefolder(Library.foldername)
+		if string.match(Library.foldername, '/') then
+			local Folders = string.split(Library.foldername, '/')
+			local str = ''
+			for _, v in pairs(Folders) do
+				str = str .. v .. '/'
+				makefolder(str)
+			end
+		else
+			makefolder(Library.foldername)
+		end
 		return {}
 	end
 	local files = {}
