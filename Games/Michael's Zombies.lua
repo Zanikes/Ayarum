@@ -445,22 +445,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 			wait(KillAuraSpeed)
 		until not library.flags['Kill Aura']
-
-		--[[
-			local args = {
-				[1] = true
-			}
-
-			game:GetService("Players").LocalPlayer.Character.Remotes.Knifing:FireServer(unpack(args))
-
-
-
-			local args = {
-				[1] = workspace.Ignore.Zombies.HelmZombie
-			}
-
-			game:GetService("ReplicatedStorage").Framework.Remotes.KnifeHitbox:FireServer(unpack(args))
-		]]
 	end})
 	Sections.Main.Misc:AddSlider({text = 'Kill Aura Delay', min = 0, max = 0.25, float = 0.05, suffix = 's', value = KillAuraSpeed, callback = function(v)
 		KillAuraSpeed = v
