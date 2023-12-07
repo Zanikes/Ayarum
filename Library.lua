@@ -2566,13 +2566,15 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBarTitle.Parent = LoadingBar
 	LoadingBarTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	LoadingBarTitle.BackgroundTransparency = 1.000
-	LoadingBarTitle.Position = UDim2.new(0, 10, 0, 0)
-	LoadingBarTitle.Size = UDim2.new(0, 152, 0, 25)
+	LoadingBarTitle.AnchorPoint = Vector2.new(0.5, 0)
+	LoadingBarTitle.Position = UDim2.new(0.5, 0, 0, 0)
+	LoadingBarTitle.Size = UDim2.new(0, 200, 0, 25)
 	LoadingBarTitle.Font = Enum.Font.Nunito
 	LoadingBarTitle.RichText = true
 	LoadingBarTitle.Text = '<b>' .. LoadingBarText .. '</b>'
 	LoadingBarTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	LoadingBarTitle.TextSize = 20.000
+	LoadingBarTitle.Size = UDim2.new(0, LoadingBarTitle.TextBounds.X, 0, 25)
 	Gradient(LoadingBarTitle)
 
 	BarHolder.Name = 'BarHolder'
