@@ -261,7 +261,7 @@ Library:AddConnection(Title:GetPropertyChangedSignal('Text'), function()
 	local Size = GetTextSize(SetText, Title.TextSize, Title.Font).X
 	Title.Size = UDim2.new(0, Size, 0, 25)
 end)
-Title.Text = '<b>Ayarum v4.1</b>'
+Title.Text = '<b>Ayarum</b>'
 
 local SelectedTabButton
 local SelectedTabPage
@@ -2570,7 +2570,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBarTitle.Size = UDim2.new(0, 152, 0, 25)
 	LoadingBarTitle.Font = Enum.Font.Nunito
 	LoadingBarTitle.RichText = true
-	LoadingBarTitle.Text = '<b>' .. Library.title .. ' - ' .. LoadingBarText .. '</b>'
+	LoadingBarTitle.Text = '<b>' .. LoadingBarText .. '</b>'
 	LoadingBarTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	LoadingBarTitle.TextSize = 20.000
 	LoadingBarTitle.TextXAlignment = Enum.TextXAlignment.Left

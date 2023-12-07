@@ -1,3 +1,5 @@
+local AVer = '4.7'
+
 repeat wait() until game:IsLoaded()
 
 local Host = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
@@ -56,7 +58,7 @@ for Game, ID in pairs(SupportedGames) do
 end
 
 library:Settings({
-	name = 'Ayarum Hub v4.7',
+	name = 'Ayarum Hub v' .. AVer,
 	themecolor1 = Color3.fromRGB(137, 0, 254),
 	themecolor2 = Color3.fromRGB(223, 0, 255),
 	useconfigs = true,
@@ -65,7 +67,7 @@ library:Settings({
 	autoload = isfile('Ayarum/AutoLoad.txt') and readfile('Ayarum/AutoLoad.txt') or nil
 })
 
-local LoadingBar = library:AddLoadingBar('Loader')
+local LoadingBar = library:AddLoadingBar('Ayarum Hub v' .. AVer .. ' - Loader')
 local function LoadInfo(Text)
 	LoadVal = LoadVal + 1
 	LoadingBar:Update(LoadVal, LoadTotal, Text)
