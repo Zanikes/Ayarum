@@ -1,4 +1,4 @@
-local AVer = '4.7'
+local AVer = '4.8'
 
 repeat wait() until game:IsLoaded()
 
