@@ -2573,7 +2573,6 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBarTitle.Text = '<b>' .. LoadingBarText .. '</b>'
 	LoadingBarTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	LoadingBarTitle.TextSize = 20.000
-	LoadingBarTitle.TextXAlignment = Enum.TextXAlignment.Left
 	Gradient(LoadingBarTitle)
 
 	BarHolder.Name = 'BarHolder'
