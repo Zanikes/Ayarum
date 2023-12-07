@@ -56,12 +56,7 @@ for Game, ID in pairs(SupportedGames) do
 end
 
 library:Settings({
-	name = 'Ayarum Hub v4.1',
-	colorscheme = {
-		Color3.fromRGB(22, 22, 22),
-		Color3.fromRGB(44, 44, 44),
-		Color3.fromRGB(27, 27, 27)
-	},
+	name = 'Ayarum Hub v4.7',
 	themecolor1 = Color3.fromRGB(137, 0, 254),
 	themecolor2 = Color3.fromRGB(223, 0, 255),
 	useconfigs = true,

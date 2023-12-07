@@ -41,11 +41,6 @@ local Library = {
 	tabs = {},
 	theme = {},
 	connections = {},
-	colorscheme = {
-		Color3.fromRGB(22, 22, 30),
-		Color3.fromRGB(44, 44, 60),
-		Color3.fromRGB(27, 27, 36)
-	},
 	open = false,
 	loaded = false,
 	fullloaded = false,
@@ -180,7 +175,7 @@ function Library:AddConnection(connection, name, callback)
 	return connection
 end
 
-local Ayarumv4 = Instance.new('ScreenGui')
+local Ayarum = Instance.new('ScreenGui')
 local Mainframe = Instance.new('Frame')
 local DragBar = Instance.new('Frame')
 local MouseUnlock = Instance.new('TextButton')
@@ -189,16 +184,16 @@ local TabButtonsHolder = Instance.new('Frame')
 local TabButtonsLayout = Instance.new('UIListLayout')
 local Holder = Instance.new('Frame')
 
-Ayarumv4.Name = 'Ayarum v4'
-Ayarumv4.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Ayarumv4.DisplayOrder = 200
-Ayarumv4.ResetOnSpawn = false
-Ayarumv4.IgnoreGuiInset = true
+Ayarum.Name = 'Ayarum'
+Ayarum.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Ayarum.DisplayOrder = 200
+Ayarum.ResetOnSpawn = false
+Ayarum.IgnoreGuiInset = true
 
 Mainframe.Name = 'Mainframe'
-Mainframe.Parent = Ayarumv4
-Mainframe.BackgroundColor3 = Library.colorscheme[1]
-Mainframe.BorderColor3 = Library.colorscheme[2]
+Mainframe.Parent = Ayarum
+Mainframe.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+Mainframe.BorderColor3 = Color3.fromRGB(44, 44, 60)
 Mainframe.Position = UDim2.new(0, 10, 0, 46)
 Mainframe.Size = UDim2.new(0, 519, 0, 450)
 Mainframe.Visible = false
@@ -253,8 +248,8 @@ TabButtonsLayout.Padding = UDim.new(0, 7)
 
 Holder.Name = 'Holder'
 Holder.Parent = Mainframe
-Holder.BackgroundColor3 = Library.colorscheme[3]
-Holder.BorderColor3 = Library.colorscheme[2]
+Holder.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+Holder.BorderColor3 = Color3.fromRGB(44, 44, 60)
 Holder.ClipsDescendants = true
 Holder.Position = UDim2.new(0, 14, 0, 70)
 Holder.Size = UDim2.new(1, -28, 1, -84)
@@ -300,8 +295,8 @@ function Library:AddTab(Text)
 
 	TabButton.Name = 'TabButton'
 	TabButton.Parent = TabButtonsHolder
-	TabButton.BackgroundColor3 = Library.colorscheme[3]
-	TabButton.BorderColor3 = Library.colorscheme[2]
+	TabButton.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+	TabButton.BorderColor3 = Color3.fromRGB(44, 44, 60)
 	TabButton.Size = UDim2.new(0, 58, 1, 0)
 	TabButton.AutoButtonColor = false
 	TabButton.Font = Enum.Font.Nunito
@@ -389,13 +384,13 @@ function Library:AddTab(Text)
 
 	TabButton.MouseEnter:Connect(function()
 		if Library.warning then return end
-		QTween(TabButton, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+		QTween(TabButton, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 		QTween(TabButtonGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
 		QTween(TabButtonText, 0.3, {TextColor3 = Color3.new(1, 1, 1)})
 	end)
 
 	TabButton.MouseLeave:Connect(function()
-		QTween(TabButton, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+		QTween(TabButton, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 		QTween(TabButtonGradient, 0.3, {BackgroundColor3 = Color3.fromRGB(50, 50, 50)})
 		QTween(TabButtonText, 0.3, {TextColor3 = Color3.fromRGB(144, 144, 165)})
 	end)
@@ -460,7 +455,7 @@ function Library:AddTab(Text)
 		Section.Name = 'Section'
 		Section.Parent = Column
 		Section.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
-		Section.BorderColor3 = Library.colorscheme[2]
+		Section.BorderColor3 = Color3.fromRGB(44, 44, 60)
 		Section.Size = UDim2.new(1, 0, 0, 200)
 		Roundify(Section)
 		Border(Section)
@@ -510,8 +505,8 @@ function Library:AddTab(Text)
 
 			Button.Name = 'Button'
 			Button.Parent = SectionHolder
-			Button.BackgroundColor3 = Library.colorscheme[3]
-			Button.BorderColor3 = Library.colorscheme[2]
+			Button.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			Button.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			Button.Size = UDim2.new(1, 0, 0, 20)
 			Button.AutoButtonColor = false
 			Button.Font = Enum.Font.Nunito
@@ -535,11 +530,11 @@ function Library:AddTab(Text)
 
 			Button.MouseEnter:Connect(function()
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
-				QTween(Button, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(Button, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			Button.MouseLeave:Connect(function()
-				QTween(Button, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(Button, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 				QTween(ButtonGradient.UIStroke, 0.3, {Transparency = 1})
 				QTween(ButtonGradient.Glow, 0.3, {ImageTransparency = 1})
 			end)
@@ -616,7 +611,7 @@ function Library:AddTab(Text)
 
 			Divider.Name = 'Divider'
 			Divider.Parent = SectionHolder
-			Divider.BackgroundColor3 = Library.colorscheme[2]
+			Divider.BackgroundColor3 = Color3.fromRGB(44, 44, 60)
 			Divider.BorderSizePixel = 0
 			Divider.Size = UDim2.new(1, 28, 0, 1)
 		end
@@ -669,8 +664,8 @@ function Library:AddTab(Text)
 			ToggleHolder.Name = 'ToggleHolder'
 			ToggleHolder.Parent = Toggle
 			ToggleHolder.AnchorPoint = Vector2.new(1, 0)
-			ToggleHolder.BackgroundColor3 = Library.colorscheme[3]
-			ToggleHolder.BorderColor3 = Library.colorscheme[2]
+			ToggleHolder.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			ToggleHolder.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			ToggleHolder.Position = UDim2.new(1, 0, 0, 0)
 			ToggleHolder.Size = UDim2.new(0, 45, 1, 0)
 			Roundify(ToggleHolder)
@@ -687,7 +682,7 @@ function Library:AddTab(Text)
 			BoxFiller.Name = 'BoxFiller'
 			BoxFiller.Parent = ToggleBox
 			BoxFiller.AnchorPoint = Vector2.new(0.5, 0.5)
-			BoxFiller.BackgroundColor3 = Library.colorscheme[3]
+			BoxFiller.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
 			BoxFiller.BorderSizePixel = 0
 			BoxFiller.Position = UDim2.new(0.5, 0, 0.5, 0)
 			BoxFiller.Size = UDim2.new(0, 10, 0, 10)
@@ -720,14 +715,14 @@ function Library:AddTab(Text)
 			Toggle.MouseEnter:Connect(function()
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
 				QTween(ToggleGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
-				QTween(ToggleHolder, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
-				QTween(BoxFiller, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(ToggleHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
+				QTween(BoxFiller, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			Toggle.MouseLeave:Connect(function()
 				QTween(ToggleGradient, 0.3, {BackgroundColor3 = Color3.fromRGB(50, 50, 50)})
-				QTween(ToggleHolder, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
-				QTween(BoxFiller, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(ToggleHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
+				QTween(BoxFiller, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 				if not Options.state then
 					QTween(ToggleBox, 0.3, {BackgroundColor3 = Color3.fromRGB(34, 34, 45)})
 				end
@@ -745,8 +740,8 @@ function Library:AddTab(Text)
 
 			Toggle.MouseButton1Up:Connect(function()
 				QTween(ToggleGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
-				QTween(ToggleHolder, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
-				QTween(BoxFiller, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(ToggleHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
+				QTween(BoxFiller, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 				if not Options.state then
 					QTween(ToggleBox, 0.3, {BackgroundColor3 = Color3.fromRGB(34, 34, 45)})
 				end
@@ -833,8 +828,8 @@ function Library:AddTab(Text)
 			BindHolder.Name = 'BindHolder'
 			BindHolder.Parent = Bind
 			BindHolder.AnchorPoint = Vector2.new(1, 0)
-			BindHolder.BackgroundColor3 = Library.colorscheme[3]
-			BindHolder.BorderColor3 = Library.colorscheme[2]
+			BindHolder.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			BindHolder.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			BindHolder.Position = UDim2.new(1, 0, 0, 0)
 			BindHolder.Size = UDim2.new(0, 76, 1, 0)
 			Roundify(BindHolder)
@@ -874,11 +869,11 @@ function Library:AddTab(Text)
 
 			Bind.MouseEnter:Connect(function()
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
-				QTween(BindHolder, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(BindHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			Bind.MouseLeave:Connect(function()
-				QTween(BindHolder, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(BindHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 			end)
 
 			Bind.MouseButton1Down:Connect(function()
@@ -887,7 +882,7 @@ function Library:AddTab(Text)
 			end)
 
 			Bind.MouseButton1Up:Connect(function()
-				QTween(BindHolder, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(BindHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			Bind.MouseButton1Click:Connect(function()
@@ -1021,8 +1016,8 @@ function Library:AddTab(Text)
 			ValueBox.Name = 'ValueBox'
 			ValueBox.Parent = Slider
 			ValueBox.AnchorPoint = Vector2.new(1, 0)
-			ValueBox.BackgroundColor3 = Library.colorscheme[3]
-			ValueBox.BorderColor3 = Library.colorscheme[2]
+			ValueBox.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			ValueBox.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			ValueBox.Position = UDim2.new(1, 0, 0, 0)
 			ValueBox.Size = UDim2.new(0, 50, 0, 15)
 			ValueBox.Font = Enum.Font.Code
@@ -1047,8 +1042,8 @@ function Library:AddTab(Text)
 			SliderHolder.Name = 'SliderHolder'
 			SliderHolder.Parent = Slider
 			SliderHolder.AnchorPoint = Vector2.new(0, 1)
-			SliderHolder.BackgroundColor3 = Library.colorscheme[3]
-			SliderHolder.BorderColor3 = Library.colorscheme[2]
+			SliderHolder.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			SliderHolder.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			SliderHolder.Position = UDim2.new(0, 0, 1, 0)
 			SliderHolder.Size = UDim2.new(1, 0, 0, 6)
 			Roundify(SliderHolder)
@@ -1108,8 +1103,8 @@ function Library:AddTab(Text)
 				InContact = true
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
 				if Sliding then return end
-				QTween(BarColor, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
-				QTween(Circle, 0.3, {BackgroundColor3 = Library.colorscheme[2], Size = UDim2.new(0, 10, 0, 10)})
+				QTween(BarColor, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
+				QTween(Circle, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60), Size = UDim2.new(0, 10, 0, 10)})
 			end)
 
 			Slider.MouseLeave:Connect(function()
@@ -1142,8 +1137,8 @@ function Library:AddTab(Text)
 					QTween(CircleGradient, 0.5, {BackgroundTransparency = 1})
 					QTween(BarGradient, 0.3, {BackgroundTransparency = 1})
 					if InContact then
-						QTween(BarColor, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
-						QTween(Circle, 0.3, {BackgroundColor3 = Library.colorscheme[2], Size = UDim2.new(0, 10, 0, 10)})
+						QTween(BarColor, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
+						QTween(Circle, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60), Size = UDim2.new(0, 10, 0, 10)})
 					else
 						QTween(BarColor, 0.3, {BackgroundColor3 = Color3.fromRGB(34, 34, 45)})
 						QTween(Circle, 0.3, {BackgroundColor3 = Color3.fromRGB(34, 34, 45), Size = UDim2.new(0, 0, 0, 0)})
@@ -1158,13 +1153,13 @@ function Library:AddTab(Text)
 				Hover = true
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
 				if Typing then return end
-				QTween(ValueBox, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(ValueBox, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			ValueBox.MouseLeave:Connect(function()
 				Hover = false
 				if Typing then return end
-				QTween(ValueBox, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(ValueBox, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 			end)
 
 			ValueBox.Focused:Connect(function()
@@ -1176,9 +1171,9 @@ function Library:AddTab(Text)
 				Typing = false
 				QTween(ValueBoxGradient.UIStroke, 0.5, {Transparency = 1})
 				if Hover then
-					QTween(ValueBox, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+					QTween(ValueBox, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 				else
-					QTween(ValueBox, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+					QTween(ValueBox, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 				end
 				Options:SetValue(tonumber(ValueBox.Text) or Options.value)
 			end)
@@ -1281,8 +1276,8 @@ function Library:AddTab(Text)
 			OpenButton.Name = 'OpenButton'
 			OpenButton.Parent = List
 			OpenButton.AnchorPoint = Vector2.new(1, 0)
-			OpenButton.BackgroundColor3 = Library.colorscheme[3]
-			OpenButton.BorderColor3 = Library.colorscheme[2]
+			OpenButton.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			OpenButton.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			OpenButton.Position = UDim2.new(1, 0, 0, 0)
 			OpenButton.Size = UDim2.new(0, 25, 0, 25)
 			Roundify(OpenButton)
@@ -1329,7 +1324,7 @@ function Library:AddTab(Text)
 			ItemsHolder.Name = 'ItemsHolder'
 			ItemsHolder.Parent = ItemsInvis
 			ItemsHolder.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
-			ItemsHolder.BorderColor3 = Library.colorscheme[2]
+			ItemsHolder.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			ItemsHolder.Size = UDim2.new(1, 0, 0, 0)
 			Roundify(ItemsHolder)
 			Border(ItemsHolder).Transparency = 1
@@ -1412,13 +1407,13 @@ function Library:AddTab(Text)
 
 			List.MouseEnter:Connect(function()
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
-				QTween(OpenButton, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(OpenButton, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 				QTween(OpenIcon, 0.3, {ImageColor3 = Color3.new(1, 1, 1)})
 				QTween(OpenButtonGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
 			end)
 
 			List.MouseLeave:Connect(function()
-				QTween(OpenButton, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(OpenButton, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 				QTween(OpenButtonGradient, 0.3, {BackgroundColor3 = Color3.fromRGB(50, 50, 50)})
 				if Options.open then return end
 				QTween(OpenIcon, 0.3, {ImageColor3 = Color3.fromRGB(144, 144, 165)})
@@ -1431,7 +1426,7 @@ function Library:AddTab(Text)
 			end)
 
 			List.MouseButton1Up:Connect(function()
-				QTween(OpenButton, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(OpenButton, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 				QTween(OpenButtonGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
 			end)
 
@@ -1634,8 +1629,8 @@ function Library:AddTab(Text)
 
 			Box.Name = 'Box'
 			Box.Parent = SectionHolder
-			Box.BackgroundColor3 = Library.colorscheme[3]
-			Box.BorderColor3 = Library.colorscheme[2]
+			Box.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			Box.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			Box.Size = UDim2.new(1, 0, 0, 20)
 			Box.ClearTextOnFocus = Options.clearonfocus
 			Box.Font = Enum.Font.Nunito
@@ -1671,13 +1666,13 @@ function Library:AddTab(Text)
 				Hover = true
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
 				if Typing then return end
-				QTween(Box, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(Box, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			Box.MouseLeave:Connect(function()
 				Hover = false
 				if Typing then return end
-				QTween(Box, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(Box, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 			end)
 
 			Box.Focused:Connect(function()
@@ -1691,9 +1686,9 @@ function Library:AddTab(Text)
 				QTween(BoxGradient.UIStroke, 0.3, {Transparency = 1})
 				QTween(BoxGradient.Glow, 0.3, {ImageTransparency = 1})
 				if Hover then
-					QTween(Box, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+					QTween(Box, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 				else
-					QTween(Box, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+					QTween(Box, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 				end
 				if not Options.callbackonchanged then
 					Options:SetValue(Box.Text)
@@ -1774,8 +1769,8 @@ function Library:AddTab(Text)
 			Container.Name = 'Container'
 			Container.Parent = ColorButton
 			Container.AnchorPoint = Vector2.new(1, 0)
-			Container.BackgroundColor3 = Library.colorscheme[3]
-			Container.BorderColor3 = Library.colorscheme[2]
+			Container.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			Container.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			Container.Position = UDim2.new(1, 0, 0, 0)
 			Container.Size = UDim2.new(0, 25, 1, 0)
 			Roundify(Container)
@@ -1821,7 +1816,7 @@ function Library:AddTab(Text)
 			ColorWindow.Name = 'ColorWindow'
 			ColorWindow.Parent = Mainframe
 			ColorWindow.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
-			ColorWindow.BorderColor3 = Library.colorscheme[2]
+			ColorWindow.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			ColorWindow.ClipsDescendants = true
 			ColorWindow.Size = UDim2.new(0, 207, 0, 0)
 			ColorWindow.ZIndex = 2
@@ -1832,7 +1827,7 @@ function Library:AddTab(Text)
 			Hue.Name = 'Hue'
 			Hue.Parent = ColorWindow
 			Hue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			Hue.BorderColor3 = Library.colorscheme[2]
+			Hue.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			Hue.Position = UDim2.new(0, 5, 0, 137)
 			Hue.Size = UDim2.new(0, 127, 0, 20)
 			Roundify(Hue)
@@ -1844,7 +1839,7 @@ function Library:AddTab(Text)
 
 			HueSlider.Name = 'HueSlider'
 			HueSlider.Parent = Hue
-			HueSlider.BackgroundColor3 = Library.colorscheme[3]
+			HueSlider.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
 			HueSlider.BorderSizePixel = 0
 			HueSlider.Position = UDim2.new(0, 20, 0, 2)
 			HueSlider.Size = UDim2.new(0, 2, 1, -4)
@@ -1852,7 +1847,7 @@ function Library:AddTab(Text)
 			SatVal.Name = 'SatVal'
 			SatVal.Parent = ColorWindow
 			SatVal.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-			SatVal.BorderColor3 = Library.colorscheme[2]
+			SatVal.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			SatVal.ClipsDescendants = true
 			SatVal.Position = UDim2.new(0, 5, 0, 5)
 			SatVal.Size = UDim2.new(0, 127, 0, 127)
@@ -1873,7 +1868,7 @@ function Library:AddTab(Text)
 			Visual.Name = 'Visual'
 			Visual.Parent = ColorWindow
 			Visual.BackgroundColor3 = Color3.fromRGB(255, 65, 65)
-			Visual.BorderColor3 = Library.colorscheme[2]
+			Visual.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			Visual.Position = UDim2.new(0, 137, 0, 5)
 			Visual.Size = UDim2.new(0, 65, 0, 52)
 			Roundify(Visual)
@@ -1881,8 +1876,8 @@ function Library:AddTab(Text)
 
 			RainbowColor.Name = 'RainbowColor'
 			RainbowColor.Parent = ColorWindow
-			RainbowColor.BackgroundColor3 = Library.colorscheme[3]
-			RainbowColor.BorderColor3 = Library.colorscheme[2]
+			RainbowColor.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			RainbowColor.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			RainbowColor.Position = UDim2.new(0, 137, 0, 137)
 			RainbowColor.Size = UDim2.new(0, 65, 0, 20)
 			RainbowColor.AutoButtonColor = false
@@ -1895,8 +1890,8 @@ function Library:AddTab(Text)
 
 			ResetColor.Name = 'ResetColor'
 			ResetColor.Parent = ColorWindow
-			ResetColor.BackgroundColor3 = Library.colorscheme[3]
-			ResetColor.BorderColor3 = Library.colorscheme[2]
+			ResetColor.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+			ResetColor.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			ResetColor.Position = UDim2.new(0, 137, 0, 112)
 			ResetColor.Size = UDim2.new(0, 65, 0, 20)
 			ResetColor.AutoButtonColor = false
@@ -1910,7 +1905,7 @@ function Library:AddTab(Text)
 			ValueBox.Name = 'ValueBox'
 			ValueBox.Parent = ColorWindow
 			ValueBox.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
-			ValueBox.BorderColor3 = Library.colorscheme[2]
+			ValueBox.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			ValueBox.Position = UDim2.new(0, 137, 0, 62)
 			ValueBox.Size = UDim2.new(0, 65, 0, 20)
 			ValueBox.ClearTextOnFocus = false
@@ -1932,7 +1927,7 @@ function Library:AddTab(Text)
 			HexBox.Name = 'HexBox'
 			HexBox.Parent = ColorWindow
 			HexBox.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
-			HexBox.BorderColor3 = Library.colorscheme[2]
+			HexBox.BorderColor3 = Color3.fromRGB(44, 44, 60)
 			HexBox.Position = UDim2.new(0, 137, 0, 87)
 			HexBox.Size = UDim2.new(0, 65, 0, 20)
 			HexBox.ClearTextOnFocus = false
@@ -2018,11 +2013,11 @@ function Library:AddTab(Text)
 				Glow(ButtonGradient).ImageTransparency = 1
 
 				Button.MouseEnter:Connect(function()
-					QTween(Button, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+					QTween(Button, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 				end)
 
 				Button.MouseLeave:Connect(function()
-					QTween(Button, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+					QTween(Button, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 					QTween(ButtonGradient.UIStroke, 0.3, {Transparency = 1})
 					QTween(ButtonGradient.Glow, 0.3, {ImageTransparency = 1})
 				end)
@@ -2111,11 +2106,11 @@ function Library:AddTab(Text)
 
 			ColorButton.MouseEnter:Connect(function()
 				if Library.warning or (Library.popup and Library.popup.hovering) then return end
-				QTween(Container, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(Container, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			ColorButton.MouseLeave:Connect(function()
-				QTween(Container, 0.3, {BackgroundColor3 = Library.colorscheme[3]})
+				QTween(Container, 0.3, {BackgroundColor3 = Color3.fromRGB(27, 27, 36)})
 			end)
 
 			ColorButton.MouseButton1Down:Connect(function()
@@ -2124,7 +2119,7 @@ function Library:AddTab(Text)
 			end)
 
 			ColorButton.MouseButton1Up:Connect(function()
-				QTween(Container, 0.3, {BackgroundColor3 = Library.colorscheme[2]})
+				QTween(Container, 0.3, {BackgroundColor3 = Color3.fromRGB(44, 44, 60)})
 			end)
 
 			ColorButton.MouseButton1Click:Connect(function()
@@ -2235,7 +2230,7 @@ end
 
 function Library:Settings(Options)
 	Options = CheckTable(Options, {
-		name = 'Ayarum v4.1',
+		name = 'Ayarum',
 		colorscheme = Library.colorscheme,
 		themecolor1 = Library.themecolor1,
 		themecolor2 = Library.themecolor2,
@@ -2288,7 +2283,7 @@ MouseBorder.ZIndex = 9
 
 function Library:Unload()
 	Library.fullloaded = false
-	for _, v in pairs(Ayarumv4:GetChildren()) do
+	for _, v in pairs(Ayarum:GetChildren()) do
 		if v.Name == 'Notification' then
 			v.CanTween.Value = false
 			QTween(v, 0.5, {Position = UDim2.new(1, v.Size.X.Offset + 5, 1, v.NotifPos.Value)}, true)
@@ -2302,7 +2297,7 @@ function Library:Unload()
 		c:Disconnect()
 	end
 	wait()
-	Ayarumv4:Destroy()
+	Ayarum:Destroy()
 	getgenv().ayarum = nil
 	Library.loaded = false
 	MouseIndicator:Remove()
@@ -2455,10 +2450,10 @@ function Library:Notify(Message, Duration)
 	local NotifPos = Instance.new('IntValue')
 	local CanTween = Instance.new('BoolValue')
 
-	Notification.Parent = Ayarumv4
+	Notification.Parent = Ayarum
 	Notification.AnchorPoint = Vector2.new(1, 1)
-	Notification.BackgroundColor3 = Library.colorscheme[1]
-	Notification.BorderColor3 = Library.colorscheme[2]
+	Notification.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+	Notification.BorderColor3 = Color3.fromRGB(44, 44, 60)
 	Notification.Position = UDim2.new(1, -10, 1, -10)
 	Notification.Size = UDim2.new(0, 162, 0, 50)
 	Notification.ZIndex = 2
@@ -2514,7 +2509,7 @@ function Library:Notify(Message, Duration)
 	Notification.Size = UDim2.new(0, NotifText.TextBounds.X + 47, 0, NotifText.TextBounds.Y + 10)
 	Notification.Position = UDim2.new(1, Notification.AbsoluteSize.X + 5, 1, -10)
 
-	for _, v in pairs(Ayarumv4:GetChildren()) do
+	for _, v in pairs(Ayarum:GetChildren()) do
 		if v.Name == 'Notification' then
 			v.NotifPos.Value = v.NotifPos.Value - (Notification.Size.Y.Offset + 10)
 			if v.CanTween.Value then
@@ -2529,7 +2524,7 @@ function Library:Notify(Message, Duration)
 	delay(Duration, function()
 		CanTween.Value = false
 		BTween(Notification, 0.5, {Position = UDim2.new(1, Notification.AbsoluteSize.X + 5, 1, NotifPos.Value)}, true)
-		for _, v in pairs(Ayarumv4:GetChildren()) do
+		for _, v in pairs(Ayarum:GetChildren()) do
 			if v.Name == 'Notification' then
 				if v.NotifPos.Value < NotifPos.Value and v.CanTween.Value == true then
 					v.NotifPos.Value = v.NotifPos.Value + (Notification.Size.Y.Offset + 10)
@@ -2560,7 +2555,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBar.Name = 'LoadingBar'
 	LoadingBar.Parent = LoadingGui
 	LoadingBar.AnchorPoint = Vector2.new(0.5, 0)
-	LoadingBar.BackgroundColor3 = Library.colorscheme[1]
+	LoadingBar.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
 	LoadingBar.BorderColor3 = Color3.fromRGB(27, 42, 53)
 	LoadingBar.Position = UDim2.new(0.5, 0, 0, -85)
 	LoadingBar.Size = UDim2.new(0, 350, 0, 78)
@@ -2575,7 +2570,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBarTitle.Size = UDim2.new(0, 152, 0, 25)
 	LoadingBarTitle.Font = Enum.Font.Nunito
 	LoadingBarTitle.RichText = true
-	LoadingBarTitle.Text = '<b>Ayarum v4.1 - ' .. LoadingBarText .. '</b>'
+	LoadingBarTitle.Text = '<b>' .. Library.title .. ' - ' .. LoadingBarText .. '</b>'
 	LoadingBarTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 	LoadingBarTitle.TextSize = 20.000
 	LoadingBarTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -2584,8 +2579,8 @@ function Library:AddLoadingBar(LoadingBarText)
 	BarHolder.Name = 'BarHolder'
 	BarHolder.Parent = LoadingBar
 	BarHolder.AnchorPoint = Vector2.new(0, 1)
-	BarHolder.BackgroundColor3 = Library.colorscheme[3]
-	BarHolder.BorderColor3 = Library.colorscheme[2]
+	BarHolder.BackgroundColor3 = Color3.fromRGB(27, 27, 36)
+	BarHolder.BorderColor3 = Color3.fromRGB(44, 44, 60)
 	BarHolder.Position = UDim2.new(0, 10, 1, -10)
 	BarHolder.Size = UDim2.new(1, -20, 0, 20)
 	Roundify(BarHolder)
@@ -2800,9 +2795,9 @@ end
 function Library:Init()
 	Library.loaded = true
 	if RunService:IsStudio() then
-		Ayarumv4.Parent = game.Players.LocalPlayer:WaitForChild('PlayerGui')
+		Ayarum.Parent = game.Players.LocalPlayer:WaitForChild('PlayerGui')
 	else
-		Ayarumv4.Parent = game.CoreGui
+		Ayarum.Parent = game.CoreGui
 	end
 
 	if Library.useconfigs and Library.autoload and isfile(Library.foldername .. '/' .. Library.autoload .. Library.fileext) then
