@@ -21,339 +21,62 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	wait(0.5)
 	local CorrectMats = {'Bricks', 'C4Placed', 'Fireplace', 'Floodlight', 'LargeCrateOpen', 'Planks', 'RoadFlareLit', 'Slabs', 'SmallCrateOpen', 'Stone', 'TM46Placed', 'Timber', 'VS50Placed', 'Walls', 'MetalTruss'}
 	local VehiclesList = {'PoliceCar', 'SportsCar', 'DeliveryVan', 'Bicycle', 'TrinitySUV', 'Tractor', 'Pickup2', 'Jeep', 'ATV', 'Jeep2', 'Motorside', 'Motorcycle', 'Van', 'Humvee2', 'Humvee', 'Firetruck', 'Pickup', 'Ural2', 'Ural', 'Ambulance'}
+
+	local function AddInstance(Table, Instance, CorrectParent)
+		local OldParent = ''
+		local Parent = ''
+
+		local FoundFullOldParent = false
+		local FoundFullParent = false
+
+		local OldParLoop = Instance.Parent
+		local ParLoop = CorrectParent
+
+		repeat
+			if OldParLoop ~= game then
+				OldParent = OldParLoop.Name .. '.' .. OldParent
+				OldParLoop = OldParLoop.Parent
+			else
+				OldParent = 'game.' .. OldParent
+				FoundFullOldParent = true
+			end
+		until FoundFullOldParent == true
+
+		repeat
+			if ParLoop ~= game then
+				Parent = ParLoop.Name .. '.' .. Parent
+				ParLoop = ParLoop.Parent
+			else
+				Parent = 'game.' .. Parent
+				FoundFullParent = true
+			end
+		until FoundFullParent == true
+
+		Parent = string.sub(Parent, 0, string.len(Parent) - 1)
+		OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
+
+		table.insert(Table, {Instance, CorrectParent, OldParent, Parent})
+	end
+
 	local function FixServer()
 		local MoveThings = {}
 		for _, v in pairs(game:GetDescendants()) do
-			if v.Name == 'Zombies' then
-				if not v:FindFirstChild('Skeleton') then
-					if v.Parent ~= game.Workspace then
-						if v:IsA('Model') then
-							local Instance = v
-							local CorrectParent = game.Workspace
-							local OldParent = ''
-							local Parent = ''
-
-							local FoundFullOldParent = false
-							local FoundFullParent = false
-
-							local OldParLoop = Instance.Parent
-							local ParLoop = CorrectParent
-
-							repeat
-								if OldParLoop ~= game then
-									OldParent = OldParLoop.Name .. '.' .. OldParent
-									OldParLoop = OldParLoop.Parent
-								else
-									OldParent = 'game.' .. OldParent
-									FoundFullOldParent = true
-								end
-							until FoundFullOldParent == true
-
-							repeat
-								if ParLoop ~= game then
-									Parent = ParLoop.Name .. '.' .. Parent
-									ParLoop = ParLoop.Parent
-								else
-									Parent = 'game.' .. Parent
-									FoundFullParent = true
-								end
-							until FoundFullParent == true
-
-							Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-							OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-							table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-						end
-					end
-				end
-			elseif v.Name == 'Zombie' then
-				if v.Parent.Name ~= 'Zombies' then
-					if v.Parent.Parent.Name ~= 'Zombies' then
-						if v.Parent ~= game.Lighting.Materials then
-							local Instance = v
-							local CorrectParent = game.ReplicatedStorage.Zombies
-							local OldParent = ''
-							local Parent = ''
-
-							local FoundFullOldParent = false
-							local FoundFullParent = false
-
-							local OldParLoop = Instance.Parent
-							local ParLoop = CorrectParent
-
-							repeat
-								if OldParLoop ~= game then
-									OldParent = OldParLoop.Name .. '.' .. OldParent
-									OldParLoop = OldParLoop.Parent
-								else
-									OldParent = 'game.' .. OldParent
-									FoundFullOldParent = true
-								end
-							until FoundFullOldParent == true
-
-							repeat
-								if ParLoop ~= game then
-									Parent = ParLoop.Name .. '.' .. Parent
-									ParLoop = ParLoop.Parent
-								else
-									Parent = 'game.' .. Parent
-									FoundFullParent = true
-								end
-							until FoundFullParent == true
-
-							Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-							OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-							table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-						end
-					end
-				end
-			elseif table.find(CorrectMats, v.Name) then
-				if v.Parent ~= game.Lighting.Materials then
-					if v.Parent ~= game.Lighting.LootDrops then
-						if v.Parent ~= game.Workspace.Remote then
-							if v.Parent ~= game.ReplicatedStorage.private then
-								if v.Parent ~= game.ReplicatedStorage.SpawnPlate.Models then
-									if not game.Lighting.Materials:FindFirstChild(v.Name) then
-										if v.Name ~= 'Floodlight' then
-											local Instance = v
-											local CorrectParent = game.Lighting.Materials
-											local OldParent = ''
-											local Parent = ''
-
-											local FoundFullOldParent = false
-											local FoundFullParent = false
-
-											local OldParLoop = Instance.Parent
-											local ParLoop = CorrectParent
-
-											repeat
-												if OldParLoop ~= game then
-													OldParent = OldParLoop.Name .. '.' .. OldParent
-													OldParLoop = OldParLoop.Parent
-												else
-													OldParent = 'game.' .. OldParent
-													FoundFullOldParent = true
-												end
-											until FoundFullOldParent == true
-
-											repeat
-												if ParLoop ~= game then
-													Parent = ParLoop.Name .. '.' .. Parent
-													ParLoop = ParLoop.Parent
-												else
-													Parent = 'game.' .. Parent
-													FoundFullParent = true
-												end
-											until FoundFullParent == true
-
-											Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-											OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-											table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			elseif table.find(VehiclesList, v.Name) then
-				if v.Parent ~= game.Workspace.Vehicles then
-					if v.Parent ~= game.ReplicatedStorage.SpawnPlate.Models then
-						if v.Parent.Name ~= 'Models' then
-							local Instance = v
-							local CorrectParent = game.Workspace.Vehicles
-							local OldParent = ''
-							local Parent = ''
-
-							local FoundFullOldParent = false
-							local FoundFullParent = false
-
-							local OldParLoop = Instance.Parent
-							local ParLoop = CorrectParent
-
-							repeat
-								if OldParLoop ~= game then
-									OldParent = OldParLoop.Name .. '.' .. OldParent
-									OldParLoop = OldParLoop.Parent
-								else
-									OldParent = 'game.' .. OldParent
-									FoundFullOldParent = true
-								end
-							until FoundFullOldParent == true
-
-							repeat
-								if ParLoop ~= game then
-									Parent = ParLoop.Name .. '.' .. Parent
-									ParLoop = ParLoop.Parent
-								else
-									Parent = 'game.' .. Parent
-									FoundFullParent = true
-								end
-							until FoundFullParent == true
-
-							Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-							OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-							table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-						end
-					end
-				end
-			elseif v.Parent == game.Lighting.Materials then
-				if not table.find(CorrectMats, v.Name) then
-					if v.Name ~= 'Animal1' and v.Name ~= 'Animal2' and v.Name ~= 'Animal3' and v.Name ~= 'Animal4' and v.Name ~= 'Animal5' and v.Name ~= 'Animal6' and v.Name ~= 'AyarumStorage' then
-						local Instance = v
-						local CorrectParent = game.Lighting.LootDrops
-						local OldParent = ''
-						local Parent = ''
-
-						local FoundFullOldParent = false
-						local FoundFullParent = false
-
-						local OldParLoop = Instance.Parent
-						local ParLoop = CorrectParent
-
-						repeat
-							if OldParLoop ~= game then
-								OldParent = OldParLoop.Name .. '.' .. OldParent
-								OldParLoop = OldParLoop.Parent
-							else
-								OldParent = 'game.' .. OldParent
-								FoundFullOldParent = true
-							end
-						until FoundFullOldParent == true
-
-						repeat
-							if ParLoop ~= game then
-								Parent = ParLoop.Name .. '.' .. Parent
-								ParLoop = ParLoop.Parent
-							else
-								Parent = 'game.' .. Parent
-								FoundFullParent = true
-							end
-						until FoundFullParent == true
-
-						Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-						OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-						table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-					end
-				end
-			elseif v.Name == 'Animal1' or v.Name == 'Animal2' or v.Name == 'Animal3' or v.Name == 'Animal4' or v.Name == 'Animal5' or v.Name == 'Animal6' then
-				if v.Parent ~= game.ReplicatedStorage.Animals and v.Parent ~= game.Workspace then
-					local Instance = v
-					local CorrectParent = game.ReplicatedStorage.Animals
-					local OldParent = ''
-					local Parent = ''
-
-					local FoundFullOldParent = false
-					local FoundFullParent = false
-
-					local OldParLoop = Instance.Parent
-					local ParLoop = CorrectParent
-
-					repeat
-						if OldParLoop ~= game then
-							OldParent = OldParLoop.Name .. '.' .. OldParent
-							OldParLoop = OldParLoop.Parent
-						else
-							OldParent = 'game.' .. OldParent
-							FoundFullOldParent = true
-						end
-					until FoundFullOldParent == true
-
-					repeat
-						if ParLoop ~= game then
-							Parent = ParLoop.Name .. '.' .. Parent
-							ParLoop = ParLoop.Parent
-						else
-							Parent = 'game.' .. Parent
-							FoundFullParent = true
-						end
-					until FoundFullParent == true
-
-					Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-					OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-					table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-				end
-			elseif v.Name == 'DropLoot' or v.Name == 'SpawnLoot' then
-				if v.Parent ~= game.Workspace then
-					local Instance = v
-					local CorrectParent = game.Workspace
-					local OldParent = ''
-					local Parent = ''
-
-					local FoundFullOldParent = false
-					local FoundFullParent = false
-
-					local OldParLoop = Instance.Parent
-					local ParLoop = CorrectParent
-
-					repeat
-						if OldParLoop ~= game then
-							OldParent = OldParLoop.Name .. '.' .. OldParent
-							OldParLoop = OldParLoop.Parent
-						else
-							OldParent = 'game.' .. OldParent
-							FoundFullOldParent = true
-						end
-					until FoundFullOldParent == true
-
-					repeat
-						if ParLoop ~= game then
-							Parent = ParLoop.Name .. '.' .. Parent
-							ParLoop = ParLoop.Parent
-						else
-							Parent = 'game.' .. Parent
-							FoundFullParent = true
-						end
-					until FoundFullParent == true
-
-					Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-					OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-					table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-				end
-			elseif v.Name == 'Corpse' or v.Name == 'GhostCorpse' then
-				if v.Parent ~= game.Workspace and v.Parent ~= game.ReplicatedStorage and v.Parent.Name ~= 'Corpse' and v.Parent.Name ~= 'GhostCorpse' then
-					local Instance = v
-					local CorrectParent = game.ReplicatedStorage
-					local OldParent = ''
-					local Parent = ''
-
-					local FoundFullOldParent = false
-					local FoundFullParent = false
-
-					local OldParLoop = Instance.Parent
-					local ParLoop = CorrectParent
-
-					repeat
-						if OldParLoop ~= game then
-							OldParent = OldParLoop.Name .. '.' .. OldParent
-							OldParLoop = OldParLoop.Parent
-						else
-							OldParent = 'game.' .. OldParent
-							FoundFullOldParent = true
-						end
-					until FoundFullOldParent == true
-
-					repeat
-						if ParLoop ~= game then
-							Parent = ParLoop.Name .. '.' .. Parent
-							ParLoop = ParLoop.Parent
-						else
-							Parent = 'game.' .. Parent
-							FoundFullParent = true
-						end
-					until FoundFullParent == true
-
-					Parent = string.sub(Parent, 0, string.len(Parent) - 1)
-					OldParent = string.sub(OldParent, 0, string.len(OldParent) - 1)
-
-					table.insert(MoveThings, {Instance, CorrectParent, OldParent, Parent})
-				end
+			if v.Name == 'Zombies' and not v:FindFirstChild('Skeleton') and v.Parent ~= Workspace and v:IsA('Model') then
+				AddInstance(MoveThings, v, Workspace)
+			elseif v.Name =='Zombie' and v.Parent.Name ~= 'Zombies' and v.Parent.Parent.Name ~= 'Zombies' and v.Parent ~= Lighting.Materials then
+				AddInstance(MoveThings, v, ReplicatedStorage.Zombies)
+			elseif table.find(CorrectMats, v.Name) and v.Parent ~= Lighting.Materials and v.Parent ~= Lighting.LootDrops and v.Parent ~= Workspace.Remote and v.Parent ~= ReplicatedStorage.private and v.Parent ~= ReplicatedStorage.SpawnPlate.Models and not Lighting.Materials:FindFirstChild(v.Name) and v.Name ~= 'Floodlight' then
+				AddInstance(MoveThings, v, Lighting.Materials)
+			elseif table.find(VehiclesList, v.Name) and v.Parent ~= Workspace.Vehicles and v.Parent.Name ~= 'Models' then
+				AddInstance(MoveThings, v, Workspace.Vehicles)
+			elseif v.Parent == Lighting.Materials and not table.find(CorrectMats, v.Name) and v.Name ~= 'Animal1' and v.Name ~= 'Animal2' and v.Name ~= 'Animal3' and v.Name ~= 'Animal4' and v.Name ~= 'Animal5' and v.Name ~= 'Animal6' and v.Name ~= 'AyarumStorage' then
+				AddInstance(MoveThings, v, Lighting.LootDrops)
+			elseif (v.Name == 'Animal1' or v.Name == 'Animal2' or v.Name == 'Animal3' or v.Name == 'Animal4' or v.Name == 'Animal5' or v.Name == 'Animal6') and v.Parent ~= ReplicatedStorage.Animals and v.Parent ~= Workspace then
+				AddInstance(MoveThings, v, ReplicatedStorage.Animals)
+			elseif (v.Name == 'DropLoot' or v.Name == 'SpawnLoot') and v.Parent ~= Workspace then
+				AddInstance(MoveThings, v, Workspace)
+			elseif (v.Name == 'Corpse' or v.Name == 'GhostCorpse') and v.Parent ~= Workspace and v.Parent ~= ReplicatedStorage and v.Parent.Name ~= 'Corpse' and v.Parent.Name ~= 'GhostCorpse' then
+				AddInstance(MoveThings, v, ReplicatedStorage)
 			end
 		end
 		if #MoveThings == 0 then
