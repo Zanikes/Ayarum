@@ -432,13 +432,35 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 	Sections.Main.Misc:AddToggle({text = 'Kill Aura', state = false, callback = function(bool)
 		repeat
+			if Client.Character then
+				Client.Character.Remotes.Knifing:FireServer(true)
+			end
 			for _, v in pairs(Workspace.Ignore.Zombies:GetChildren()) do
 				if v:FindFirstChild('Humanoid') and Client.Character and Client.Character:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('HumanoidRootPart') and (Client.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude < 25 then
 					ReplicatedStorage.Framework.Remotes.KnifeHitbox:FireServer(v.Humanoid)
 				end
 			end
+			if Client.Character then
+				Client.Character.Remotes.Knifing:FireServer(false)
+			end
 			wait(KillAuraSpeed)
 		until not library.flags['Kill Aura']
+
+		--[[
+			local args = {
+				[1] = true
+			}
+
+			game:GetService("Players").LocalPlayer.Character.Remotes.Knifing:FireServer(unpack(args))
+
+
+
+			local args = {
+				[1] = workspace.Ignore.Zombies.HelmZombie
+			}
+
+			game:GetService("ReplicatedStorage").Framework.Remotes.KnifeHitbox:FireServer(unpack(args))
+		]]
 	end})
 	Sections.Main.Misc:AddSlider({text = 'Kill Aura Delay', min = 0, max = 0.25, float = 0.05, suffix = 's', value = KillAuraSpeed, callback = function(v)
 		KillAuraSpeed = v
