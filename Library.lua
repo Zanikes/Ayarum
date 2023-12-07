@@ -2236,6 +2236,7 @@ end
 function Library:Settings(Options)
 	Options = CheckTable(Options, {
 		name = 'Ayarum v4.1',
+		colorscheme = Library.colorscheme,
 		themecolor1 = Library.themecolor1,
 		themecolor2 = Library.themecolor2,
 		foldername = Library.foldername,
@@ -2244,6 +2245,7 @@ function Library:Settings(Options)
 		autoload = Library.autoload
 	})
 	Title.Text = '<b>' .. Options.name .. '</b>'
+	Library.colorscheme = Options.colorscheme
 	Library.themecolor1 = Options.themecolor1
 	Library.themecolor2 = Options.themecolor2
 	Library.foldername = Options.foldername
