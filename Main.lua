@@ -138,8 +138,8 @@ local EspSettings = {
 }
 
 local function GetCharacter(Player)
-	if Workspace:FindFirstChild(Player.Name) then
-		return Workspace[Player.Name]
+	if Workspace:FindFirstChild(Player.Name) or Player.Character then
+		return Workspace:FindFirstChild(Player.Name) or Player.Character
 	end
 end
 
@@ -364,14 +364,8 @@ local function DrawTracer(Player)
 	local Tracer = Drawing.new('Line')
 	local Stem = Drawing.new('Line')
 	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar
-		local Char
-		if Workspace:FindFirstChild(Player.Name) then
-			Char = Workspace[Player.Name]
-		end
-		if Workspace:FindFirstChild(Client.Name) then
-			ClientChar = Workspace[Client.Name]
-		end
+		local ClientChar = GetCharacter(Client)
+		local Char = GetCharacter(Player)
 		local Torso
 		local CTorso
 		if Char then
@@ -502,14 +496,8 @@ local function DrawBox(Player)
 	Line.Thickness = 1
 	Line.Visible = false
 	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar
-		local Char
-		if Workspace:FindFirstChild(Player.Name) then
-			Char = Workspace[Player.Name]
-		end
-		if Workspace:FindFirstChild(Client.Name) then
-			ClientChar = Workspace[Client.Name]
-		end
+		local ClientChar = GetCharacter(Client)
+		local Char = GetCharacter(Player)
 		local Torso
 		local CTorso
 		if Char then
@@ -652,14 +640,8 @@ local function DrawCham(Player)
 	local Cham = Instance.new('Highlight')
 	Cham.Enabled = false
 	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar
-		local Char
-		if Workspace:FindFirstChild(Player.Name) then
-			Char = Workspace[Player.Name]
-		end
-		if Workspace:FindFirstChild(Client.Name) then
-			ClientChar = Workspace[Client.Name]
-		end
+		local ClientChar = GetCharacter(Client)
+		local Char = GetCharacter(Player)
 		local Torso
 		local CTorso
 		if Char then
