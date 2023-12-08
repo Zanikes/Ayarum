@@ -22,7 +22,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local CorrectMats = {'Bricks', 'C4Placed', 'Fireplace', 'Floodlight', 'LargeCrateOpen', 'Planks', 'RoadFlareLit', 'Slabs', 'SmallCrateOpen', 'Stone', 'TM46Placed', 'Timber', 'VS50Placed', 'Walls', 'MetalTruss'}
 	local VehiclesList = {'PoliceCar', 'SportsCar', 'DeliveryVan', 'Bicycle', 'TrinitySUV', 'Tractor', 'Pickup2', 'Jeep', 'ATV', 'Jeep2', 'Motorside', 'Motorcycle', 'Van', 'Humvee2', 'Humvee', 'Firetruck', 'Pickup', 'Ural2', 'Ural', 'Ambulance'}
 
-	local function AddInstance(Table, Instance, CorrectParent)
+	local function AddBroken(Table, Instance, CorrectParent)
 		local OldParent = ''
 		local Parent = ''
 
@@ -62,21 +62,21 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		local MoveThings = {}
 		for _, v in pairs(game:GetDescendants()) do
 			if v.Name == 'Zombies' and not v:FindFirstChild('Skeleton') and v.Parent ~= Workspace and v:IsA('Model') then
-				AddInstance(MoveThings, v, Workspace)
-			elseif v.Name =='Zombie' and v.Parent.Name ~= 'Zombies' and v.Parent.Parent.Name ~= 'Zombies' and v.Parent ~= Lighting.Materials then
-				AddInstance(MoveThings, v, ReplicatedStorage.Zombies)
+				AddBroken(MoveThings, v, Workspace)
+			elseif v.Name == 'Zombie' and v.Parent.Name ~= 'Zombies' and v.Parent.Parent.Name ~= 'Zombies' and v.Parent ~= Lighting.Materials then
+				AddBroken(MoveThings, v, ReplicatedStorage.Zombies)
 			elseif table.find(CorrectMats, v.Name) and v.Parent ~= Lighting.Materials and v.Parent ~= Lighting.LootDrops and v.Parent ~= Workspace.Remote and v.Parent ~= ReplicatedStorage.private and v.Parent ~= ReplicatedStorage.SpawnPlate.Models and not Lighting.Materials:FindFirstChild(v.Name) and v.Name ~= 'Floodlight' then
-				AddInstance(MoveThings, v, Lighting.Materials)
+				AddBroken(MoveThings, v, Lighting.Materials)
 			elseif table.find(VehiclesList, v.Name) and v.Parent ~= Workspace.Vehicles and v.Parent.Name ~= 'Models' then
-				AddInstance(MoveThings, v, Workspace.Vehicles)
+				AddBroken(MoveThings, v, Workspace.Vehicles)
 			elseif v.Parent == Lighting.Materials and not table.find(CorrectMats, v.Name) and v.Name ~= 'Animal1' and v.Name ~= 'Animal2' and v.Name ~= 'Animal3' and v.Name ~= 'Animal4' and v.Name ~= 'Animal5' and v.Name ~= 'Animal6' and v.Name ~= 'AyarumStorage' then
-				AddInstance(MoveThings, v, Lighting.LootDrops)
+				AddBroken(MoveThings, v, Lighting.LootDrops)
 			elseif (v.Name == 'Animal1' or v.Name == 'Animal2' or v.Name == 'Animal3' or v.Name == 'Animal4' or v.Name == 'Animal5' or v.Name == 'Animal6') and v.Parent ~= ReplicatedStorage.Animals and v.Parent ~= Workspace then
-				AddInstance(MoveThings, v, ReplicatedStorage.Animals)
+				AddBroken(MoveThings, v, ReplicatedStorage.Animals)
 			elseif (v.Name == 'DropLoot' or v.Name == 'SpawnLoot') and v.Parent ~= Workspace then
-				AddInstance(MoveThings, v, Workspace)
+				AddBroken(MoveThings, v, Workspace)
 			elseif (v.Name == 'Corpse' or v.Name == 'GhostCorpse') and v.Parent ~= Workspace and v.Parent ~= ReplicatedStorage and v.Parent.Name ~= 'Corpse' and v.Parent.Name ~= 'GhostCorpse' then
-				AddInstance(MoveThings, v, ReplicatedStorage)
+				AddBroken(MoveThings, v, ReplicatedStorage)
 			end
 		end
 		if #MoveThings == 0 then
