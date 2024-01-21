@@ -16,7 +16,8 @@ local BaseList = {
 	['Radio Tower'] = GetFile('RadioTower'),
 	['TA Base'] = GetFile('TABase'),
 	['Tower'] = GetFile('Tower'),
-	['Weapons'] = GetFile('Weapons')
+	['Weapons'] = GetFile('Weapons'),
+	['MA Tree Base'] = GetFile('MATree')
 }
 
 return BaseList
