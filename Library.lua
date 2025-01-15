@@ -2438,102 +2438,104 @@ function Library:GetConfigs()
 end
 
 function Library:Notify(Message, Duration)
-	Message = typeof(tostring(Message)) == 'string' and tostring(Message) or 'New Notification'
-	if Message:gsub(' ', '') == '' then return end
-	Duration = typeof(Duration) == 'number' and Duration or 5
-
-	local Notification = Instance.new('Frame')
-	local NotifIcon = Instance.new('ImageLabel')
-	local NotifDetailHolder = Instance.new('Frame')
-	local NotifDetail = Instance.new('Frame')
-	local NotifText = Instance.new('TextLabel')
-	local NotifPos = Instance.new('IntValue')
-	local CanTween = Instance.new('BoolValue')
-
-	Notification.Parent = Ayarum
-	Notification.AnchorPoint = Vector2.new(1, 1)
-	Notification.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
-	Notification.BorderColor3 = Color3.fromRGB(44, 44, 60)
-	Notification.Position = UDim2.new(1, -10, 1, -10)
-	Notification.Size = UDim2.new(0, 162, 0, 50)
-	Notification.ZIndex = 2
-	Roundify(Notification)
-	Glow(Notification, Color3.new(0, 0, 0))
-
-	NotifIcon.Name = 'NotifIcon'
-	NotifIcon.Parent = Notification
-	NotifIcon.AnchorPoint = Vector2.new(0, 0.5)
-	NotifIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	NotifIcon.BackgroundTransparency = 1.000
-	NotifIcon.Position = UDim2.new(0, 8, 0.5, 0)
-	NotifIcon.Size = UDim2.new(0, 24, 0, 24)
-	NotifIcon.Image = 'rbxassetid://6034308946'
-	Gradient(NotifIcon, 45)
-
-	NotifDetailHolder.Name = 'NotifDetailHolder'
-	NotifDetailHolder.Parent = Notification
-	NotifDetailHolder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	NotifDetailHolder.BackgroundTransparency = 1.000
-	NotifDetailHolder.ClipsDescendants = true
-	NotifDetailHolder.Size = UDim2.new(0, 5, 1, 0)
-
-	NotifDetail.Name = 'NotifDetail'
-	NotifDetail.Parent = NotifDetailHolder
-	NotifDetail.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	NotifDetail.BorderSizePixel = 0
-	NotifDetail.Size = UDim2.new(0, 10, 1, 0)
-	Roundify(NotifDetail)
-	Gradient(NotifDetail, 90)
-
-	NotifText.Name = 'NotifText'
-	NotifText.Parent = Notification
-	NotifText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	NotifText.BackgroundTransparency = 1.000
-	NotifText.Position = UDim2.new(0, 32, 0, 0)
-	NotifText.Size = UDim2.new(1, -32, 1, 0)
-	NotifText.Font = Enum.Font.Nunito
-	NotifText.RichText = true
-	NotifText.Text = '<b>' .. Message .. '</b>'
-	NotifText.TextColor3 = Color3.fromRGB(255, 255, 255)
-	NotifText.TextSize = 18.000
-	Gradient(NotifText)
-
-	NotifPos.Name = 'NotifPos'
-	NotifPos.Parent = Notification
-	NotifPos.Value = -10
-
-	CanTween.Name = 'CanTween'
-	CanTween.Parent = Notification
-	CanTween.Value = true
-
-	Notification.Size = UDim2.new(0, NotifText.TextBounds.X + 47, 0, NotifText.TextBounds.Y + 10)
-	Notification.Position = UDim2.new(1, Notification.AbsoluteSize.X + 5, 1, -10)
-
-	for _, v in pairs(Ayarum:GetChildren()) do
-		if v.Name == 'Notification' then
-			v.NotifPos.Value = v.NotifPos.Value - (Notification.Size.Y.Offset + 10)
-			if v.CanTween.Value then
-				QTween(v, 0.5, {Position = UDim2.new(1, -10, 1, v.NotifPos.Value)})
-			end
-		end
-	end
-	Notification.Name = 'Notification'
-
-	BTween(Notification, 0.5, {Position = UDim2.new(1, -10, 1, NotifPos.Value)})
-
-	delay(Duration, function()
-		CanTween.Value = false
-		BTween(Notification, 0.5, {Position = UDim2.new(1, Notification.AbsoluteSize.X + 5, 1, NotifPos.Value)}, true)
+	pcall(function()
+		Message = typeof(tostring(Message)) == 'string' and tostring(Message) or 'New Notification'
+		if Message:gsub(' ', '') == '' then return end
+		Duration = typeof(Duration) == 'number' and Duration or 5
+	
+		local Notification = Instance.new('Frame')
+		local NotifIcon = Instance.new('ImageLabel')
+		local NotifDetailHolder = Instance.new('Frame')
+		local NotifDetail = Instance.new('Frame')
+		local NotifText = Instance.new('TextLabel')
+		local NotifPos = Instance.new('IntValue')
+		local CanTween = Instance.new('BoolValue')
+	
+		Notification.Parent = Ayarum
+		Notification.AnchorPoint = Vector2.new(1, 1)
+		Notification.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+		Notification.BorderColor3 = Color3.fromRGB(44, 44, 60)
+		Notification.Position = UDim2.new(1, -10, 1, -10)
+		Notification.Size = UDim2.new(0, 162, 0, 50)
+		Notification.ZIndex = 2
+		Roundify(Notification)
+		Glow(Notification, Color3.new(0, 0, 0))
+	
+		NotifIcon.Name = 'NotifIcon'
+		NotifIcon.Parent = Notification
+		NotifIcon.AnchorPoint = Vector2.new(0, 0.5)
+		NotifIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NotifIcon.BackgroundTransparency = 1.000
+		NotifIcon.Position = UDim2.new(0, 8, 0.5, 0)
+		NotifIcon.Size = UDim2.new(0, 24, 0, 24)
+		NotifIcon.Image = 'rbxassetid://6034308946'
+		Gradient(NotifIcon, 45)
+	
+		NotifDetailHolder.Name = 'NotifDetailHolder'
+		NotifDetailHolder.Parent = Notification
+		NotifDetailHolder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NotifDetailHolder.BackgroundTransparency = 1.000
+		NotifDetailHolder.ClipsDescendants = true
+		NotifDetailHolder.Size = UDim2.new(0, 5, 1, 0)
+	
+		NotifDetail.Name = 'NotifDetail'
+		NotifDetail.Parent = NotifDetailHolder
+		NotifDetail.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NotifDetail.BorderSizePixel = 0
+		NotifDetail.Size = UDim2.new(0, 10, 1, 0)
+		Roundify(NotifDetail)
+		Gradient(NotifDetail, 90)
+	
+		NotifText.Name = 'NotifText'
+		NotifText.Parent = Notification
+		NotifText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NotifText.BackgroundTransparency = 1.000
+		NotifText.Position = UDim2.new(0, 32, 0, 0)
+		NotifText.Size = UDim2.new(1, -32, 1, 0)
+		NotifText.Font = Enum.Font.Nunito
+		NotifText.RichText = true
+		NotifText.Text = '<b>' .. Message .. '</b>'
+		NotifText.TextColor3 = Color3.fromRGB(255, 255, 255)
+		NotifText.TextSize = 18.000
+		Gradient(NotifText)
+	
+		NotifPos.Name = 'NotifPos'
+		NotifPos.Parent = Notification
+		NotifPos.Value = -10
+	
+		CanTween.Name = 'CanTween'
+		CanTween.Parent = Notification
+		CanTween.Value = true
+	
+		Notification.Size = UDim2.new(0, NotifText.TextBounds.X + 47, 0, NotifText.TextBounds.Y + 10)
+		Notification.Position = UDim2.new(1, Notification.AbsoluteSize.X + 5, 1, -10)
+	
 		for _, v in pairs(Ayarum:GetChildren()) do
 			if v.Name == 'Notification' then
-				if v.NotifPos.Value < NotifPos.Value and v.CanTween.Value == true then
-					v.NotifPos.Value = v.NotifPos.Value + (Notification.Size.Y.Offset + 10)
+				v.NotifPos.Value = v.NotifPos.Value - (Notification.Size.Y.Offset + 10)
+				if v.CanTween.Value then
 					QTween(v, 0.5, {Position = UDim2.new(1, -10, 1, v.NotifPos.Value)})
 				end
 			end
 		end
-		wait(0.5)
-		Notification:Destroy()
+		Notification.Name = 'Notification'
+	
+		BTween(Notification, 0.5, {Position = UDim2.new(1, -10, 1, NotifPos.Value)})
+	
+		delay(Duration, function()
+			CanTween.Value = false
+			BTween(Notification, 0.5, {Position = UDim2.new(1, Notification.AbsoluteSize.X + 5, 1, NotifPos.Value)}, true)
+			for _, v in pairs(Ayarum:GetChildren()) do
+				if v.Name == 'Notification' then
+					if v.NotifPos.Value < NotifPos.Value and v.CanTween.Value == true then
+						v.NotifPos.Value = v.NotifPos.Value + (Notification.Size.Y.Offset + 10)
+						QTween(v, 0.5, {Position = UDim2.new(1, -10, 1, v.NotifPos.Value)})
+					end
+				end
+			end
+			wait(0.5)
+			Notification:Destroy()
+		end)
 	end)
 end
 
