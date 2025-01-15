@@ -1034,15 +1034,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		local AmountSpawned = 0
 		local ChildAddedFunc
 		local AddedZombies = {}
-		local DoneSpawning = false
 		ChildAddedFunc = Workspace.ChildAdded:Connect(function(Child)
 			if Child.Name == 'Zombie' and AddedZombies[Child] == nil then
 				print('Zombie Added')
 				AddedZombies[Child] = true
-				if AmountSpawned >= Amount then
-					DoneSpawning = true
-					ChildAddedFunc:Disconnect()
-				end
 
 				repeat wait() until FindInstances(Child, ZombieInstances) and Child:FindFirstChild('IsBuildingMaterial')
 				print('Found Instances')
@@ -1064,7 +1059,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						repeat wait() until Child:FindFirstChild('Control')
 						print('Moved Control to Zombie')
 						Remote.ReplicateModel:FireServer(Child, CFrame.new(0, 0, 0) + Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 0, math.random(-15, 15)))
-						AmountSpawned = AmountSpawned + 1
 					else
 						print('Failure, Deleting Zombie...')
 						Delete(Control)
@@ -1074,14 +1068,13 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 		end)
 
-		spawn(function()
-			for i = 1, Amount do
-				Remote.PlaceMaterial:FireServer('Zombie', Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 5, math.random(-15, 15)))
-				wait(0.1)
-			end
-		end)
+		for i = 1, Amount do
+			Remote.PlaceMaterial:FireServer('Zombie', Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 5, math.random(-15, 15)))
+			wait(0.1)
+		end
 
-		repeat wait() until DoneSpawning
+		wait(1)
+
 		Delete(Zombie)
 		if OldZomb then
 			ChangeParent(OldZomb, Materials)
