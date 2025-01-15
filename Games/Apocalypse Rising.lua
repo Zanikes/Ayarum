@@ -1036,31 +1036,24 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		local AddedZombies = {}
 		ChildAddedFunc = Workspace.ChildAdded:Connect(function(Child)
 			if Child.Name == 'Zombie' and AddedZombies[Child] == nil then
-				print('Zombie Added')
 				AddedZombies[Child] = true
 
 				repeat wait() until FindInstances(Child, ZombieInstances) and Child:FindFirstChild('IsBuildingMaterial')
-				print('Found Instances')
-				if not Child.Parent then print('Parent is Nil!'); return end
+				if not Child.Parent then return end
 
 				ChangeParent(Child, Workspace.Zombies)
 				repeat wait() until Child.Parent == Workspace.Zombies
-				print('Moved Zombie to Workspace.Zombies')
 				local Control = Child.Control
 				ChangeParent(Control, ReplicatedStorage)
 				ChangeParent(Child.Head:WaitForChild('Humanoid'), Child)
 				repeat wait() until Control.Parent == ReplicatedStorage and Child:FindFirstChild('Humanoid')
-				print('Moved Control to ReplicatedStorage')
 
 				spawn(function()
 					if Player.Character ~= nil and Player.Character:FindFirstChild('Head') then
-						print('Found Character')
 						ChangeParent(Control, Child)
 						repeat wait() until Child:FindFirstChild('Control')
-						print('Moved Control to Zombie')
 						Remote.ReplicateModel:FireServer(Child, CFrame.new(0, 0, 0) + Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 0, math.random(-15, 15)))
 					else
-						print('Failure, Deleting Zombie...')
 						Delete(Control)
 						Delete(Child)
 					end
@@ -1069,6 +1062,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end)
 
 		for i = 1, Amount do
+			if not Player.Character or not Player.Character.Head then break end
 			Remote.PlaceMaterial:FireServer('Zombie', Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 5, math.random(-15, 15)))
 			wait(0.1)
 		end
