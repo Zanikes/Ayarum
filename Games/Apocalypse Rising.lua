@@ -226,6 +226,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 
 	local function GetMid(Item)
+		local Base = Item:FindFirstChild('Essentials'):FindFirstChild('Base')
+		if Base then return Base.Position end
+
 		local Tab = {['LowX'] = nil, ['HighX'] = nil, ['LowY'] = nil, ['HighY'] = nil, ['LowZ'] = nil, ['HighZ'] = nil}
 		local List = Item
 		if typeof(Item) ~= 'table' then
@@ -2696,8 +2699,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 			Text.Color = Color3.fromRGB(0, 255, 100)
 			Text.Text = Veh.Name
-			Text.Size = 20
-			Text.Font = 1
+			Text.Size = 16
+			Text.Font = 3
 			Text.ZIndex = 1
 
 			Line2.Color = Color3.fromRGB(0, 255, 100)
