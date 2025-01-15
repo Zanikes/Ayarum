@@ -2451,6 +2451,7 @@ function Library:Notify(Message, Duration)
 		local NotifPos = Instance.new('IntValue')
 		local CanTween = Instance.new('BoolValue')
 	
+		print(tostring(Ayarum))
 		Notification.Parent = Ayarum
 		Notification.AnchorPoint = Vector2.new(1, 1)
 		Notification.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
