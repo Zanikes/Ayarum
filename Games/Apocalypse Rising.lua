@@ -109,7 +109,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local function fireServer(RemoteName, ...)
 		for _, v in pairs(Remote:GetChildren()) do
 			if v:IsA('RemoteEvent') and v.Name == RemoteName then
-				v:FireServer(Serial({...}, GrabKey()))
+				spawn(v:FireServer(Serial({...}, GrabKey())))
 			end
 		end
 	end
