@@ -4709,7 +4709,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	Sections.Client.Character:AddButton({text = 'Remove Fall Damage', callback = function()
 		if Client.PlayerGui.HitEqualsYouDie:FindFirstChild('JumpLimiter') then
 			Delete(Client.PlayerGui.HitEqualsYouDie.JumpLimiter)
-			library:Notify('Removed Fall Damage')
+			Notify('Removed Fall Damage')
 		else
 			Notify('Fall Damage has already been removed!')
 		end
