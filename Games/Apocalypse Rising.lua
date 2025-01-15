@@ -1513,7 +1513,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		return Lowest
 	end
 
-	local CTab = {'Bright red', 'Bright blue', 'Bright green', 'Bright orange', 'Bright yellow', 'Bright bluish green', 'Bright violet', 'Grime', 'Earth green', 'Navy blue', 'Dusty Rose', 'Black', 'Reddish brown', 'Nougat', 'Brick yellow', 'Really blue', 'Really red', 'New Yeller', 'Lime green', 'Hot pink', 'White', 'Really black', 'Deep orange', 'Cyan', 'Slime green', 'Alder', 'Royal purple', 'CGA brown', 'Maroon', 'Gold', 'Cool yellow', 'Cashmere', 'Dirt brown', 'Crimson', 'Institutional white', 'Pearl', 'Baby blue', 'Sea green', 'Salmon', 'Light reddish violet', 'Pink', 'Pastel violet', 'Alder', 'Pastel blue-green', 'Persimmon', 'Quill grey', 'Cool yellow', 'Pastel light blue', 'Br. yellowish orange', 'Laurel green', 'Pastel blue-green', 'Khaki', 'Cashmere', 'Grime', 'Toothpaste', 'Neon orange', 'Teal', 'Camo', 'Terra Cotta', 'Electric blue', 'Fog', 'Pastel yellow', 'Lily white', 'Dark stone grey', 'Sand red'}
+	local ColorsTab = {'Bright red', 'Bright blue', 'Bright green', 'Bright orange', 'Bright yellow', 'Bright bluish green', 'Bright violet', 'Grime', 'Earth green', 'Navy blue', 'Dusty Rose', 'Black', 'Reddish brown', 'Nougat', 'Brick yellow', 'Really blue', 'Really red', 'New Yeller', 'Lime green', 'Hot pink', 'White', 'Really black', 'Deep orange', 'Cyan', 'Slime green', 'Alder', 'Royal purple', 'CGA brown', 'Maroon', 'Gold', 'Cool yellow', 'Cashmere', 'Dirt brown', 'Crimson', 'Institutional white', 'Pearl', 'Baby blue', 'Sea green', 'Salmon', 'Light reddish violet', 'Pink', 'Pastel violet', 'Alder', 'Pastel blue-green', 'Persimmon', 'Quill grey', 'Cool yellow', 'Pastel light blue', 'Br. yellowish orange', 'Laurel green', 'Pastel blue-green', 'Khaki', 'Cashmere', 'Grime', 'Toothpaste', 'Neon orange', 'Teal', 'Camo', 'Terra Cotta', 'Electric blue', 'Fog', 'Pastel yellow', 'Lily white', 'Dark stone grey', 'Sand red'}
 	local ViewingTab = {false, 'Name', 'Model'}
 	local function PreviewItem(BaseName, Part, Bool, Offset)
 		if BaseName == false then
@@ -1592,8 +1592,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						Pos = Tab[i][a][2] + Pos
 					end
 					if C:IsA('BasePart') then
-						if Tab[i][a]['CID'] ~= nil and CTab[tonumber(Tab[i][a]['CID'])] ~= nil then
-							C.BrickColor = BrickColor.new(CTab[tonumber(Tab[i][a]['CID'])])
+						if Tab[i][a]['CID'] ~= nil and ColorsTab[tonumber(Tab[i][a]['CID'])] ~= nil then
+							C.BrickColor = BrickColor.new(ColorsTab[tonumber(Tab[i][a]['CID'])])
 						end
 						C.Transparency = 0.6
 						C.CanCollide = false
