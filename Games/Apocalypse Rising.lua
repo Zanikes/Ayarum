@@ -1077,6 +1077,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		spawn(function()
 			for i = 1, Amount do
 				Remote.PlaceMaterial:FireServer('Zombie', Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 5, math.random(-15, 15)))
+				wait(0.1)
 			end
 		end)
 
