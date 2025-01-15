@@ -110,7 +110,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		for _, v in pairs(Remote:GetChildren()) do
 			if v:IsA('RemoteEvent') and v.Name == RemoteName then
 				v:FireServer(Serial({...}, GrabKey()))
-				return
 			end
 		end
 	end
