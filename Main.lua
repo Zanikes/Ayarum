@@ -1,4 +1,4 @@
-local AVer = '4.8'
+local AVer = '5.0'
 
 repeat wait() until game:IsLoaded()
 
@@ -1060,7 +1060,7 @@ spawn(function()
 		if not getgenv().AyarumWatermark then return end
 		getgenv().AyarumWatermark.Text = ''
 		if library.flags['showMark'] then
-			getgenv().AyarumWatermark.Text = 'Ayarum Hub - Version 4.1'
+			getgenv().AyarumWatermark.Text = 'Ayarum Hub - Version ' .. AVer
 		end
 		if library.flags['showMem'] then
 			local Mem = SetDecimal(Stats.PerformanceStats.Memory:GetValue(), 2) .. ' MB'
