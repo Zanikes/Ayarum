@@ -3471,6 +3471,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			return
 		end
 		if library.flags['Import at Mouse'] == true then
+			Notify('Ready to Import\nEnter: Confirm\nBackspace: Cancel')
+			PreviewItem(SelectedBase, MousePart, false)
+			wait()
+			ImportWaiting = true
 			spawn(function()
 				while library and ImportWaiting do
 					wait()
@@ -3483,10 +3487,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					end
 				end
 			end)
-			Notify('Ready to Import\nEnter: Confirm\nBackspace: Cancel')
-			PreviewItem(SelectedBase, MousePart, false)
-			wait()
-			ImportWaiting = true
 		else
 			ImportWaiting = false
 			PreviewItem(false)
