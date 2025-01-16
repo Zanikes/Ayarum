@@ -649,9 +649,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 		if not Parent:FindFirstChild(ValueName) then
 			Remote.AddClothing:FireServer(ValueName, Parent, Value, '', '')
-			repeat wait() until Parent:FindFirstChild(ValueName)
 		end
-		return Parent:FindFirstChild(ValueName)
+		return Parent:WaitForChild(ValueName)
 	end
 
 	local function Teleport(Player, Param)
@@ -842,53 +841,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				end
 			end
 		end
-	end
-
-	local function MakeInt(Name, Parent, Value)
-		Remote.GroupCreate:FireServer(Name)
-		local Int = Lighting.Groups:WaitForChild(Name)
-		ChangeValue(Int, tonumber(Value))
-		ChangeParent(Int, Parent)
-		repeat wait() until Int.Parent == Parent
-		for _, v in pairs(Int:GetChildren()) do
-			Delete(v)
-		end
-	end
-
-	local function SetSlot(Slot, Item)
-		local ObjectID = AddInstance('ObjectID', Slot)
-		ChangeValue(ObjectID, Item.Value)
-		for _, v in pairs(ObjectID:GetChildren()) do
-			if v.Name == '' then
-				Delete(v)
-			end
-		end
-		if Item:FindFirstChild('Clip') then
-			local Clip = AddInstance('Clip', ObjectID)
-			ChangeValue(Clip, Item.Clip.Value)
-			for _, v in pairs(Clip:GetChildren()) do
-				if v.Name == '' then
-					Delete(v)
-				end
-			end
-			for _, v in pairs(Item.Clip:GetChildren()) do
-				MakeInt(v.Name, Clip, v.Value)
-			end
-		end
-		ChangeValue(Slot, 1)
-		repeat wait() until Slot.Value == 1
-	end
-
-	local function StealSlot(FromSlot, ToSlot)
-		if ToSlot:FindFirstChild('ObjectID') then
-			Delete(ToSlot.ObjectID)
-			ChangeValue(ToSlot, 0)
-			repeat wait() until ToSlot.Value == 0
-		end
-		ChangeValue(FromSlot, 0)
-		ChangeParent(FromSlot.ObjectID, ToSlot)
-		ChangeValue(ToSlot, 1)
-		repeat wait() until ToSlot.Value == 1
 	end
 
 	local function SetPlayerInvis(Plr, Value)
@@ -2844,38 +2796,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		{'Tornado', 'Sheets', ReplicatedStorage.Rain}
 	}
 
-	local function LoadKit(Kit, Player)
-		WipeInv(Player, true)
-		if Kit['backpack'] then
-			SetSlot(Player.playerstats.slots.slotbackpack, LootDrops[Kit['backpack']].ObjectID)
-		end
-		for Slot, Item in pairs(Kit) do
-			if Slot == 'backpack' then continue end
-			Slot = Player.playerstats.slots:FindFirstChild('slot' .. tostring(Slot))
-			Item = LootDrops:FindFirstChild(Item)
-			if not Slot or not Item then continue end
-			spawn(function()
-				SetSlot(Slot, Item.ObjectID)
-			end)
-			Limiter()
-		end
-	end
-	--[[LoadKit({
-		['backpack'] = 'MilitaryPackBlack',
-		['primary'] = 'HK21',
-		['secondary'] = 'G18',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M14Ammo50',
-		'M9Ammo32',
-		'M9Ammo32'
-	}, Client)]]
-
 	Sections.Players.Groups:AddButton({text = 'Join Group', callback = function()
 		local Player = ReturnPlayers()[1]
 		if not Player or CheckGroup(Player) then return end
@@ -4461,61 +4381,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		for _, Player in pairs(ReturnPlayers()) do
 			WipeInv(Player)
 			Notify('Deleted ' .. Player.Name .. '\'s Inventory')
-		end
-	end})
-	local StealWarning = library:AddWarning({type = 'confirm'})
-	Sections.Players.Abusive:AddButton({text = 'Steal Player Inventory', callback = function()
-		local Player = ReturnPlayers()[1]
-		if not Player then return end
-		if Player == Client then
-			Notify('Cannot steal your own Inventory!')
-			return
-		end
-		StealWarning.text = 'Are you sure you want to steal <b>' .. Player.Name .. '\'s</b> Inventory?\nThis will erase yours in the process!'
-		if StealWarning:Show() then
-			WipeInv(Client)
-
-			for _, v in pairs(Player.playerstats.slots:GetChildren()) do
-				if v.Name == 'slotbackpack' and v.Value == 1 and v:FindFirstChild('ObjectID') then
-					SetSlot(Client.playerstats.slots.slotbackpack, v.ObjectID)
-				elseif (v.Name == 'slotprimary' or v.Name == 'slotsecondary') and v.Value == 1 and v:FindFirstChild('ObjectID') then
-					SetSlot(Client.playerstats.slots[v.Name], v.ObjectID)
-				end
-			end
-
-			for i = 1, 20 do
-				local v = Player.playerstats.slots['slot' .. tostring(i)]
-				if v.Value == 1 and v:FindFirstChild('ObjectID') then
-					SetSlot(Client.playerstats.slots[v.Name], v.ObjectID)
-				end
-			end
-
-			for i = 1, 7 do
-				local v = Player.playerstats.utilityslots['slot' .. tostring(i)]
-				if v.Value == 1 and v:FindFirstChild('ObjectID') then
-					SetSlot(Client.playerstats.utilityslots[v.Name], v.ObjectID)
-				end
-			end
-
-			for _, v in pairs(Player.playerstats.attachments:GetChildren()) do
-				for _, a in pairs(v:GetChildren()) do
-					if a.Value == 1 and a:FindFirstChild('ObjectID') then
-						SetSlot(Client.playerstats.attachments[v.Name][a.Name], a.ObjectID)
-					end
-				end
-			end
-
-			for _, v in pairs(Player.playerstats.character:GetChildren()) do
-				if v.Name == 'hat' or v.Name == 'accessory' then
-					if v.Value == 1 and v:FindFirstChild('ObjectID') then
-						SetSlot(Client.playerstats.character[v.Name], v.ObjectID)
-					end
-				end
-			end
-
-			WipeInv(Player)
-
-			Notify('Stole ' .. Player.Name .. '\'s Inventory')
 		end
 	end})
 	Sections.Players.Abusive:AddButton({text = 'Steal Player C4', callback = function()
