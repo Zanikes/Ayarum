@@ -466,7 +466,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		until not library.flags['collect']
 	end})
 	Sections.Main.Misc:AddToggle({text = 'Parts ESP', state = false, callback = function()
-		for _, v in pairs(Workspace.Parts:GetChildren()) do
+		for _, v in pairs(Workspace._Parts:GetChildren()) do
 			AddPartEsp(v, Color3.fromRGB(255, 65, 65))
 		end
 	end})
