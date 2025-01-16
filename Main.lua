@@ -84,6 +84,8 @@ end
 
 local Tabs = {}
 local Sections = {}
+local CollectionService = game:GetService('CollectionService')
+local GuiService = game:GetService('GuiService')
 local HttpService = game:GetService('HttpService')
 local InputService = game:GetService('UserInputService')
 local RunService = game:GetService('RunService')
@@ -95,6 +97,7 @@ local Stats = game:GetService('Stats')
 local Client = Players.LocalPlayer
 local Camera = Workspace.CurrentCamera
 local Mouse = Client:GetMouse()
+local GuiInset = GuiService:GetGuiInset().Y
 
 local EspSettings = {
 	Enabled = false,
@@ -104,15 +107,15 @@ local EspSettings = {
 	TextSize = 20,
 	Font = 'UI',
 
-	BoxEnabled = false,
-	BoxThickness = 1,
-	BoxHealthBar = false,
-
 	TracersEnabled = false,
 	TracerThickness = 1,
 	TracerStem = false,
 	TracerFrom = 'Bottom',
 	TracerTo = 'Feet',
+
+	BoxEnabled = false,
+	BoxThickness = 1,
+	BoxHealthBar = false,
 
 	ChamsEnabled = false,
 	ChamsFillTransparency = 0.5,
@@ -158,7 +161,7 @@ local function SetDecimal(Number, Amount)
 	return NewNum
 end
 
-local function Distance(PointA, PointB)
+local function GetDistance(PointA, PointB)
 	return math.sqrt(math.pow(PointA.X - PointB.X, 2) + math.pow(PointA.Y - PointB.Y, 2))
 end
 
@@ -166,7 +169,7 @@ local function GetClosest(Points, Dest)
 	local Min = math.huge
 	local Closest = nil
 	for _, v in pairs(Points) do
-		local Dist = Distance(v, Dest)
+		local Dist = GetDistance(v, Dest)
 		if Dist < Min then
 			Min = Dist
 			Closest = v
@@ -251,16 +254,88 @@ local function GetClosestPlr()
 	return Closest
 end
 
-local function DrawName(Player)
-	local TextDrawing = Drawing.new('Text')
-	TextDrawing.Center = true
-	TextDrawing.OutlineColor = Color3.new(0, 0, 0)
-	TextDrawing.Visible = false
-	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar = GetCharacter(Client)
+local RenderList = {}
+local function AddPlayer(Player)
+	local Drawings = {
+		['Active'] = true,
+
+		['Name'] = Drawing.new('Text'),
+
+		['Tracer'] = Drawing.new('Line'),
+		['Stem'] = Drawing.new('Line'),
+
+		['Box'] = Drawing.new('Quad'),
+		['Bar'] = Drawing.new('Square'),
+		['Line'] = Drawing.new('Line'),
+
+		['Cham'] = Instance.new('Highlight')
+	}
+
+	Drawings.Name.Center = true
+	Drawings.Name.OutlineColor = Color3.new(0, 0, 0)
+	Drawings.Name.Outline = EspSettings.TextOutline
+	Drawings.Name.Size = EspSettings.TextSize
+	Drawings.Name.Font = EspSettings.Fonts[EspSettings.Font]
+	Drawings.Name.Transparency = 1 - EspSettings.Transparency
+	Drawings.Name.Visible = false
+
+	Drawings.Tracer.Thickness = EspSettings.TracerThickness
+	Drawings.Tracer.Transparency = 1 - EspSettings.Transparency
+	Drawings.Tracer.Visible = false
+	Drawings.Stem.Thickness = EspSettings.TracerThickness
+	Drawings.Stem.Transparency = 1 - EspSettings.Transparency
+	Drawings.Stem.Visible = false
+
+	Drawings.Box.Thickness = EspSettings.BoxThickness
+	Drawings.Box.Transparency = 1 - EspSettings.Transparency
+	Drawings.Box.Visible = false
+	Drawings.Bar.Filled = true
+	Drawings.Bar.Visible = false
+	Drawings.Bar.Transparency = 1 - EspSettings.Transparency
+	Drawings.Line.Thickness = 1
+	Drawings.Line.Transparency = 1 - EspSettings.Transparency
+	Drawings.Line.Visible = false
+
+	Drawings.Cham.Enabled = false
+	Drawings.Cham.FillTransparency = EspSettings.ChamsFillTransparency
+	Drawings.Cham.OutlineColor = EspSettings.ChamsOutlineColor
+	Drawings.Cham.OutlineTransparency = EspSettings.ChamsOutlineTransparency
+
+	RenderList[Player.Name] = Drawings
+end
+for _, v in pairs(Players:GetPlayers()) do
+	if v == Client then continue end
+	AddPlayer(v)
+end
+
+local LastRefresh = 0
+local function Update()
+	if (tick() - LastRefresh) < 0.005 then return end
+	LastRefresh = tick()
+
+	local ClientChar = GetCharacter(Client)
+	local MousePos = Client:GetMouse()
+	local ClosestPlr
+	local CTorso
+	if EspSettings.HighlightClosest then
+		ClosestPlr = GetClosestPlr()
+	end
+	if ClientChar then
+		for _, t in pairs(ClientChar:GetChildren()) do
+			if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
+				CTorso = t
+				break
+			end
+		end
+	end
+
+	for Player, Drawings in pairs(RenderList) do
+		if not Drawings.Active then continue end
+		Player = Players:FindFirstChild(Player)
+		if not Player then continue end
+
 		local Char = GetCharacter(Player)
 		local Torso
-		local CTorso
 		if Char then
 			for _, t in pairs(Char:GetChildren()) do
 				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
@@ -269,25 +344,11 @@ local function DrawName(Player)
 				end
 			end
 		end
-		if ClientChar then
-			for _, t in pairs(ClientChar:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					CTorso = t
-					break
-				end
-			end
-		end
+
 		if Char and ClientChar and Char:FindFirstChild('Head') and Torso and CTorso then
 			local Distance = (Torso.Position - CTorso.Position).Magnitude
 			local Vector, OnScreen = Camera:WorldToScreenPoint(Char.Head.Position)
 			if OnScreen then
-				TextDrawing.Size = EspSettings.TextSize
-				TextDrawing.Outline = EspSettings.TextOutline
-				TextDrawing.Color = EspSettings.Color
-				TextDrawing.Font = EspSettings.Fonts[EspSettings.Font]
-				TextDrawing.Visible = true
-				TextDrawing.Text = Player.Name
-				TextDrawing.Transparency = 1 - EspSettings.Transparency
 				local Points = {}
 				local Tab = 0
 				for _, v in pairs(Char:GetChildren()) do
@@ -306,416 +367,201 @@ local function DrawName(Player)
 						Points[Tab] = Pos
 					end
 				end
-				local Top = GetClosest(Points, Vector2.new(Vector.X, 0))
 
-				if Top then
-					TextDrawing.Position = Vector2.new(Vector.X, Top.Y - 36)
-					TextDrawing.Visible = true
-				else
-					TextDrawing.Visible = false
-				end
-				if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and IsDead(Player)) then
-					TextDrawing.Visible = false
-				end
-				if EspSettings.ShowDistance == true then
-					TextDrawing.Text = TextDrawing.Text .. '\n[' .. string.format('%.0f', Distance) .. ']'
-				end
-				if EspSettings.ShowHealth == true then
-					local DropLine = EspSettings.ShowDistance == false and '\n' or ' '
-					TextDrawing.Text = TextDrawing.Text .. DropLine .. '[' .. string.split(tostring(GetHealth(Player)), '.')[1] .. '/' .. tostring(GetMaxHealth(Player)) .. ']'
-				end
-				if GetClosestPlr() == Player then
-					TextDrawing.ZIndex = 1
-					if EspSettings.HighlightClosest == true then
-						TextDrawing.Color = EspSettings.HighlightColor
-					end
-				else
-					TextDrawing.ZIndex = 0
-				end
-			else
-				TextDrawing.Visible = false
-			end
-		else
-			TextDrawing.Visible = false
-		end
-	end)
-	local Removed = false
-	local LeavingEvent
-	LeavingEvent = Players.PlayerRemoving:Connect(function(LeavingPlayer)
-		if LeavingPlayer == Player and not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			TextDrawing:Remove()
-			LeavingEvent:Disconnect()
-		end
-	end)
-	spawn(function()
-		repeat wait() until EspSettings.Enabled == false
-		if not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			TextDrawing:Remove()
-			LeavingEvent:Disconnect()
-		end
-	end)
-end
-
-local function DrawTracer(Player)
-	local Tracer = Drawing.new('Line')
-	local Stem = Drawing.new('Line')
-	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar = GetCharacter(Client)
-		local Char = GetCharacter(Player)
-		local Torso
-		local CTorso
-		if Char then
-			for _, t in pairs(Char:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					Torso = t
-					break
-				end
-			end
-		end
-		if ClientChar then
-			for _, t in pairs(ClientChar:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					CTorso = t
-					break
-				end
-			end
-		end
-		if ClientChar and Char and Torso and CTorso and Char:FindFirstChild('Head') then
-			local Distance = (Torso.Position - CTorso.Position).Magnitude
-			local Vector, OnScreen = Camera:WorldToScreenPoint(Torso.Position)
-			if OnScreen then
-				local MousePos = Client:GetMouse()
-				Tracer.Visible = true
-				Tracer.Transparency = 1 - EspSettings.Transparency
-				Tracer.Color = EspSettings.Color
-				Tracer.Thickness = EspSettings.TracerThickness
-				Stem.Visible = EspSettings.TracerStem
-				Stem.Transparency = 1 - EspSettings.Transparency
-				Stem.Color = EspSettings.Color
-				Stem.Thickness = EspSettings.TracerThickness
-				local FromList = {
-					['Top'] = Vector2.new(Camera.ViewportSize.X / 2, 0),
-					['Bottom'] = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y),
-					['Mouse'] = Vector2.new(MousePos.X, MousePos.Y + 36)
-				}
-				Tracer.From = FromList[EspSettings.TracerFrom]
-				if GetClosestPlr() == Player then
-					Tracer.ZIndex = 1
-					Stem.ZIndex = 1
-					if EspSettings.HighlightClosest == true then
-						Tracer.Color = EspSettings.HighlightColor
-						Stem.Color = EspSettings.HighlightColor
-					end
-				else
-					Tracer.ZIndex = 0
-					Stem.ZIndex = 0
-				end
-				local Points = {}
-				local Tab = 0
-				for _, v in pairs(Char:GetChildren()) do
-					if v:IsA('BasePart') then
-						Tab = Tab + 1
-						local Pos = Camera:WorldToViewportPoint(v.Position)
-						if v.Name == 'Torso' or v.Name == 'UpperTorso' then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(0, 0, -v.Size.Z)).p)
-						elseif v.Name == 'Head' then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(0, v.Size.Y / 2, v.Size.Z / 1.25)).p)
-						elseif string.match(v.Name, 'Left') then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(-v.Size.X / 2, 0, 0)).p)
-						elseif string.match(v.Name, 'Right') then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(v.Size.X / 2, 0, 0)).p)
-						end
-						Points[Tab] = Pos
-					end
-				end
 				local Top = GetClosest(Points, Vector2.new(Vector.X, 0))
 				local Bottom = GetClosest(Points, Vector2.new(Vector.X, Camera.ViewportSize.Y))
-
-				if Top and Bottom then
-					local ToList = {
-						['Head'] = Vector2.new(Vector.X, Top.Y),
-						['Feet'] = Vector2.new(Vector.X, Bottom.Y)
-					}
-					Tracer.To = ToList[EspSettings.TracerTo]
-					Tracer.Visible = true
-					Stem.From = ToList.Feet
-					Stem.To = ToList.Head
-					Stem.Visible = EspSettings.TracerStem
-				else
-					Tracer.Visible = false
-					Stem.Visible = false
-				end
-				if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and IsDead(Player)) then
-					Tracer.Visible = false
-					Stem.Visible = false
-				end
-			else
-				Tracer.Visible = false
-				Stem.Visible = false
-			end
-		else
-			Tracer.Visible = false
-			Stem.Visible = false
-		end
-	end)
-	local Removed = false
-	local LeavingEvent
-	LeavingEvent = Players.PlayerRemoving:Connect(function(LeavingPlayer)
-		if LeavingPlayer == Player and not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			Tracer:Remove()
-			Stem:Remove()
-			LeavingEvent:Disconnect()
-		end
-	end)
-	spawn(function()
-		repeat wait() until EspSettings.TracersEnabled == false
-		if not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			Tracer:Remove()
-			Stem:Remove()
-			LeavingEvent:Disconnect()
-		end
-	end)
-end
-
-local function DrawBox(Player)
-	local Box = Drawing.new('Quad')
-	Box.Visible = false
-	Box.Thickness = 1
-	local Bar = Drawing.new('Square')
-	Bar.Filled = true
-	Bar.Visible = false
-	local Line = Drawing.new('Line')
-	Line.Thickness = 1
-	Line.Visible = false
-	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar = GetCharacter(Client)
-		local Char = GetCharacter(Player)
-		local Torso
-		local CTorso
-		if Char then
-			for _, t in pairs(Char:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					Torso = t
-					break
-				end
-			end
-		end
-		if ClientChar then
-			for _, t in pairs(ClientChar:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					CTorso = t
-					break
-				end
-			end
-		end
-		if Char and ClientChar and Torso and CTorso and not IsDead(Player) then
-			local Dist = (Torso.Position - CTorso.Position).Magnitude
-			local Vector, OnScreen = Camera:WorldToScreenPoint(Torso.Position)
-			if OnScreen then
-				Box.Color = EspSettings.Color
-				Box.Visible = true
-				Box.Transparency = 1 - EspSettings.Transparency
-				Bar.Transparency = 1 - EspSettings.Transparency
-				Line.Transparency = 1 - EspSettings.Transparency
-				Line.Color = EspSettings.Color
-				if GetClosestPlr() == Player then
-					Box.ZIndex = 1
-					Bar.ZIndex = 1
-					Line.ZIndex = 1
-					if EspSettings.HighlightClosest == true then
-						Box.Color = EspSettings.HighlightColor
-						Line.Color = EspSettings.HighlightColor
-					end
-				else
-					Box.ZIndex = 0
-					Bar.ZIndex = 0
-					Line.ZIndex = 0
-				end
-				if EspSettings.BoxHealthBar then
-					Bar.Visible = true
-					Line.Visible = true
-				else
-					Bar.Visible = false
-					Line.Visible = false
-				end
-				local Points = {}
-				local Tab = 0
-				for _, v in pairs(Char:GetChildren()) do
-					if v:IsA('BasePart') then
-						Tab = Tab + 1
-						local Pos = Camera:WorldToViewportPoint(v.Position)
-						if v.Name == 'Torso' or v.Name == 'UpperTorso' then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(0, 0, -v.Size.Z)).p)
-						elseif v.Name == 'Head' then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(0, v.Size.Y / 2, v.Size.Z / 1.25)).p)
-						elseif string.match(v.Name, 'Left') then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(-v.Size.X / 2, 0, 0)).p)
-						elseif string.match(v.Name, 'Right') then
-							Pos = Camera:WorldToViewportPoint((v.CFrame * CFrame.new(v.Size.X / 2, 0, 0)).p)
-						end
-						Points[Tab] = Pos
-					end
-				end
 				local Left = GetClosest(Points, Vector2.new(0, Vector.Y))
 				local Right = GetClosest(Points, Vector2.new(Camera.ViewportSize.X, Vector.Y))
-				local Top = GetClosest(Points, Vector2.new(Vector.X, 0))
-				local Bottom = GetClosest(Points, Vector2.new(Vector.X, Camera.ViewportSize.Y))
 
-				if Left and Right and Top and Bottom then
-					Box.PointA = Vector2.new(Right.X, Top.Y)
-					Box.PointB = Vector2.new(Left.X, Top.Y)
-					Box.PointC = Vector2.new(Left.X, Bottom.Y)
-					Box.PointD = Vector2.new(Right.X, Bottom.Y)
-					Box.Visible = true
+				local PlrHealth = GetHealth(Player)
+				local PlrMaxHealth = GetMaxHealth(Player)
+				local PlrIsDead = IsDead(Player)
 
-					local BoxHeight = Bottom.Y - Top.Y
-					local HealthPercent = GetHealth(Player) / GetMaxHealth(Player)
-					Bar.Size = Vector2.new(EspSettings.BoxThickness, -(BoxHeight * HealthPercent) + 1)
-					Bar.Position = Vector2.new(Left.X + 0.5, Bottom.Y - 0.5)
-					Bar.Color = Color3.new(1 - HealthPercent, HealthPercent, 0)
-					Line.From = Vector2.new(Bar.Position.X + Bar.Size.X, Top.Y)
-					Line.To = Vector2.new(Bar.Position.X + Bar.Size.X, Bottom.Y)
-					if EspSettings.BoxHealthBar then
-						Bar.Visible = true
-						Line.Visible = true
+				if EspSettings.Enabled then
+					Drawings.Name.Color = EspSettings.Color
+					Drawings.Name.Text = Player.Name
+
+					if Top then
+						Drawings.Name.Position = Vector2.new(Vector.X, Top.Y - GuiInset)
+						Drawings.Name.Visible = true
 					else
-						Bar.Visible = false
-						Line.Visible = false
+						Drawings.Name.Visible = false
+					end
+					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
+						Drawings.Name.Visible = false
+					end
+					if EspSettings.ShowDistance == true then
+						Drawings.Name.Text = Drawings.Name.Text .. '\n[' .. string.format('%.0f', Distance) .. ']'
+					end
+					if EspSettings.ShowHealth == true then
+						local DropLine = EspSettings.ShowDistance == false and '\n' or ' '
+						Drawings.Name.Text = Drawings.Name.Text .. DropLine .. '[' .. string.split(tostring(PlrHealth), '.')[1] .. '/' .. tostring(PlrMaxHealth) .. ']'
+					end
+					if ClosestPlr == Player then
+						if EspSettings.HighlightClosest == true then
+							Drawings.Name.Color = EspSettings.HighlightColor
+						end
 					end
 				else
-					Box.Visible = false
-					Bar.Visible = false
-					Line.Visible = false
+					Drawings.Name.Visible = false
 				end
-				if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Dist > EspSettings.MaxDistance) then
-					Box.Visible = false
-					Bar.Visible = false
-					Line.Visible = false
+
+				if EspSettings.TracersEnabled then
+					Drawings.Tracer.Color = EspSettings.Color
+					Drawings.Stem.Color = EspSettings.Color
+					local FromList = {
+						['Top'] = Vector2.new(Camera.ViewportSize.X / 2, 0),
+						['Bottom'] = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y),
+						['Mouse'] = Vector2.new(MousePos.X, MousePos.Y + GuiInset)
+					}
+					Drawings.Tracer.From = FromList[EspSettings.TracerFrom]
+					if ClosestPlr == Player then
+						if EspSettings.HighlightClosest == true then
+							Drawings.Tracer.Color = EspSettings.HighlightColor
+							Drawings.Stem.Color = EspSettings.HighlightColor
+						end
+					end
+
+					if Top and Bottom then
+						local ToList = {
+							['Head'] = Vector2.new(Vector.X, Top.Y),
+							['Feet'] = Vector2.new(Vector.X, Bottom.Y)
+						}
+						Drawings.Tracer.To = ToList[EspSettings.TracerTo]
+						Drawings.Tracer.Visible = true
+						Drawings.Stem.From = ToList.Feet
+						Drawings.Stem.To = ToList.Head
+						Drawings.Stem.Visible = EspSettings.TracerStem
+					else
+						Drawings.Tracer.Visible = false
+						Drawings.Stem.Visible = false
+					end
+					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
+						Drawings.Tracer.Visible = false
+						Drawings.Stem.Visible = false
+					end
+				else
+					Drawings.Tracer.Visible = false
+					Drawings.Stem.Visible = false
+				end
+
+				if EspSettings.BoxEnabled then
+					Drawings.Box.Color = EspSettings.Color
+					Drawings.Line.Color = EspSettings.Color
+					if ClosestPlr == Player then
+						if EspSettings.HighlightClosest == true then
+							Drawings.Box.Color = EspSettings.HighlightColor
+							Drawings.Line.Color = EspSettings.HighlightColor
+						end
+					end
+					if EspSettings.BoxHealthBar then
+						Drawings.Bar.Visible = true
+						Drawings.Line.Visible = true
+					else
+						Drawings.Bar.Visible = false
+						Drawings.Line.Visible = false
+					end
+
+					if Left and Right and Top and Bottom then
+						Drawings.Box.PointA = Vector2.new(Right.X, Top.Y)
+						Drawings.Box.PointB = Vector2.new(Left.X, Top.Y)
+						Drawings.Box.PointC = Vector2.new(Left.X, Bottom.Y)
+						Drawings.Box.PointD = Vector2.new(Right.X, Bottom.Y)
+						Drawings.Box.Visible = true
+
+						if EspSettings.BoxHealthBar then
+							local BoxHeight = Bottom.Y - Top.Y
+							local HealthPercent = PlrHealth / PlrMaxHealth
+							Drawings.Bar.Size = Vector2.new(EspSettings.BoxThickness * 2, -(BoxHeight * HealthPercent) + 1)
+							Drawings.Bar.Position = Vector2.new(Left.X + 0.5, Bottom.Y - 0.5)
+							Drawings.Bar.Color = Color3.new(1 - HealthPercent, HealthPercent, 0)
+							Drawings.Line.From = Vector2.new(Drawings.Bar.Position.X + Drawings.Bar.Size.X, Top.Y)
+							Drawings.Line.To = Vector2.new(Drawings.Bar.Position.X + Drawings.Bar.Size.X, Bottom.Y)
+							Drawings.Bar.Visible = true
+							Drawings.Line.Visible = true
+						else
+							Drawings.Bar.Visible = false
+							Drawings.Line.Visible = false
+						end
+					else
+						Drawings.Box.Visible = false
+						Drawings.Bar.Visible = false
+						Drawings.Line.Visible = false
+					end
+					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
+						Drawings.Box.Visible = false
+						Drawings.Bar.Visible = false
+						Drawings.Line.Visible = false
+					end
+				else
+					Drawings.Box.Visible = false
+					Drawings.Bar.Visible = false
+					Drawings.Line.Visible = false
+				end
+
+				if EspSettings.ChamsEnabled then
+					if not Drawings.Cham or Drawings.Cham.Parent == nil then
+						Drawings.Cham = Instance.new('Highlight')
+						Drawings.Cham.Enabled = false
+						Drawings.Cham.FillTransparency = EspSettings.ChamsFillTransparency
+						Drawings.Cham.OutlineColor = EspSettings.ChamsOutlineColor
+						Drawings.Cham.OutlineTransparency = EspSettings.ChamsOutlineTransparency
+					end
+					Drawings.Cham.FillColor = EspSettings.ChamsColor
+					Drawings.Cham.Parent = Char
+					Drawings.Cham.Enabled = true
+					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
+						Drawings.Cham.Enabled = false
+					end
+					if ClosestPlr == Player and EspSettings.HighlightClosest == true then
+						Drawings.Cham.FillColor = EspSettings.HighlightColor
+					end
+				else
+					Drawings.Cham.Enabled = false
 				end
 			else
-				Box.Visible = false
-				Bar.Visible = false
-				Line.Visible = false
-			end
-		else
-			Box.Visible = false
-			Bar.Visible = false
-			Line.Visible = false
-		end
-	end)
-	local Removed = false
-	local LeavingEvent
-	LeavingEvent = Players.PlayerRemoving:Connect(function(LeavingPlayer)
-		if LeavingPlayer == Player and not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			Box:Remove()
-			Bar:Remove()
-			Line:Remove()
-			LeavingEvent:Disconnect()
-		end
-	end)
-	spawn(function()
-		repeat wait() until EspSettings.BoxEnabled == false
-		if not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			Box:Remove()
-			Bar:Remove()
-			Line:Remove()
-			LeavingEvent:Disconnect()
-		end
-	end)
-end
+				Drawings.Name.Visible = false
 
-local function DrawCham(Player)
-	local Cham = Instance.new('Highlight')
-	Cham.Enabled = false
-	local RenderEvent = RunService.RenderStepped:Connect(function()
-		local ClientChar = GetCharacter(Client)
-		local Char = GetCharacter(Player)
-		local Torso
-		local CTorso
-		if Char then
-			for _, t in pairs(Char:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					Torso = t
-					break
-				end
-			end
-		end
-		if ClientChar then
-			for _, t in pairs(ClientChar:GetChildren()) do
-				if (t.Name == 'Torso' or t.Name == 'UpperTorso') and (t.ClassName == 'Part' or t.ClassName == 'MeshPart') then
-					CTorso = t
-					break
-				end
-			end
-		end
-		if Char and ClientChar and Torso and CTorso then
-			if not Cham or Cham.Parent == nil then
-				Cham = Instance.new('Highlight')
-			end
-			local Distance = (Torso.Position - CTorso.Position).Magnitude
-			Cham.Enabled = true
-			Cham.FillColor = EspSettings.ChamsColor
-			Cham.FillTransparency = EspSettings.ChamsFillTransparency
-			Cham.OutlineColor = EspSettings.ChamsOutlineColor
-			Cham.OutlineTransparency = EspSettings.ChamsOutlineTransparency
-			Cham.Parent = Char
-			if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and IsDead(Player)) then
-				Cham.Enabled = false
-			end
-			if GetClosestPlr() == Player and EspSettings.HighlightClosest == true then
-				Cham.FillColor = EspSettings.HighlightColor
+				Drawings.Tracer.Visible = false
+				Drawings.Stem.Visible = false
+
+				Drawings.Box.Visible = false
+				Drawings.Bar.Visible = false
+				Drawings.Line.Visible = false
 			end
 		else
-			Cham.Enabled = false
+			Drawings.Name.Visible = false
+
+			Drawings.Tracer.Visible = false
+			Drawings.Stem.Visible = false
+
+			Drawings.Box.Visible = false
+			Drawings.Bar.Visible = false
+			Drawings.Line.Visible = false
+
+			Drawings.Cham.Enabled = false
 		end
-	end)
-	local Removed = false
-	local LeavingEvent
-	LeavingEvent = Players.PlayerRemoving:Connect(function(LeavingPlayer)
-		if LeavingPlayer == Player and not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			Cham:Destroy()
-			LeavingEvent:Disconnect()
-		end
-	end)
-	spawn(function()
-		repeat wait() until EspSettings.ChamsEnabled == false
-		if not Removed then
-			Removed = true
-			RenderEvent:Disconnect()
-			Cham:Destroy()
-			LeavingEvent:Disconnect()
-		end
-	end)
+	end
 end
 
 library:AddConnection(Players.PlayerAdded, function(Player)
-	if EspSettings.Enabled then
-		DrawName(Player)
-	end
-	if EspSettings.TracersEnabled then
-		DrawTracer(Player)
-	end
-	if EspSettings.BoxEnabled then
-		DrawBox(Player)
-	end
-	if EspSettings.ChamsEnabled then
-		DrawCham(Player)
-	end
+	AddPlayer(Player)
 end)
+
+library:AddConnection(Players.PlayerRemoving, function(Player)
+	local Drawings = RenderList[Player.Name]
+	if not Drawings then return end
+	Drawings.Active = false
+	for _, v in pairs(Drawings) do
+		if type(v) ~= "boolean" then
+			v:Remove()
+		end
+	end
+	table.remove(RenderList, table.find(RenderList, Player.Name))
+end)
+
+RunService:UnbindFromRenderStep('UpdateEsp')
+RunService:BindToRenderStep('UpdateEsp', 300, Update)
 
 local AimbotSettings = {
 	Enabled = false,
@@ -745,7 +591,7 @@ library:AddConnection(RunService.RenderStepped, function()
 	FOVCircle.NumSides = AimbotSettings.FOV.Sides
 	FOVCircle.Radius = AimbotSettings.FOV.Size
 	FOVCircle.Filled = AimbotSettings.FOV.Filled
-	FOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y + 36)
+	FOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y + GuiInset)
 end)
 
 local function TargetObscured(Table, ...)
@@ -826,12 +672,6 @@ end)
 
 Sections.ESP.NameESP:AddToggle({text = 'Enabled', state = false, callback = function(bool)
 	EspSettings.Enabled = bool
-	if bool then
-		for _, v in pairs(Players:GetPlayers()) do
-			if v == Client then continue end
-			DrawName(v)
-		end
-	end
 end})
 Sections.ESP.NameESP:AddToggle({text = 'Show Distance', state = false, callback = function(bool)
 	EspSettings.ShowDistance = bool
@@ -841,42 +681,65 @@ Sections.ESP.NameESP:AddToggle({text = 'Show Health', state = false, callback = 
 end})
 Sections.ESP.NameESP:AddToggle({text = 'Text Outline', state = false, callback = function(bool)
 	EspSettings.TextOutline = bool
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Name' then
+				a.Outline = bool
+			end
+		end
+	end
 end})
 Sections.ESP.NameESP:AddSlider({text = 'Text Size', value = 20, min = 15, max = 25, suffix = 'px', callback = function(value)
 	EspSettings.TextSize = value
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Name' then
+				a.Size = value
+			end
+		end
+	end
 end})
 Sections.ESP.NameESP:AddList({text = 'Font', values = {'UI', 'System', 'Plex', 'Monospace'}, value = EspSettings.Fonts[1], callback = function(choice)
 	EspSettings.Font = choice
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Name' then
+				a.Font = EspSettings.Fonts[choice]
+			end
+		end
+	end
 end})
 
 Sections.ESP.BoxESP:AddToggle({text = 'Enabled', state = false, callback = function(bool)
 	EspSettings.BoxEnabled = bool
-	if bool then
-		for _, v in pairs(Players:GetPlayers()) do
-			if v == Client then continue end
-			DrawBox(v)
-		end
-	end
 end})
 Sections.ESP.BoxESP:AddDivider()
 Sections.ESP.BoxESP:AddToggle({text = 'Health Bar', state = false, callback = function(bool)
 	EspSettings.BoxHealthBar = bool
 end})
-Sections.ESP.BoxESP:AddSlider({text = 'Thickness', value = 2, min = 2, max = 5, callback = function(value)
+Sections.ESP.BoxESP:AddSlider({text = 'Thickness', value = 1, min = 1, max = 5, callback = function(value)
 	EspSettings.BoxThickness = value
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Box' or k == 'Line' then
+				a.Thickness = value
+			end
+		end
+	end
 end})
 
 Sections.ESP.Tracers:AddToggle({text = 'Enabled', state = false, callback = function(bool)
 	EspSettings.TracersEnabled = bool
-	if bool then
-		for _, v in pairs(Players:GetPlayers()) do
-			if v == Client then continue end
-			DrawTracer(v)
-		end
-	end
 end})
 Sections.ESP.Tracers:AddSlider({text = 'Thickness', value = 1, min = 1, max = 5, callback = function(value)
 	EspSettings.TracerThickness = value
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Tracer' or k == 'Stem' then
+				a.Thickness = value
+			end
+		end
+	end
 end})
 Sections.ESP.Tracers:AddList({text = 'From', values = {'Bottom', 'Top', 'Mouse'}, value = 'Bottom', callback = function(choice)
 	EspSettings.TracerFrom = choice
@@ -890,21 +753,36 @@ end})
 
 Sections.ESP.Chams:AddToggle({text = 'Enabled', state = false, callback = function(bool)
 	EspSettings.ChamsEnabled = bool
-	if bool then
-		for _, v in pairs(Players:GetPlayers()) do
-			if v == Client then continue end
-			DrawCham(v)
-		end
-	end
 end})
 Sections.ESP.Chams:AddSlider({text = 'Fill Transparency', value = 0.5, min = 0, max = 1, float = 0.1, callback = function(value)
 	EspSettings.ChamsFillTransparency = value
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Cham' then
+				a.FillTransparency = value
+			end
+		end
+	end
 end})
 Sections.ESP.Chams:AddColor({text = 'Outline Color', color = Color3.fromRGB(255, 255, 255), callback = function(color)
 	EspSettings.ChamsOutlineColor = color
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Cham' then
+				a.OutlineColor = color
+			end
+		end
+	end
 end})
 Sections.ESP.Chams:AddSlider({text = 'Outline Transparency', value = 0, min = 0, max = 1, float = 0.1, callback = function(value)
 	EspSettings.ChamsOutlineTransparency = value
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Cham' then
+				a.OutlineTransparency = value
+			end
+		end
+	end
 end})
 
 Sections.ESP.All:AddColor({text = 'Color', color = Color3.fromRGB(255, 255, 255), callback = function(color)
@@ -931,6 +809,13 @@ Sections.ESP.All:AddToggle({text = 'Hide Dead', state = false, callback = functi
 end})
 Sections.ESP.All:AddSlider({text = 'Transparency', value = 0, min = 0, max = 1, float = 0.1, callback = function(value)
 	EspSettings.Transparency = value
+	for _, v in pairs(RenderList) do
+		for k, a in pairs(v) do
+			if k == 'Name' or k == 'Tracer' or k == 'Stem' or k == 'Box' or k == 'Bar' or k == 'Line' then
+				a.Transparency = 1 - EspSettings.Transparency
+			end
+		end
+	end
 end})
 
 Sections.Aimbot.Main:AddToggle({text = 'Enabled', state = false, callback = function(bool)
@@ -1193,3 +1078,4 @@ if getgenv().AyarumWatermark then
 	getgenv().AyarumWatermark:Remove()
 	getgenv().AyarumWatermark = nil
 end
+RunService:UnbindFromRenderStep('UpdateEsp')

@@ -1656,18 +1656,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	MousePart.CanCollide = false
 	MousePart.Anchored = true
 	MousePart.CanQuery = false
-	spawn(function()
-		while library do
-			wait()
-			if Mouse.Hit.Position ~= nil and Client.Character ~= nil and Client.Character:FindFirstChild('Torso') and (Client.Character.Torso.Position - Mouse.Hit.Position).Magnitude < 200 then
-				MousePart.Position = Mouse.Hit.Position
-			else
-				if Client.Character and Client.Character:FindFirstChild('Head') then
-					MousePart.Position = Client.Character.Head.Position
-				end
-			end
-		end
-	end)
 
 	local ImportWaiting = false
 	library:AddConnection(InputService.InputBegan, function(input)
@@ -3483,6 +3471,18 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			return
 		end
 		if library.flags['Import at Mouse'] == true then
+			spawn(function()
+				while library and ImportWaiting do
+					wait()
+					if Mouse.Hit.Position ~= nil and Client.Character ~= nil and Client.Character:FindFirstChild('Torso') and (Client.Character.Torso.Position - Mouse.Hit.Position).Magnitude < 200 then
+						MousePart.Position = Mouse.Hit.Position
+					else
+						if Client.Character and Client.Character:FindFirstChild('Head') then
+							MousePart.Position = Client.Character.Head.Position
+						end
+					end
+				end
+			end)
 			Notify('Ready to Import\nEnter: Confirm\nBackspace: Cancel')
 			PreviewItem(SelectedBase, MousePart, false)
 			wait()
@@ -4893,7 +4893,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 		local Hidden = {}
 		spawn(function()
-			while library and wait() do
+			while library and wait(0.5) do
 				for _, v in pairs(Workspace:GetChildren()) do
 					if Hidden[v.Name] == true then
 						Delete(v)
