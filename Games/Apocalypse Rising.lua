@@ -880,13 +880,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 	local function StealSlot(FromSlot, ToSlot)
 		if ToSlot:FindFirstChild('ObjectID') then
-			fireServer('ChangeValue', ToSlot, 0)
-			fireServer('ChangeParent', ToSlot.ObjectID, nil)
+			Delete(ToSlot.ObjectID)
+			ChangeValue(ToSlot, 0)
 			repeat wait() until ToSlot.Value == 0
 		end
-		fireServer('ChangeValue', FromSlot, 0)
-		fireServer('ChangeParent', FromSlot.ObjectID, ToSlot)
-		fireServer('ChangeValue', ToSlot, 1)
+		ChangeValue(FromSlot, 0)
+		ChangeParent(FromSlot.ObjectID, ToSlot)
+		ChangeValue(ToSlot, 1)
+		repeat wait() until ToSlot.Value == 1
 	end
 
 	local function SetPlayerInvis(Plr, Value)
