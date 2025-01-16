@@ -470,20 +470,18 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	Sections.Main.Misc:AddToggle({text = 'Parts ESP', state = false, callback = function(bool)
 		PartsESP = bool
 		if PartsESP then
-			while PartsESP do
+			while PartsESP and wait(1) do
 				for _, v in pairs(Workspace._Parts:GetChildren()) do
 					PartEsp(v, Color3.fromRGB(255, 65, 65), PartsESP)
 				end
-				wait(1)
 			end
 		end
 	end})
 	Sections.Main.Misc:AddToggle({text = 'Mystery Box ESP', state = false, callback = function(bool)
 		MysteryBoxESP = bool
 		if MysteryBoxESP then
-			while MysteryBoxESP do
+			while MysteryBoxESP and wait(1) do
 				PartEsp(Workspace._MapComponents:FindFirstChild('MysteryBox'), Color3.fromRGB(255, 218, 55), MysteryBoxESP)
-				wait (1)
 			end
 		end
 	end})
