@@ -3989,10 +3989,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			SpawnKit({
 				{'M1014', 1},
 				{'M870Ammo', 8},
-				{'Laser', 2},
-				{'Acog', 1},
+				{'Laser', 1},
+				{'ACOG', 1},
 				{'Uzi', 1},
-				{'Tec9Ammo32', 4},
+				{'TEC9Ammo32', 4},
 				{'MilitaryPackBlack', 1},
 				{'BloodBag', 8}
 			}, Player)
