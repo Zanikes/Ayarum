@@ -848,6 +848,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		if ToSlot:FindFirstChild('ObjectID') then
 			fireServer('ChangeValue', ToSlot, 0)
 			fireServer('ChangeParent', ToSlot.ObjectID, nil)
+			repeat wait() until ToSlot.Value == 0
 		end
 		fireServer('ChangeValue', FromSlot, 0)
 		fireServer('ChangeParent', FromSlot.ObjectID, ToSlot)
