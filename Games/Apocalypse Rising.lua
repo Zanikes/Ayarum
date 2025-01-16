@@ -856,13 +856,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 
 	local function SetSlot(Slot, Item)
-		if Item.Parent ~= LootDrops then
-			for _, v in pairs(LootDrops:GetChildren()) do
-				if v:FindFirstChild('ObjectID') and v.ObjectID.Value == Item.Value then
-					Item = v
-				end
-			end
-		end
 		local ObjectID = AddInstance('ObjectID', Slot)
 		ChangeValue(ObjectID, Item.Value)
 		for _, v in pairs(ObjectID:GetChildren()) do
