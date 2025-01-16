@@ -1073,6 +1073,18 @@ spawn(function()
 	end
 end)
 
+if game.PlaceId == 286090429 then -- Arsenal
+	spawn(function()
+		while library.loaded and wait(1) do
+			for _, v in pairs(Client.PlayerGui:GetChildren()) do
+				if v:IsA('Highlight') then
+					v:Destroy()
+				end
+			end
+		end
+	end)
+end
+
 Notify('Ayarum Hub Loaded Successfully,\nMade by Zanikes#9131')
 Notify('Press ' .. library.options['UI Toggle'].key .. ' to toggle the UI')
 LoadInfo('Loading Complete (' .. GameName .. ')')
