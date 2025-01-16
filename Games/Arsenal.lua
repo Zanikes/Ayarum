@@ -148,6 +148,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		if not library.loaded then return end
 		for ModName, ModVal in pairs(ModVals) do
 			for _, Weapon in pairs(ReplicatedStorage.Weapons:GetChildren()) do
+				if string.match(Weapon.Name, 'Knife') then continue end
 				local Val = Weapon:FindFirstChild(ModName)
 				if not Val then continue end
 				local Original = Val.AyarumSave.Value
