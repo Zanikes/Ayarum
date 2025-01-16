@@ -475,6 +475,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					PartEsp(v, Color3.fromRGB(255, 65, 65), PartsESP)
 				end
 			end
+		else
+			for _, v in pairs(Workspace._Parts:GetChildren()) do
+				PartEsp(v, Color3.fromRGB(255, 65, 65), PartsESP)
+			end
 		end
 	end})
 	Sections.Main.Misc:AddToggle({text = 'Mystery Box ESP', state = false, callback = function(bool)
@@ -483,6 +487,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			while MysteryBoxESP and wait(1) do
 				PartEsp(Workspace._MapComponents:FindFirstChild('MysteryBox'), Color3.fromRGB(255, 218, 55), MysteryBoxESP)
 			end
+		else
+			PartEsp(Workspace._MapComponents:FindFirstChild('MysteryBox'), Color3.fromRGB(255, 218, 55), MysteryBoxESP)
 		end
 	end})
 	Sections.Main.Misc:AddButton({text = 'Teleport to Mystery Box', callback = function()
