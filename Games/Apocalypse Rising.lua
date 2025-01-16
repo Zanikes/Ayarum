@@ -873,6 +873,17 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 			fireServer('VehichleLightsSet', v, 'Plastic', Value == true and 1 or 0)
 		end
+		if Plr == Client then
+			spawn(function()
+				repeat wait() until Plr.Character.Head.Transparency == 1
+				local Parts = {'Head', 'Left Arm', 'Right Arm', 'Torso', 'Left Leg', 'Right Leg'}
+				for _, v in pairs(Plr.Character:GetChildren()) do
+					if table.find(Parts, v.Name) then
+						v.Transparency = 0.8
+					end
+				end
+			end)
+		end
 	end
 
 	local function SpawnKit(Items, Player)
