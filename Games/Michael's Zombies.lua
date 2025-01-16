@@ -189,7 +189,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		RecoilGlobal.Value = true
 		if not RecoilRemoved then
 			library:AddConnection(RunService.RenderStepped, function()
-				if Client.Character then
+				if Client.Character and Client.Character:FindFirstChild('CharStats') then
 					for _, v in pairs(Client.Character.CharStats.GunInventory:GetChildren()) do
 						for _, a in pairs({'Underbarrel', 'Sight'}) do
 							v:SetAttribute(a, '')
@@ -437,7 +437,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 			for _, v in pairs(Workspace.Ignore.Zombies:GetChildren()) do
 				if v:FindFirstChild('Humanoid') and Client.Character and Client.Character:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('HumanoidRootPart') and (Client.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude < 25 then
-					ReplicatedStorage.Framework.Remotes.KnifeHitbox:FireServer(v.Humanoid)
+					ReplicatedStorage.Framework.Remotes.KnifeHitbox:FireServer(v)
 				end
 			end
 			if Client.Character then
