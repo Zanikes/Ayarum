@@ -856,6 +856,13 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 
 	local function SetSlot(Slot, Item)
+		if Item.Parent ~= LootDrops then
+			for _, v in pairs(LootDrops:GetChildren()) do
+				if v:FindFirstChild('ObjectID') and v.ObjectID.Value == Item.Value then
+					Item = v
+				end
+			end
+		end
 		local ObjectID = AddInstance('ObjectID', Slot)
 		ChangeValue(ObjectID, Item.Value)
 		for _, v in pairs(ObjectID:GetChildren()) do
@@ -876,6 +883,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 		end
 		ChangeValue(Slot, 1)
+		repeat wait() until Slot.Value == 1
 	end
 
 	local function StealSlot(FromSlot, ToSlot)
@@ -4474,35 +4482,32 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		if StealWarning:Show() then
 			WipeInv(Client)
 
-			local BackpackSlot
 			for _, v in pairs(Player.playerstats.slots:GetChildren()) do
 				if v.Name == 'slotbackpack' and v.Value == 1 and v:FindFirstChild('ObjectID') then
-					BackpackSlot = v
 					SetSlot(Client.playerstats.slots.slotbackpack, v.ObjectID)
-					repeat wait() until Client.playerstats.slots.slotbackpack.Value == 1
 				elseif (v.Name == 'slotprimary' or v.Name == 'slotsecondary') and v.Value == 1 and v:FindFirstChild('ObjectID') then
-					StealSlot(v, Client.playerstats.slots[v.Name])
+					SetSlot(Client.playerstats.slots[v.Name], v.ObjectID)
 				end
 			end
 
 			for i = 1, 20 do
 				local v = Player.playerstats.slots['slot' .. tostring(i)]
 				if v.Value == 1 and v:FindFirstChild('ObjectID') then
-					StealSlot(v, Client.playerstats.slots[v.Name])
+					SetSlot(Client.playerstats.slots[v.Name], v.ObjectID)
 				end
 			end
 
 			for i = 1, 7 do
 				local v = Player.playerstats.utilityslots['slot' .. tostring(i)]
 				if v.Value == 1 and v:FindFirstChild('ObjectID') then
-					StealSlot(v, Client.playerstats.utilityslots[v.Name])
+					SetSlot(Client.playerstats.utilityslots[v.Name], v.ObjectID)
 				end
 			end
 
 			for _, v in pairs(Player.playerstats.attachments:GetChildren()) do
 				for _, a in pairs(v:GetChildren()) do
 					if a.Value == 1 and a:FindFirstChild('ObjectID') then
-						StealSlot(a, Client.playerstats.attachments[v.Name][a.Name])
+						SetSlot(Client.playerstats.attachments[v.Name][a.Name], a.ObjectID)
 					end
 				end
 			end
@@ -4510,15 +4515,12 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			for _, v in pairs(Player.playerstats.character:GetChildren()) do
 				if v.Name == 'hat' or v.Name == 'accessory' then
 					if v.Value == 1 and v:FindFirstChild('ObjectID') then
-						StealSlot(v, Client.playerstats.character[v.Name])
+						SetSlot(Client.playerstats.character[v.Name], v.ObjectID)
 					end
 				end
 			end
 
-			if BackpackSlot and BackpackSlot:FindFirstChild('ObjectID') then
-				Delete(BackpackSlot.ObjectID)
-				ChangeValue(BackpackSlot, 0)
-			end
+			WipeInv(Player)
 
 			Notify('Stole ' .. Player.Name .. '\'s Inventory')
 		end
