@@ -106,7 +106,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 	Tabs.Arsenal = library:AddTab('Arsenal')
 	Sections.Main = Tabs.Arsenal:AddSection({text = 'Main', column = 1})
-	Sections.AutoFarms = Tabs.Arsenal:AddSection({text = 'AutoFarms', column = 2})
+	--[[Sections.AutoFarms = Tabs.Arsenal:AddSection({text = 'AutoFarms', column = 2}) -- these gamemodes got removed
 
 	local AutoFarm = false
 	Sections.AutoFarms:AddToggle({text = 'Monkey Business', state = false, callback = function(bool)
@@ -142,7 +142,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end})
 	Sections.AutoFarms:AddBind({text = 'Quick-Toggle', key = 'L', callback = function()
 		library.options['Oddball']:SetState(not library.flags['Oddball'])
-	end})
+	end})]]
 
 	Sections.Main:AddToggle({text = 'Modded Guns', state = false, callback = function(bool)
 		if not library.loaded then return end

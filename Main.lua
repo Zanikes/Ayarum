@@ -103,6 +103,14 @@ local Camera = Workspace.CurrentCamera
 local Mouse = Client:GetMouse()
 local GuiInset = GuiService:GetGuiInset().Y
 
+if game.PlaceId == 286090429 then
+	for _, v in pairs(Client.PlayerGui:GetChildren()) do
+		if v:IsA('Highlight') then
+			v:Destroy()
+		end
+	end
+end
+
 local EspSettings = {
 	Enabled = false,
 	ShowDistance = false,
@@ -507,7 +515,9 @@ local function Update()
 				if EspSettings.ChamsEnabled then
 					Drawings.Cham.FillColor = EspSettings.ChamsColor
 					Drawings.Cham.Enabled = true
-					Drawings.Cham.Adornee = Char
+					if Drawings.Cham.Adornee ~= Char then
+						Drawings.Cham.Adornee = Char
+					end
 					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
 						Drawings.Cham.Enabled = false
 					end
@@ -557,9 +567,6 @@ library:AddConnection(Players.PlayerRemoving, function(Player)
 	end
 	table.remove(RenderList, table.find(RenderList, Player.Name))
 end)
-
-RunService:UnbindFromRenderStep('UpdateEsp')
-RunService:BindToRenderStep('UpdateEsp', 300, Update)
 
 local AimbotSettings = {
 	Enabled = false,
@@ -1067,17 +1074,8 @@ spawn(function()
 	end
 end)
 
-if game.PlaceId == 286090429 then -- Arsenal
-	spawn(function()
-		while library and wait(1) do
-			for _, v in pairs(Client.PlayerGui:GetChildren()) do
-				if v:IsA('Highlight') then
-					v:Destroy()
-				end
-			end
-		end
-	end)
-end
+RunService:UnbindFromRenderStep('UpdateEsp')
+RunService:BindToRenderStep('UpdateEsp', 300, Update)
 
 Notify('Ayarum Hub Loaded Successfully,\nMade by Zanikes#9131')
 Notify('Press ' .. library.options['UI Toggle'].key .. ' to toggle the UI')
