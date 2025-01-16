@@ -4478,7 +4478,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				if v.Name == 'slotbackpack' and v.Value == 1 and v:FindFirstChild('ObjectID') then
 					BackpackSlot = v
 					SetSlot(Client.playerstats.slots.slotbackpack, v.ObjectID)
-					repeat wait() until Client.payerstats.slots.slotbackpack.Value == 1
+					repeat wait() until Client.playerstats.slots.slotbackpack.Value == 1
 				elseif v.Name == 'slotprimary' or v.Name == 'slotsecondary' then
 					StealSlot(v, Client.playerstats.slots[v.Name])
 				end
