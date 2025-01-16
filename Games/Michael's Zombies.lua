@@ -378,17 +378,16 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		return OldNameCall(Self, ...)
 	end)
 
-	local function AddMysteryBoxESP()
-		local Box = Workspace._MapComponents:FindFirstChild('MysteryBox')
-		if not Box then return end
-		local Cham = Box:FindFirstChild('AyarumCham') or Instance.new('Highlight')
+	local function AddPartEsp(Part, Color)
+		if not Part then return end
+		local Cham = Part:FindFirstChild('AyarumCham') or Instance.new('Highlight')
 		Cham.Name = 'AyarumCham'
 		Cham.Enabled = library.flags['Mystery Box ESP']
-		Cham.FillColor = Color3.fromRGB(255, 218, 55)
+		Cham.FillColor = Color
 		Cham.FillTransparency = 0.8
-		Cham.OutlineColor = Color3.fromRGB(255, 218, 55)
+		Cham.OutlineColor = Color
 		Cham.OutlineTransparency = 0
-		Cham.Parent = Box
+		Cham.Parent = Part
 	end
 
 	Tabs.Main = library:AddTab('Michael\'s Zombies')
@@ -466,7 +465,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			wait()
 		until not library.flags['collect']
 	end})
-	Sections.Main.Misc:AddToggle({text = 'Mystery Box ESP', state = false, callback = AddMysteryBoxESP})
+	Sections.Main.Misc:AddToggle({text = 'Parts ESP', state = false, callback = function()
+		for _, v in pairs(Workspace.Parts:GetChildren()) do
+			AddPartEsp(v, Color3.fromRGB(255, 65, 65))
+		end
+	end})
+	Sections.Main.Misc:AddToggle({text = 'Mystery Box ESP', state = false, callback = function()
+		AddPartEsp(Workspace._MapComponents:FindFirstChild('MysteryBox'), Color3.fromRGB(255, 218, 55))
+	end})
 	Sections.Main.Misc:AddButton({text = 'Teleport to Mystery Box', callback = function()
 		if Client.Character and Client.Character.HumanoidRootPart and Workspace._MapComponents:FindFirstChild('MysteryBox') then
 			Client.Character.HumanoidRootPart.CFrame = Workspace._MapComponents.MysteryBox.Torso.CFrame
