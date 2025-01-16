@@ -320,6 +320,12 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		Filled = false
 	}
 
+	local GuiInset = game:GetService('GuiService'):GetGuiInset().Y
+
+	if game.CoreGui:FindFirstChild('TobBarApp') then
+		GuiInset = 58
+	end
+
 	local SilentAimFOVCircle = Drawing.new('Circle')
 	SilentAimFOVCircle.ZIndex = 2
 	SilentAimFOVCircle.Visible = false
@@ -330,7 +336,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		SilentAimFOVCircle.NumSides = SilentAimFOV.Sides
 		SilentAimFOVCircle.Radius = SilentAimFOV.Size
 		SilentAimFOVCircle.Filled = SilentAimFOV.Filled
-		SilentAimFOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y + 36)
+		SilentAimFOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y + GuiInset)
 	end)
 
 	local BodyPart

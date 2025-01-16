@@ -2,7 +2,15 @@ local ContentProvider = game:GetService('ContentProvider')
 local InputService = game:GetService('UserInputService')
 local TweenService = game:GetService('TweenService')
 local RunService = game:GetService('RunService')
+local GuiService = game:GetService('GuiService')
 local Mouse = game.Players.LocalPlayer:GetMouse()
+
+local GuiInset = GuiService:GetGuiInset().Y
+
+if game.CoreGui:FindFirstChild('TobBarApp') then
+	GuiInset = 58
+end
+
 local Ids = {
 	'rbxassetid://10025201748',
 	'rbxassetid://6814674798',
@@ -2305,8 +2313,8 @@ function Library:Unload()
 end
 
 Library:AddConnection(RunService.RenderStepped, function()
-	MouseBorder.Position = Vector2.new(Mouse.X, Mouse.Y + 36)
-	MouseIndicator.Position = Vector2.new(Mouse.X, Mouse.Y + 36)
+	MouseBorder.Position = Vector2.new(Mouse.X, Mouse.Y + GuiInset)
+	MouseIndicator.Position = Vector2.new(Mouse.X, Mouse.Y + GuiInset)
 end)
 
 function Library:Toggle(Bool)

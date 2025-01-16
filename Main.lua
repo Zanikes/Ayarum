@@ -103,6 +103,10 @@ local Camera = Workspace.CurrentCamera
 local Mouse = Client:GetMouse()
 local GuiInset = GuiService:GetGuiInset().Y
 
+if game.CoreGui:FindFirstChild('TobBarApp') then
+	GuiInset = 58
+end
+
 if game.PlaceId == 286090429 then
 	for _, v in pairs(Client.PlayerGui:GetChildren()) do
 		if v:IsA('Highlight') then
