@@ -202,7 +202,7 @@ Mainframe.Name = 'Mainframe'
 Mainframe.Parent = Ayarum
 Mainframe.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
 Mainframe.BorderColor3 = Color3.fromRGB(44, 44, 60)
-Mainframe.Position = UDim2.new(0, 10, 0, 46)
+Mainframe.Position = UDim2.new(0, 10, 0, GuiInset + 10)
 Mainframe.Size = UDim2.new(0, 519, 0, 450)
 Mainframe.Visible = false
 Roundify(Mainframe)
