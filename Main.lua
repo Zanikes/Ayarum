@@ -3,8 +3,12 @@ local AVer = '4.8'
 repeat wait() until game:IsLoaded()
 
 local Host = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
-local function HttpGet(Url)
-	return loadstring(game:HttpGet(Host .. Url, true))();
+local function HttpGet(File)
+	local Result = request({
+		Url = Host .. File,
+		Method = 'GET'
+	})
+	return loadstring(Result.Body)()
 end
 
 local library = HttpGet('Library.lua')

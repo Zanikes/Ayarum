@@ -19,7 +19,8 @@
 		"firetouchinterest",
 		"delfile",
 		"getactors",
-		"syn"
+		"syn",
+		"request"
 	],
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"
