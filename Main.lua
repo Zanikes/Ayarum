@@ -300,6 +300,7 @@ local function AddPlayer(Player)
 	Drawings.Line.Transparency = 1 - EspSettings.Transparency
 	Drawings.Line.Visible = false
 
+	Drawings.Cham.Parent = game.CoreGui
 	Drawings.Cham.Enabled = false
 	Drawings.Cham.FillTransparency = EspSettings.ChamsFillTransparency
 	Drawings.Cham.OutlineColor = EspSettings.ChamsOutlineColor
@@ -504,16 +505,9 @@ local function Update()
 				end
 
 				if EspSettings.ChamsEnabled then
-					if not Drawings.Cham or Drawings.Cham.Parent == nil then
-						Drawings.Cham = Instance.new('Highlight')
-						Drawings.Cham.Enabled = false
-						Drawings.Cham.FillTransparency = EspSettings.ChamsFillTransparency
-						Drawings.Cham.OutlineColor = EspSettings.ChamsOutlineColor
-						Drawings.Cham.OutlineTransparency = EspSettings.ChamsOutlineTransparency
-					end
 					Drawings.Cham.FillColor = EspSettings.ChamsColor
-					Drawings.Cham.Parent = Char
 					Drawings.Cham.Enabled = true
+					Drawings.Cham.Adornee = Char
 					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
 						Drawings.Cham.Enabled = false
 					end
@@ -1075,7 +1069,7 @@ end)
 
 if game.PlaceId == 286090429 then -- Arsenal
 	spawn(function()
-		while library.loaded and wait(1) do
+		while library and wait(1) do
 			for _, v in pairs(Client.PlayerGui:GetChildren()) do
 				if v:IsA('Highlight') then
 					v:Destroy()
