@@ -2429,7 +2429,7 @@ function Library:GetConfigs()
 	for _, v in next, listfiles(Library.foldername) do
 		if v:sub(#v - #Library.fileext + 1, #v) == Library.fileext then
 			a = a + 1
-			v = v:gsub(Library.foldername .. '\\', '')
+			v = v:gsub(Library.foldername:gsub('/', '\\') .. '\\', '')
 			v = v:gsub(Library.fileext, '')
 			table.insert(files, a, v)
 		end
