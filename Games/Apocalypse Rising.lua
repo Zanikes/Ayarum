@@ -844,6 +844,40 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end
 
+	local function MakeInt(Name, Parent, Value)
+		Remote.GroupCreate:FireServer(Name)
+		local Int = Lighting.Groups:WaitForChild(Name)
+		ChangeValue(Int, tonumber(Value))
+		ChangeParent(Int, Parent)
+		repeat wait() until Int.Parent == Parent
+		for _, v in pairs(Int:GetChildren()) do
+			Delete(v)
+		end
+	end
+
+	local function SetSlot(Slot, Item)
+		local ObjectID = AddInstance('ObjectID', Slot)
+		ChangeValue(ObjectID, Item.Value)
+		for _, v in pairs(ObjectID:GetChildren()) do
+			if v.Name == '' then
+				Delete(v)
+			end
+		end
+		if Item:FindFirstChild('Clip') then
+			local Clip = AddInstance('Clip', ObjectID)
+			ChangeValue(Clip, Item.Clip.Value)
+			for _, v in pairs(Clip:GetChildren()) do
+				if v.Name == '' then
+					Delete(v)
+				end
+			end
+			for _, v in pairs(Item.Clip:GetChildren()) do
+				MakeInt(v.Name, Clip, v.Value)
+			end
+		end
+		ChangeValue(Slot, 1)
+	end
+
 	local function StealSlot(FromSlot, ToSlot)
 		if ToSlot:FindFirstChild('ObjectID') then
 			fireServer('ChangeValue', ToSlot, 0)
@@ -2808,40 +2842,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		{'Tornado', 'Sheets', ReplicatedStorage.Rain}
 	}
 
-	local function MakeInt(Name, Parent, Value)
-		Remote.GroupCreate:FireServer(Name)
-		local Int = Lighting.Groups:WaitForChild(Name)
-		ChangeValue(Int, tonumber(Value))
-		ChangeParent(Int, Parent)
-		repeat wait() until Int.Parent == Parent
-		for _, v in pairs(Int:GetChildren()) do
-			Delete(v)
-		end
-	end
-
-	local function SetSlot(Slot, Item)
-		Remote.AddClothing:FireServer('ObjectID', Slot, Item.Value, '', '')
-		local ObjectID = Slot:WaitForChild('ObjectID')
-		for _, v in pairs(ObjectID:GetChildren()) do
-			if v.Name == '' then
-				Delete(v)
-			end
-		end
-		if Item:FindFirstChild('Clip') then
-			Remote.AddClothing:FireServer('Clip', ObjectID, Item.Clip.Value, '', '')
-			local Clip = ObjectID:WaitForChild('Clip')
-			for _, v in pairs(Clip:GetChildren()) do
-				if v.Name == '' then
-					Delete(v)
-				end
-			end
-			for _, v in pairs(Item.Clip:GetChildren()) do
-				MakeInt(v.Name, Clip, v.Value)
-			end
-		end
-		ChangeValue(Slot, 1)
-	end
-
 	local function LoadKit(Kit, Player)
 		WipeInv(Player, true)
 		if Kit['backpack'] then
@@ -4476,7 +4476,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			local BackpackSlot = Player.playerstats.slots.slotbackpack
 
 			if BackpackSlot.Value == 1 and BackpackSlot:FindFirstChild('ObjectID') then
-				StealSlot(BackpackSlot, Client.playerstats.slots.slotbackpack)
+				SetSlot(Client.playerstats.slots.slotbackpack, BackpackSlot.ObjectID)
 			end
 
 			for _, v in pairs(Player.playerstats.slots:GetChildren()) do
@@ -4505,6 +4505,11 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						StealSlot(v, Client.playerstats.character[v.Name])
 					end
 				end
+			end
+
+			if BackpackSlot.Value == 1 and BackpackSlot:FindFirstChild('ObjectID') then
+				Delete(BackpackSlot.ObjectID)
+				ChangeValue(BackpackSlot, 0)
 			end
 
 			Notify('Stole ' .. Player.Name .. '\'s Inventory')
