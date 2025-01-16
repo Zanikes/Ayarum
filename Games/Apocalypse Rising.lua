@@ -674,12 +674,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				until Char.Humanoid.Sit == true
 				wait()
 				Remote.ReplicateModel:FireServer(Char, Param)
-				spawn(function()
-					for i = 1, 20 do
-						wait(0.05)
-						Remote.HurtZombie:FireServer(Char)
-					end
-				end)
+				for i = 1, 20 do
+					wait(0.05)
+					Remote.HurtZombie:FireServer(Char)
+				end
 				local Teleported = false
 				repeat
 					wait()
