@@ -118,21 +118,22 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			Cham.OutlineTransparency = ChamsSettings.OutlineTransparency
 			Cham.Parent = Zombie
 
-			local DiedFunction
-			local HealthFunction
-			Zombie:WaitForChild('Humanoid')
-			DiedFunction = Zombie.Humanoid.Died:Connect(function()
-				Cham:Destroy()
-				DiedFunction:Disconnect()
-				HealthFunction:Disconnect()
-			end)
-			HealthFunction = Zombie.Humanoid.HealthChanged:Connect(function()
+			if Zombie:FindFirstChild('Humanoid') then
+				local DiedFunction
+				local HealthFunction
+				DiedFunction = Zombie.Humanoid.Died:Connect(function()
+					Cham:Destroy()
+					DiedFunction:Disconnect()
+					HealthFunction:Disconnect()
+				end)
+				HealthFunction = Zombie.Humanoid.HealthChanged:Connect(function()
+					if ChamsSettings.HealthColored then
+						UpdateChamFromHealth(Zombie, Cham)
+					end
+				end)
 				if ChamsSettings.HealthColored then
 					UpdateChamFromHealth(Zombie, Cham)
 				end
-			end)
-			if ChamsSettings.HealthColored then
-				UpdateChamFromHealth(Zombie, Cham)
 			end
 		end)
 	end
