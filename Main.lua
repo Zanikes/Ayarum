@@ -91,7 +91,7 @@ library:Settings({
 	foldername = 'Ayarum/Configs',
 	fileext = '.json',
 	autoload = Autoload,
-	themecolor1 = Color3.fromHex('##ff9966'),
+	themecolor1 = Color3.fromHex('#ff9966'),
 	themecolor2 = Color3.fromHex('#ff5e62')
 })
 
