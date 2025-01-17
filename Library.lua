@@ -2364,7 +2364,7 @@ function Library:LoadConfig(config)
 		local Read, Config = pcall(function() return game:GetService('HttpService'):JSONDecode(readfile(Library.foldername .. '/' .. config .. Library.fileext)) end)
 		Config = Read and Config or {}
 		for _, option in next, Library.options do
-			if option.type ~= 'button' and option.flag and not option.skipflag then
+			if option.type ~= 'button' and option.flag and not option.skipflag and Config[option.flag] ~= nil then
 				if option.type == 'toggle' then
 					spawn(function()
 						option:SetState(Config[option.flag] == 1)
@@ -2397,20 +2397,20 @@ end
 
 function Library:SaveConfig(config)
 	local Config = {}
-	if table.find(Library:GetConfigs(), config) then
-		Config = game:GetService('HttpService'):JSONDecode(readfile(Library.foldername .. '/' .. config .. Library.fileext))
-	end
 	for _, option in next, Library.options do
 		if option.type ~= 'button' and option.flag and not option.skipflag then
 			if option.type == 'toggle' then
+				if option.state == option.default then continue end
 				Config[option.flag] = option.state and 1 or 0
 			elseif option.type == 'color' then
+				if option.color == option.default then continue end
 				Config[option.flag] = {option.color.R, option.color.G, option.color.B, option.rainbow}
 			elseif option.type == 'bind' then
-				if option.key ~= 'None' then
+				if option.key ~= 'None' and option.key ~= option.default then
 					Config[option.flag] = option.key
 				end
 			else
+				if option.value == option.default then continue end
 				Config[option.flag] = option.value
 			end
 		end
