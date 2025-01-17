@@ -250,6 +250,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff2) .. ' Rounds Ago, WalkSpeed Increased')
 			WalkSpeedInfo1.TextColor3 = Color3.fromRGB(0, 255, 100)
 			library.options['WalkSpeed']:SetValue(35)
+			library.options['Enable WalkSpeed']:SetState(true)
 		end
 		if SpeedColaGot ~= nil and Round == SpeedColaGot + SpeedColaBuff3 then
 			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff3) .. ' Rounds Ago, Reload Speed Increased')
@@ -311,7 +312,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					ReloadInfo1 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff1 + SpeedColaGot)
 					WalkSpeedInfo1 = AddBuffInfo('WalkSpeed Increase', SpeedColaBuff2 + SpeedColaGot)
 					ReloadInfo2 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff3 + SpeedColaGot)
-					library.options['WalkSpeed']:SetValue(25)
+					library.options['WalkSpeed']:SetValue(20)
+					library.options['Enable WalkSpeed']:SetState(true)
 				end
 				if Client.Character.CharStats.Perks:FindFirstChild('DoubleTap') and not Client.Character.CharStats.ShootBuffs:FindFirstChild('AyarumBuff') and DoubleTapGot == nil then
 					DoubleTapGot = ReplicatedStorage.MapSettings.RoundNumber.Value
