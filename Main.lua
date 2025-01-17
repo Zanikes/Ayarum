@@ -90,7 +90,9 @@ library:Settings({
 	useconfigs = true,
 	foldername = 'Ayarum/Configs',
 	fileext = '.json',
-	autoload = Autoload
+	autoload = Autoload,
+	themecolor1 = Color3.fromHex('##ff9966'),
+	themecolor2 = Color3.fromHex('#ff5e62')
 })
 
 local LoadingBar = library:AddLoadingBar('Ayarum Hub v' .. AVer .. ' - Loader')
@@ -992,6 +994,8 @@ if isfolder('Ayarum') and isfile('Ayarum/AutoLoad.txt') then
 	local Contents = HttpService:JSONDecode(readfile('Ayarum/AutoLoad.txt'))
 	if type(Contents) == 'table' and Contents[GameName] and isfile('Ayarum/Configs/' .. Contents[GameName] .. '.json') then
 		AutoloadName = Contents[GameName]
+	else
+		AutoloadName = 'None'
 	end
 else
 	AutoloadName = 'None'
