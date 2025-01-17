@@ -392,6 +392,39 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		Cham.Parent = Part
 	end
 
+	local oldAimPercent
+	local oldAimWeight
+	local DisableAimAssist = false
+	spawn(function()
+		while wait(1) do
+			if Client.Character and Client.Character:FindFirstChild('Framework') and Client.Character.Framework:FindFirstChild('WeaponHandlerClient') then
+				local Module = Client.Character.Framework.WeaponHandlerClient.Modules.AimAssist
+				Module = require(Module)
+
+				if not oldAimPercent then
+					oldAimPercent = Module.setAimToHeadPercentage
+				end
+				if not oldAimWeight then
+					oldAimWeight = Module.setAimAssistWeight
+				end
+
+				if DisableAimAssist then
+					Module.setAimToHeadPercentage(0)
+					Module.setAimAssistWeight(0)
+					Module.setAimToHeadPercentage = function()
+						return
+					end
+					Module.setAimAssistWeight = function()
+						return
+					end
+				else
+					Module.setAimToHeadPercentage = oldAimPercent
+					Module.setAimAssistWeight = oldAimWeight
+				end
+			end
+		end
+	end)
+
 	Tabs.Main = library:AddTab('Michael\'s Zombies')
 
 	Sections.Main = {
@@ -470,10 +503,11 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	Sections.Main.Misc:AddToggle({text = 'Parts ESP', state = false, callback = function(bool)
 		PartsESP = bool
 		if PartsESP then
-			while PartsESP and wait(1) do
+			while PartsESP do
 				for _, v in pairs(Workspace._Parts:GetChildren()) do
 					PartEsp(v, Color3.fromRGB(255, 65, 65), PartsESP)
 				end
+				wait(1)
 			end
 		else
 			for _, v in pairs(Workspace._Parts:GetChildren()) do
@@ -484,8 +518,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	Sections.Main.Misc:AddToggle({text = 'Mystery Box ESP', state = false, callback = function(bool)
 		MysteryBoxESP = bool
 		if MysteryBoxESP then
-			while MysteryBoxESP and wait(1) do
+			while MysteryBoxESP do
 				PartEsp(Workspace._MapComponents:FindFirstChild('MysteryBox'), Color3.fromRGB(255, 218, 55), MysteryBoxESP)
+				wait(1)
 			end
 		else
 			PartEsp(Workspace._MapComponents:FindFirstChild('MysteryBox'), Color3.fromRGB(255, 218, 55), MysteryBoxESP)
@@ -567,6 +602,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			NoRecoil()
 			Notify('Enabled No Recoil')
 		end
+	end})
+	Sections.Main.Client:AddDivider()
+	Sections.Main.Client:AddToggle({text = 'Disable Aim Assist', state = false, callback = function(bool)
+			DisableAimAssist = bool
 	end})
 
 	Sections.Main.SilentAim:AddToggle({text = 'Enabled', flag = 'Silent Aim', state = false, callback = function(bool)
