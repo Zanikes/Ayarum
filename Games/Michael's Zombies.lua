@@ -65,7 +65,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local function CheckChar(Char)
 		Char:WaitForChild('Humanoid')
 		library:AddConnection(Char.Humanoid:GetPropertyChangedSignal('WalkSpeed'), function()
-			if Char.Humanoid.WalkSpeed < WalkSpeedVal then
+			if Char.Humanoid.WalkSpeed < WalkSpeedVal and WalkSpeedVal ~= 16 then
 				Char.Humanoid.WalkSpeed = WalkSpeedVal
 			end
 		end)
