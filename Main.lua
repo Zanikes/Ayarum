@@ -286,6 +286,7 @@ local function AddPlayer(Player)
 		['Active'] = true,
 
 		['Name'] = Drawing.new('Text'),
+		['Info'] = Drawing.new('Text'),
 
 		['Tracer'] = Drawing.new('Line'),
 		['Stem'] = Drawing.new('Line'),
@@ -304,6 +305,13 @@ local function AddPlayer(Player)
 	Drawings.Name.Font = EspSettings.Fonts[EspSettings.Font]
 	Drawings.Name.Transparency = 1 - EspSettings.Transparency
 	Drawings.Name.Visible = false
+	Drawings.Info.Center = true
+	Drawings.Info.OutlineColor = Color3.new(0, 0, 0)
+	Drawings.Info.Outline = EspSettings.TextOutline
+	Drawings.Info.Size = EspSettings.TextSize
+	Drawings.Info.Font = EspSettings.Fonts[EspSettings.Font]
+	Drawings.Info.Transparency = 1 - EspSettings.Transparency
+	Drawings.Info.Visible = false
 
 	Drawings.Tracer.Thickness = EspSettings.TracerThickness
 	Drawings.Tracer.Transparency = 1 - EspSettings.Transparency
@@ -406,27 +414,33 @@ local function Update()
 
 				if EspSettings.Enabled then
 					Drawings.Name.Color = EspSettings.Color
+					Drawings.Info.Color = EspSettings.Color
 					Drawings.Name.Text = Player.Name
+					Drawings.Info.Text = ''
 
 					if Top then
 						Drawings.Name.Position = Vector2.new(Vector.X, Top.Y - GuiInset)
+						Drawings.Info.Position = Vector2.new(Vector.X, Top.Y - GuiInset + Drawings.Name.TextBounds.Y)
 						Drawings.Name.Visible = true
+						Drawings.Info.Visible = true
 					else
 						Drawings.Name.Visible = false
+						Drawings.Info.Visible = false
 					end
 					if (EspSettings.HideTeam == true and Player.Team == Client.Team) or (Distance > EspSettings.MaxDistance) or (EspSettings.HideDead == true and PlrIsDead) then
 						Drawings.Name.Visible = false
+						Drawings.Info.Visible = false
 					end
 					if EspSettings.ShowDistance == true then
-						Drawings.Name.Text = Drawings.Name.Text .. '\n[' .. string.format('%.0f', Distance) .. ']'
+						Drawings.Info.Text = '[' .. string.format('%.0f', Distance) .. ']'
 					end
 					if EspSettings.ShowHealth == true then
-						local DropLine = EspSettings.ShowDistance == false and '\n' or ' '
-						Drawings.Name.Text = Drawings.Name.Text .. DropLine .. '[' .. string.split(tostring(PlrHealth), '.')[1] .. '/' .. tostring(PlrMaxHealth) .. ']'
+						Drawings.Info.Text = Drawings.Info.Text .. ' [' .. string.split(tostring(PlrHealth), '.')[1] .. '/' .. tostring(PlrMaxHealth) .. ']'
 					end
 					if ClosestPlr == Player then
 						if EspSettings.HighlightClosest == true then
 							Drawings.Name.Color = EspSettings.HighlightColor
+							Drawings.Info.Color = EspSettings.HighlightColor
 						end
 					end
 				else
@@ -543,6 +557,7 @@ local function Update()
 				end
 			else
 				Drawings.Name.Visible = false
+				Drawings.Info.Visible = false
 
 				Drawings.Tracer.Visible = false
 				Drawings.Stem.Visible = false
@@ -553,6 +568,7 @@ local function Update()
 			end
 		else
 			Drawings.Name.Visible = false
+			Drawings.Info.Visible = false
 
 			Drawings.Tracer.Visible = false
 			Drawings.Stem.Visible = false
