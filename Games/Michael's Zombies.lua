@@ -208,6 +208,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local NoRecoilRound = 35
 	local KillAuraRound = 40
 	local KillAuraBuffRound = 45
+	local SilentAimRound = 50
 
 	local SpeedColaGot
 	local SpeedColaBuff1 = 5
@@ -223,6 +224,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local NoRecoilInfo = AddBuffInfo('No Recoil Enabled', NoRecoilRound)
 	local KillAuraInfo = AddBuffInfo('Defensive Aura Enabled', KillAuraRound)
 	local KillAuraBuffInfo = AddBuffInfo('Defensive Aura Buff', KillAuraBuffRound)
+	local SilentAimInfo = AddBuffInfo('Silent Aim', SilentAimRound)
 	local ReloadInfo1
 	local WalkSpeedInfo1
 	local ReloadInfo2
@@ -289,6 +291,13 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			Notify('[Modded Gameplay Info]\nRound ' .. tostring(AccuracyRound) .. ' Reached, Perfect Accuracy Enabled')
 			AccuracyInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
 			PerfectAccuracy()
+		end
+		if Round == SilentAimRound then
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(SilentAimRound) .. ' Reached, Silent Aim Enabled')
+			SilentAimInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
+			library.flags['Silent Aim']:SetState(true)
+			library.flags['sAimSize']:SetValue(1000)
+			library.flags['sAimTrans']:SetValue(1)
 		end
 	end)
 
@@ -619,7 +628,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	Sections.Main.SilentAim:AddColor({text = 'Color', flag = 'sAimColor', color = SilentAimFOV.Color, callback = function(color)
 		SilentAimFOV.Color = color
 	end})
-	Sections.Main.SilentAim:AddSlider({text = 'Size', flag = 'sAimSize', min = 50, max = 700, value = SilentAimFOV.Size, callback = function(v)
+	Sections.Main.SilentAim:AddSlider({text = 'Size', flag = 'sAimSize', min = 50, max = 1000, value = SilentAimFOV.Size, callback = function(v)
 		SilentAimFOV.Size = v
 	end})
 	Sections.Main.SilentAim:AddSlider({text = 'Transparency', flag = 'sAimTrans', min = 0, max = 1, value = SilentAimFOV.Transparency, float = 0.05, callback = function(v)
