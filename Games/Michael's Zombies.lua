@@ -59,13 +59,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 
 	local WalkSpeedVal = 16
+	local WalkSpeedOn = false
 	local ReloadSpeed = 200
 	local FireRateVal = 0.8
 	local KillAuraSpeed = 0.1
 	local function CheckChar(Char)
 		Char:WaitForChild('Humanoid')
 		library:AddConnection(Char.Humanoid:GetPropertyChangedSignal('WalkSpeed'), function()
-			if Char.Humanoid.WalkSpeed < WalkSpeedVal and WalkSpeedVal ~= 16 then
+			if Char.Humanoid.WalkSpeed ~= WalkSpeedVal and WalkSpeedOn then
 				Char.Humanoid.WalkSpeed = WalkSpeedVal
 			end
 		end)
@@ -304,7 +305,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	spawn(function()
 		while wait(2) do
 			if library.flags['Modded Gameplay'] and Client.Character and Client.Character.CharStats.Perks then
-				if Client.Character.CharStats.Perks:FindFirstChild('SpeedCola') and library.flags['WalkSpeed'] ~= 25 and SpeedColaGot == nil then
+				if Client.Character.CharStats.Perks:FindFirstChild('SpeedCola') and SpeedColaGot == nil then
 					Notify('[Modded Gameplay Info]\nSpeed Cola Aquired, WalkSpeed Increased')
 					SpeedColaGot = ReplicatedStorage.MapSettings.RoundNumber.Value
 					ReloadInfo1 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff1 + SpeedColaGot)
@@ -548,9 +549,17 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		AyarumInfo.Enabled = bool
 	end})
 
+	Sections.Main.Client:AddToggle({text = 'Enable WalkSpeed', state = WalkSpeedOn, callback = function(bool)
+		WalkSpeedOn = bool
+		if WalkSpeedOn then
+			Client.Character.Humanoid.WalkSpeed = WalkSpeedVal
+		end
+	end})
 	Sections.Main.Client:AddSlider({text = 'WalkSpeed', min = 16, max = 300, value = 16, callback = function(value)
 		WalkSpeedVal = value
-		Client.Character.Humanoid.WalkSpeed = value
+		if WalkSpeedOn then
+			Client.Character.Humanoid.WalkSpeed = WalkSpeedVal
+		end
 	end})
 	Sections.Main.Client:AddDivider()
 	Sections.Main.Client:AddToggle({text = 'Modify Reload Speed', flag = 'reloadMod', state = false, callback = function(bool)
