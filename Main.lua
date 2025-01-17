@@ -2,6 +2,22 @@ local AVer = '5.0'
 
 repeat wait() until game:IsLoaded()
 
+local CollectionService = game:GetService('CollectionService')
+local GuiService = game:GetService('GuiService')
+local HttpService = game:GetService('HttpService')
+local TeleportService = game:GetService("TeleportService")
+local InputService = game:GetService('UserInputService')
+local RunService = game:GetService('RunService')
+local Workspace = game:GetService('Workspace')
+local Players = game:GetService('Players')
+local Lighting = game:GetService('Lighting')
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local Stats = game:GetService('Stats')
+local Client = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
+local Mouse = Client:GetMouse()
+local GuiInset = GuiService:GetGuiInset().Y
+
 local Host = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
 local function HttpGet(File)
 	local Result = request({
@@ -61,14 +77,20 @@ for Game, ID in pairs(SupportedGames) do
 	end
 end
 
+local Autoload
+if isfile('Ayarum/AutoLoad.txt') and readfile('Ayarum/AutoLoad.txt') then
+	local Contents = HttpService:JSONDecode(readfile('Ayarum/AutoLoad.txt'))
+	if type(Contents) == 'table' and Contents[GameName] and isfile('Ayarum/Configs/' .. Contents[GameName] .. '.json') then
+		Autoload = Contents[GameName]
+	end
+end
+
 library:Settings({
 	name = 'Ayarum Hub v' .. AVer,
-	themecolor1 = Color3.fromRGB(137, 0, 254),
-	themecolor2 = Color3.fromRGB(223, 0, 255),
 	useconfigs = true,
 	foldername = 'Ayarum/Configs',
 	fileext = '.json',
-	autoload = isfile('Ayarum/AutoLoad.txt') and readfile('Ayarum/AutoLoad.txt') or nil
+	autoload = Autoload
 })
 
 local LoadingBar = library:AddLoadingBar('Ayarum Hub v' .. AVer .. ' - Loader')
@@ -88,20 +110,6 @@ end
 
 local Tabs = {}
 local Sections = {}
-local CollectionService = game:GetService('CollectionService')
-local GuiService = game:GetService('GuiService')
-local HttpService = game:GetService('HttpService')
-local InputService = game:GetService('UserInputService')
-local RunService = game:GetService('RunService')
-local Workspace = game:GetService('Workspace')
-local Players = game:GetService('Players')
-local Lighting = game:GetService('Lighting')
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local Stats = game:GetService('Stats')
-local Client = Players.LocalPlayer
-local Camera = Workspace.CurrentCamera
-local Mouse = Client:GetMouse()
-local GuiInset = GuiService:GetGuiInset().Y
 
 if game.CoreGui:FindFirstChild('TobBarApp') then
 	GuiInset = 58
@@ -942,7 +950,10 @@ Sections.Settings.Configs:AddButton({text = 'Delete', callback = function()
 				if not isfolder('Ayarum') then
 					makefolder('Ayarum')
 				end
-				writefile('Ayarum/AutoLoad.txt', '')
+				local Contents = isfile('Ayarum/AutoLoad.txt') and HttpService:JSONDecode(readfile('Ayarum/AutoLoad.txt')) or {}
+				if not type(Contents) == 'table' then Contents = {} end
+				Contents[GameName] = nil
+				writefile('Ayarum/AutoLoad.txt', HttpService:JSONEncode(Contents))
 			end
 			Notify('Deleted Config ' .. OldName)
 		end
@@ -955,7 +966,11 @@ Sections.Settings.Configs:AddButton({text = 'Set to Auto-Load', callback = funct
 	if not isfolder(library.foldername) then
 		makefolder(library.foldername)
 	end
-	writefile('Ayarum/AutoLoad.txt', library.flags['Config List'])
+	local Contents = isfile('Ayarum/AutoLoad.txt') and HttpService:JSONDecode(readfile('Ayarum/AutoLoad.txt')) or {}
+	if not type(Contents) == 'table' then Contents = {} end
+	Contents[GameName] = library.flags['Config List']
+	writefile('Ayarum/AutoLoad.txt', HttpService:JSONEncode(Contents))
+
 	AutoloadLabel:SetText('Auto-Load: ' .. library.flags['Config List'])
 	AutoloadName = library.flags['Config List']
 end})
@@ -968,10 +983,16 @@ Sections.Settings.Configs:AddButton({text = 'Clear Auto-Load', callback = functi
 	if not isfolder(library.foldername) then
 		makefolder(library.foldername)
 	end
-	writefile('Ayarum/AutoLoad.txt', '')
+	local Contents = isfile('Ayarum/AutoLoad.txt') and HttpService:JSONDecode(readfile('Ayarum/AutoLoad.txt')) or {}
+	if not type(Contents) == 'table' then Contents = {} end
+	Contents[GameName] = nil
+	writefile('Ayarum/AutoLoad.txt', HttpService:JSONEncode(Contents))
 end})
-if isfolder('Ayarum') and isfile('Ayarum/AutoLoad.txt') and isfile(library.foldername .. '/' .. readfile('Ayarum/AutoLoad.txt') .. library.fileext) then
-	AutoloadName = readfile('Ayarum/AutoLoad.txt')
+if isfolder('Ayarum') and isfile('Ayarum/AutoLoad.txt') then
+	local Contents = HttpService:JSONDecode(readfile('Ayarum/AutoLoad.txt'))
+	if type(Contents) == 'table' and Contents[GameName] and isfile('Ayarum/Configs/' .. Contents[GameName] .. '.json') then
+		AutoloadName = Contents[GameName]
+	end
 else
 	AutoloadName = 'None'
 end
