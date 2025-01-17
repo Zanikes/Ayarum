@@ -718,7 +718,7 @@ Sections.ESP.NameESP:AddToggle({text = 'Text Outline', state = false, callback =
 	EspSettings.TextOutline = bool
 	for _, v in pairs(RenderList) do
 		for k, a in pairs(v) do
-			if k == 'Name' then
+			if k == 'Name' or k == 'Info' then
 				a.Outline = bool
 			end
 		end
@@ -728,7 +728,7 @@ Sections.ESP.NameESP:AddSlider({text = 'Text Size', value = 20, min = 15, max = 
 	EspSettings.TextSize = value
 	for _, v in pairs(RenderList) do
 		for k, a in pairs(v) do
-			if k == 'Name' then
+			if k == 'Name' or k == 'Info' then
 				a.Size = value
 			end
 		end
@@ -738,7 +738,7 @@ Sections.ESP.NameESP:AddList({text = 'Font', values = {'UI', 'System', 'Plex', '
 	EspSettings.Font = choice
 	for _, v in pairs(RenderList) do
 		for k, a in pairs(v) do
-			if k == 'Name' then
+			if k == 'Name' or k == 'Info' then
 				a.Font = EspSettings.Fonts[choice]
 			end
 		end
@@ -846,7 +846,7 @@ Sections.ESP.All:AddSlider({text = 'Transparency', value = 0, min = 0, max = 1, 
 	EspSettings.Transparency = value
 	for _, v in pairs(RenderList) do
 		for k, a in pairs(v) do
-			if k == 'Name' or k == 'Tracer' or k == 'Stem' or k == 'Box' or k == 'Bar' or k == 'Line' then
+			if k == 'Name' or k == 'Info' or k == 'Tracer' or k == 'Stem' or k == 'Box' or k == 'Bar' or k == 'Line' then
 				a.Transparency = 1 - EspSettings.Transparency
 			end
 		end
