@@ -22,7 +22,8 @@ local Host = 'https://raw.githubusercontent.com/Zanikes/Ayarum/master/'
 local function HttpGet(File)
 	local Result = request({
 		Url = Host .. File,
-		Method = 'GET'
+		Method = 'GET',
+		Headers = {['Cache-Control'] = 'max-age=1, must-revalidate'}
 	})
 	return loadstring(Result.Body)()
 end

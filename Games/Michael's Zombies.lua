@@ -323,7 +323,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						Target += 10
 					else
 						SpeedColaBuffs.Buff2[1] = false
-						WalkSpeedInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
+						if WalkSpeedInfo1 then
+							WalkSpeedInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
+						end
 					end
 					if StaminUpEarned then Target += 10 end
 					library.options['WalkSpeed']:SetValue(Target)
