@@ -265,7 +265,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local StaminUpEarned = false
 
 	spawn(function()
-		while wait(0.5) do
+		while wait() do
 			if library.flags['Modded Gameplay'] and Client.Character and Client.Character.CharStats.Perks then
 				local Round = ReplicatedStorage.MapSettings.RoundNumber.Value
 				for _, Data in pairs(RoundBuffs) do
@@ -273,7 +273,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						if not Data[1] then
 							Data[1] = true
 							Data[4].TextColor3 = Color3.fromRGB(0, 255, 100)
-							Data[3](Round)
+							spawn(function()
+								Data[3](Round)
+							end)
 						end
 					else
 						Data[1] = false
