@@ -345,7 +345,7 @@ end)
 local SelectedTabButton
 local SelectedTabPage
 local HasTabBeenAdded = false
-local ColumnSize = 300
+local ColumnWidth = 300
 function Library:AddTab(Text)
 	Text = typeof(Text) == 'string' and Text or 'New Tab'
 
@@ -433,12 +433,12 @@ function Library:AddTab(Text)
 				Section.Size = UDim2.new(1, 0, 0, SectionSize)
 				ColumnSize = ColumnSize + SectionSize + Column.ColumnLayout.Padding.Offset
 			end
-			Column.Size = UDim2.new(0, ColumnSize, 0, ColumnSize)
+			Column.Size = UDim2.new(0, ColumnWidth, 0, ColumnSize)
 			if ColumnSize > BiggestColumn then
 				BiggestColumn = ColumnSize
 			end
 		end
-		TabFrame.Size = UDim2.new(0, ColumnSize * (#TabFrame:GetChildren() - 1), 1, 0)
+		TabFrame.Size = UDim2.new(0, ColumnWidth * (#TabFrame:GetChildren() - 1), 1, 0)
 		TabFrame.CanvasSize = UDim2.new(0, 0, 0, BiggestColumn)
 		if Library.selectedtab == Tab then
 			if Library.open then
@@ -516,7 +516,7 @@ function Library:AddTab(Text)
 				ColumnFrame.BackgroundTransparency = 1.000
 				ColumnFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				ColumnFrame.BorderSizePixel = 0
-				ColumnFrame.Size = UDim2.new(0, ColumnSize, 1, 0)
+				ColumnFrame.Size = UDim2.new(0, ColumnWidth, 1, 0)
 				ColumnFrame.LayoutOrder = ColCount
 
 				ColumnLayout.Name = 'ColumnLayout'
