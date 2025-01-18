@@ -217,6 +217,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local SpeedColaBuff3 = 35
 	local DoubleTapGot
 	local DoubleTapBuff1 = 30
+	local StaminUpGot
+	local WalkspeedEarned = false
 
 	local BoxESPInfo = AddBuffInfo('Mystery Box ESP Enabled', BoxESPRound)
 	local AutoCollectInfo = AddBuffInfo('Auto Collect Powerups Enabled', AutoCollectRound)
@@ -249,8 +251,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		if SpeedColaGot ~= nil and Round == SpeedColaGot + SpeedColaBuff2 then
 			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff2) .. ' Rounds Ago, WalkSpeed Increased')
 			WalkSpeedInfo1.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['WalkSpeed']:SetValue(35)
-			library.options['Enable WalkSpeed']:SetState(true)
 		end
 		if SpeedColaGot ~= nil and Round == SpeedColaGot + SpeedColaBuff3 then
 			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff3) .. ' Rounds Ago, Reload Speed Increased')
@@ -304,20 +304,34 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end)
 
 	spawn(function()
-		while wait(2) do
+		while wait(0.5) do
 			if library.flags['Modded Gameplay'] and Client.Character and Client.Character.CharStats.Perks then
 				if Client.Character.CharStats.Perks:FindFirstChild('SpeedCola') and SpeedColaGot == nil then
+					WalkspeedEarned = true
 					Notify('[Modded Gameplay Info]\nSpeed Cola Aquired, WalkSpeed Increased')
 					SpeedColaGot = ReplicatedStorage.MapSettings.RoundNumber.Value
 					ReloadInfo1 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff1 + SpeedColaGot)
 					WalkSpeedInfo1 = AddBuffInfo('WalkSpeed Increase', SpeedColaBuff2 + SpeedColaGot)
 					ReloadInfo2 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff3 + SpeedColaGot)
-					library.options['WalkSpeed']:SetValue(20)
-					library.options['Enable WalkSpeed']:SetState(true)
 				end
 				if Client.Character.CharStats.Perks:FindFirstChild('DoubleTap') and not Client.Character.CharStats.ShootBuffs:FindFirstChild('AyarumBuff') and DoubleTapGot == nil then
 					DoubleTapGot = ReplicatedStorage.MapSettings.RoundNumber.Value
 					FireRateInfo = AddBuffInfo('FireRate Increase', DoubleTapBuff1 + DoubleTapGot)
+				end
+				if Client.Character.CharStats.Perks:FindFirstChild('StaminUp') and StaminUpGot == nil then
+					WalkspeedEarned = true
+					StaminUpGot = ReplicatedStorage.MapSettings.RoundNumber.Value
+				end
+
+				if WalkspeedEarned then
+					local Target = 16
+					if SpeedColaGot then Target += 4 end
+					if SpeedColaGot and ReplicatedStorage.MapSettings.RoundNumber.Value == SpeedColaGot + SpeedColaBuff2 then
+						Target += 10
+					end
+					if StaminUpGot then Target += 10 end
+					library.options['WalkSpeed']:SetValue(Target)
+					library.options['Enable WalkSpeed']:SetState(true)
 				end
 			end
 		end
