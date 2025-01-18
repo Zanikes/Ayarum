@@ -345,12 +345,13 @@ end)
 local SelectedTabButton
 local SelectedTabPage
 local HasTabBeenAdded = false
+local ColumnSize = 300
 function Library:AddTab(Text)
 	Text = typeof(Text) == 'string' and Text or 'New Tab'
 
 	local Tab = {selected = false, sections = {}, first = not HasTabBeenAdded}
 	HasTabBeenAdded = true
-	
+
 	local TabLayout = Instance.new('UIListLayout')
 	local TabFrame = Instance.new('ScrollingFrame')
 	local TabButton = Instance.new('TextButton')
@@ -415,8 +416,8 @@ function Library:AddTab(Text)
 	TabButtonText.Text = Text
 	TabButtonText.TextColor3 = Color3.fromRGB(150, 150, 150)
 	TabButtonText.TextSize = 16.000
-	
-	local function Update(Instant)
+
+	local function Update()
 		local BiggestColumn = 0
 		for _, Column in pairs(TabFrame:GetChildren()) do
 			if Column:IsA('UIListLayout') then continue end
@@ -432,12 +433,12 @@ function Library:AddTab(Text)
 				Section.Size = UDim2.new(1, 0, 0, SectionSize)
 				ColumnSize = ColumnSize + SectionSize + Column.ColumnLayout.Padding.Offset
 			end
-			Column.Size = UDim2.new(0, 250, 0, ColumnSize)
+			Column.Size = UDim2.new(0, ColumnSize, 0, ColumnSize)
 			if ColumnSize > BiggestColumn then
 				BiggestColumn = ColumnSize
 			end
 		end
-		TabFrame.Size = UDim2.new(0, 250 * (#TabFrame:GetChildren() - 1), 1, 0)
+		TabFrame.Size = UDim2.new(0, ColumnSize * (#TabFrame:GetChildren() - 1), 1, 0)
 		TabFrame.CanvasSize = UDim2.new(0, 0, 0, BiggestColumn)
 		if Library.selectedtab == Tab then
 			if Library.open then
@@ -447,7 +448,7 @@ function Library:AddTab(Text)
 			end
 		end
 	end
-	
+
 	function Tab:Select()
 		if SelectedTabPage ~= TabFrame then
 			if SelectedTabPage then SelectedTabPage.Visible = false end
@@ -469,7 +470,7 @@ function Library:AddTab(Text)
 		Library.selectedtab = Tab
 		Update()
 	end
-	
+
 	TabButton.MouseEnter:Connect(function()
 		if Library.warning then return end
 		QTween(TabButton, 0.3, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
@@ -487,7 +488,7 @@ function Library:AddTab(Text)
 		if Library.warning then return end
 		Tab:Select()
 	end)
-	
+
 	local ColCount = 0
 	function Tab:AddSection(Options)
 		Options = CheckTable(Options, {
@@ -504,7 +505,7 @@ function Library:AddTab(Text)
 		if not Column then
 			repeat
 				ColCount += 1
-				
+
 				local ColumnFrame = Instance.new('Frame')
 				local ColumnLayout = Instance.new('UIListLayout')
 				local ColumnPadding = Instance.new('UIPadding')
@@ -515,7 +516,7 @@ function Library:AddTab(Text)
 				ColumnFrame.BackgroundTransparency = 1.000
 				ColumnFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				ColumnFrame.BorderSizePixel = 0
-				ColumnFrame.Size = UDim2.new(0, 250, 1, 0)
+				ColumnFrame.Size = UDim2.new(0, ColumnSize, 1, 0)
 				ColumnFrame.LayoutOrder = ColCount
 
 				ColumnLayout.Name = 'ColumnLayout'
@@ -529,13 +530,13 @@ function Library:AddTab(Text)
 				ColumnPadding.PaddingLeft = UDim.new(0, 10)
 				ColumnPadding.PaddingRight = UDim.new(0, 10)
 				ColumnPadding.PaddingTop = UDim.new(0, 10)
-				
+
 				if ColumnFrame.LayoutOrder == Options.column then
 					Column = ColumnFrame
 				end
 			until Column
 		end
-		
+
 
 		local Section = Instance.new('Frame')
 		local SectionTitle = Instance.new('TextLabel')
@@ -583,16 +584,16 @@ function Library:AddTab(Text)
 		SectionPadding.Parent = SectionHolder
 		SectionPadding.PaddingLeft = UDim.new(0, 14)
 		SectionPadding.PaddingRight = UDim.new(0, 14)
-		
+
 		SectionLayout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(Update)
-		
+
 		function Options:AddButton(Options)
 			Options = CheckTable(Options, {
 				text = 'New Button',
 				callback = function() end
 			})
 			Options.type = 'button'
-			
+
 			local Button = Instance.new('TextButton')
 			local ButtonGradient = Instance.new('Frame')
 
@@ -622,7 +623,7 @@ function Library:AddTab(Text)
 			ButtonGradient.UIStroke.Transparency = 1
 			Gradient(ButtonGradient.UIStroke)
 			Glow(ButtonGradient).ImageTransparency = 1
-			
+
 			Button.MouseEnter:Connect(function()
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				QTween(Button, 0.3, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
@@ -644,12 +645,12 @@ function Library:AddTab(Text)
 				QTween(ButtonGradient.UIStroke, 0.3, {Transparency = 1})
 				QTween(ButtonGradient.Glow, 0.3, {ImageTransparency = 1})
 			end)
-			
+
 			Button.MouseButton1Click:Connect(function()
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
-				
+
 				local Ripple = Instance.new('ImageLabel')
-				
+
 				Ripple.Name = 'Ripple'
 				Ripple.Parent = Button
 				Ripple.AnchorPoint = Vector2.new(0.5, 0)
@@ -660,20 +661,20 @@ function Library:AddTab(Text)
 				Ripple.Image = 'rbxassetid://6814674798'
 				Ripple.ImageTransparency = 0.500
 				Roundify(Ripple)
-				
+
 				QTween(Ripple, 0.5, {ImageTransparency = 1, Size = UDim2.new(1, 0, 1, 0)})
-				
+
 				task.delay(0.5, function()
 					Ripple:Destroy()
 				end)
-				
+
 				Options.callback()
 			end)
 		end
-		
+
 		function Options:AddLabel(Text)
 			Text = typeof(Text) == 'string' and Text or 'New Label'
-			
+
 			local Label = Instance.new('TextLabel')
 
 			Label.Name = 'Label'
@@ -687,24 +688,24 @@ function Library:AddTab(Text)
 			Label.TextColor3 = Color3.fromRGB(150, 150, 150)
 			Label.TextSize = 18.000
 			Label.RichText = true
-			
+
 			local Options = {text = Text}
-			
+
 			function Options:SetText(NewText)
 				NewText = typeof(NewText) == 'string' and NewText or Options.text
 				Options.text = NewText
 				Label.Text = Options.text
 				Label.Size = UDim2.new(1, 0, 0, GetTextSize(Options.text, Label.TextSize, Label.Font).Y + 2)
 			end
-			
+
 			function Options:GetText()
 				return Options.text
 			end
-			
+
 			Options:SetText(Text)
 			return Options
 		end
-		
+
 		function Options:AddDivider()
 			local Divider = Instance.new('Frame')
 
@@ -714,7 +715,7 @@ function Library:AddTab(Text)
 			Divider.BorderSizePixel = 0
 			Divider.Size = UDim2.new(1, SectionPadding.PaddingLeft.Offset + SectionPadding.PaddingRight.Offset, 0, 1)
 		end
-		
+
 		function Options:AddToggle(Options)
 			Options = CheckTable(Options, {
 				text ='New Toggle',
@@ -730,7 +731,7 @@ function Library:AddTab(Text)
 			end
 			Options.type = 'toggle'
 			Options.default = Options.state
-			
+
 			local Toggle = Instance.new('TextButton')
 			local ToggleText = Instance.new('TextLabel')
 			local ToggleHolder = Instance.new('Frame')
@@ -817,7 +818,7 @@ function Library:AddTab(Text)
 			ToggleGradient.UIStroke.Color = Color3.new(1, 1, 1)
 			Gradient(ToggleGradient.UIStroke)
 			Glow(ToggleGradient).ImageTransparency = 1
-			
+
 			Toggle.MouseEnter:Connect(function()
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				QTween(ToggleGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
@@ -858,7 +859,7 @@ function Library:AddTab(Text)
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				Options:SetState(not Options.state)
 			end)
-			
+
 			function Options:SetState(state)
 				state = typeof(state) == 'boolean' and state or false
 				Library.flags[Options.flag] = state
@@ -880,13 +881,13 @@ function Library:AddTab(Text)
 				end
 				Options.callback(state)
 			end
-			
+
 			Options:SetState(Options.state)
-			
+
 			Library.options[Options.flag] = Options
 			return Options
 		end
-		
+
 		function Options:AddBind(Options)
 			Options = CheckTable(Options, {
 				text = 'New Bind',
@@ -904,7 +905,7 @@ function Library:AddTab(Text)
 			end
 			Options.type = 'bind'
 			Options.default = Options.key
-			
+
 			local Bind = Instance.new('TextButton')
 			local BindText = Instance.new('TextLabel')
 			local BindHolder = Instance.new('Frame')
@@ -972,7 +973,7 @@ function Library:AddTab(Text)
 			Gradient(BindGradient.UIStroke)
 			Glow(BindGradient).ImageTransparency = 1
 			Gradient(BindGradient)
-			
+
 			KeyText:GetPropertyChangedSignal('Text'):Connect(function()
 				QTween(BindHolder, 0.3, {Size = UDim2.new(0, GetTextSize(KeyText.Text, KeyText.TextSize, KeyText.Font).X + 10, 1, 0)})
 			end)
@@ -999,7 +1000,7 @@ function Library:AddTab(Text)
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				QTween(BindHolder, 0.3, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
 			end)
-			
+
 			Bind.MouseButton1Click:Connect(function()
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				Binding = true
@@ -1009,7 +1010,7 @@ function Library:AddTab(Text)
 				QTween(BindGradient.Glow, 0.3, {ImageTransparency = 0})
 				QTween(KeyText, 0.3, {TextColor3 = Color3.new(1, 1, 1)})
 			end)
-			
+
 			Library:AddConnection(InputService.InputBegan, function(input)
 				if InputService:GetFocusedTextBox() then return end
 				if Binding then
@@ -1036,7 +1037,7 @@ function Library:AddTab(Text)
 					end
 				end
 			end)
-			
+
 			Library:AddConnection(InputService.InputEnded, function(input)
 				if Options.key ~= 'None' then
 					if input.KeyCode.Name == Options.key or input.UserInputType.Name == Options.key then
@@ -1048,7 +1049,7 @@ function Library:AddTab(Text)
 					end
 				end
 			end)
-			
+
 			function Options:SetKey(key)
 				Binding = false
 				if Loop then Loop:Disconnect(); Library.flags[Options.flag] = false; Options.callback(true, 0) end
@@ -1073,7 +1074,7 @@ function Library:AddTab(Text)
 			Library.options[Options.flag] = Options
 			return Options
 		end
-		
+
 		function Options:AddSlider(Options)
 			Options = CheckTable(Options, {
 				text = 'New Slider',
@@ -1094,7 +1095,7 @@ function Library:AddTab(Text)
 			Options.type = 'slider'
 			Options.default = Options.value
 			if Options.min < 0 then Options.min = 0 end
-			
+
 			local Slider = Instance.new('TextButton')
 			local SliderText = Instance.new('TextLabel')
 			local ValueBox = Instance.new('TextBox')
@@ -1224,7 +1225,7 @@ function Library:AddTab(Text)
 			CircleGradient.Size = UDim2.new(1, 0, 1, 0)
 			Roundify(CircleGradient).CornerRadius = UDim.new(1, 0)
 			Gradient(CircleGradient)
-			
+
 			ValueBox:GetPropertyChangedSignal('Text'):Connect(function()
 				if ValueBox.Text == '' then
 					STween(ValueBox, 0.1, {Size = UDim2.new(0, GetTextSize('[Value]', ValueBox.TextSize, ValueBox.Font).X + 10, 0, 20)})
@@ -1250,7 +1251,7 @@ function Library:AddTab(Text)
 				QTween(BarColor, 0.3, {BackgroundColor3 = Color3.fromRGB(25, 25, 25)})
 				QTween(Circle, 0.3, {BackgroundColor3 = Color3.fromRGB(25, 25, 25), Size = UDim2.new(0, 0, 0, 0)})
 			end)
-			
+
 			Slider.InputBegan:Connect(function(input)
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				if input.UserInputType == InputTypes.MouseButton1 then
@@ -1282,7 +1283,7 @@ function Library:AddTab(Text)
 					end
 				end
 			end)
-			
+
 			local Hover
 			local Typing
 
@@ -1335,7 +1336,7 @@ function Library:AddTab(Text)
 			Library.options[Options.flag] = Options
 			return Options
 		end
-		
+
 		function Options:AddList(Options)
 			Options = CheckTable(Options, {
 				text = 'New List',
@@ -1370,7 +1371,7 @@ function Library:AddTab(Text)
 				end
 				return string.sub(s, 1, #s - 2)
 			end
-			
+
 			local List = Instance.new('TextButton')
 			local ListText = Instance.new('TextLabel')
 			local ChoicesText = Instance.new('TextLabel')
@@ -1454,7 +1455,7 @@ function Library:AddTab(Text)
 			Gradient(OpenButtonGradient)
 			Gradient(OpenButtonGradient.UIStroke)
 			Glow(OpenButtonGradient).ImageTransparency = 1
-			
+
 			local ItemsInvis = Instance.new('Frame')
 			local ItemsHolder = Instance.new('Frame')
 			local ItemsList = Instance.new('ScrollingFrame')
@@ -1504,7 +1505,7 @@ function Library:AddTab(Text)
 			ItemsListPadding.Parent = ItemsList
 			ItemsListPadding.PaddingBottom = UDim.new(0, 5)
 			ItemsListPadding.PaddingTop = UDim.new(0, 5)
-			
+
 			ChoicesText:GetPropertyChangedSignal('Text'):Connect(function()
 				if GetTextSize(ChoicesText.Text, ChoicesText.TextSize, ChoicesText.Font).X > ChoicesText.AbsoluteSize.X then
 					local NewText = ChoicesText.Text .. '...'
@@ -1526,14 +1527,14 @@ function Library:AddTab(Text)
 					Options.hovering = false
 				end
 			end)
-			
+
 			local function UpdateListPos()
 				ItemsInvis.Position = UDim2.new(0, Round(List.AbsolutePosition.X - Mainframe.AbsolutePosition.X) - 5, 0, Round(List.AbsolutePosition.Y - Mainframe.AbsolutePosition.Y) + List.AbsoluteSize.Y + 5)
 			end
 
 			Library:AddConnection(List:GetPropertyChangedSignal('AbsolutePosition'), UpdateListPos)
 			UpdateListPos()
-			
+
 			Library:AddConnection(ItemsHolder:GetPropertyChangedSignal('AbsoluteSize'), function()
 				if ItemsHolder.AbsoluteSize.Y > 0 then
 					ItemsInvis.Visible = true
@@ -1554,9 +1555,9 @@ function Library:AddTab(Text)
 				ItemsInvis.Size = UDim2.new(0, List.AbsoluteSize.X + 10, 0, HolderSize)
 				ItemsList.CanvasSize = UDim2.new(0, 0, 0, Size)
 			end
-			
+
 			ItemsListLayout:GetPropertyChangedSignal('AbsoluteCellCount'):Connect(UpdateList)
-			
+
 			local ListHovering = false
 			List.MouseEnter:Connect(function()
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
@@ -1584,7 +1585,7 @@ function Library:AddTab(Text)
 				QTween(OpenButton, 0.3, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
 				QTween(OpenButtonGradient, 0.3, {BackgroundColor3 = Color3.new(1, 1, 1)})
 			end)
-			
+
 			List.MouseButton1Click:Connect(function()
 				if Library.warning then return end
 				if TabsDisplayed then return end
@@ -1601,7 +1602,7 @@ function Library:AddTab(Text)
 				Options.open = true
 				Library.popup = Options
 			end)
-			
+
 			local selected
 			function Options:AddValue(value, state)
 				if Options.labels[value] then return end
@@ -1614,7 +1615,7 @@ function Library:AddTab(Text)
 				if Options.multiselect then
 					Options.value[value] = state
 				end
-				
+
 				local Item = Instance.new('TextButton')
 				local ItemText = Instance.new('TextLabel')
 				local ItemTextGradient = Instance.new('TextLabel')
@@ -1679,7 +1680,7 @@ function Library:AddTab(Text)
 				Item.MouseButton1Up:Connect(function()
 					QTween(ItemText, 0.3, {TextColor3 = Color3.fromRGB(150, 150, 150)})
 				end)
-				
+
 				Item.MouseButton1Click:Connect(function()
 					if Options.multiselect then
 						Options.value[value] = not Options.value[value]
@@ -1690,11 +1691,11 @@ function Library:AddTab(Text)
 					end
 				end)
 			end
-			
+
 			for i, v in pairs(Options.values) do
 				Options:AddValue(tostring(typeof(i) == 'number' and v or i))
 			end
-			
+
 			function Options:RemoveValue(value)
 				local label = Options.labels[value]
 				if label then
@@ -1714,7 +1715,7 @@ function Library:AddTab(Text)
 					end
 				end
 			end
-			
+
 			function Options:SetValue(value)
 				if Options.multiselect and typeof(value) ~= 'table' then
 					value = {}
@@ -1752,7 +1753,7 @@ function Library:AddTab(Text)
 				end
 				Options.callback(Options.value)
 			end
-			
+
 			Options:SetValue(Options.value)
 
 			function Options:Close()
@@ -1773,7 +1774,7 @@ function Library:AddTab(Text)
 			Library.options[Options.flag] = Options
 			return Options
 		end
-		
+
 		function Options:AddBox(Options)
 			Options = CheckTable(Options, {
 				text = 'New Box',
@@ -1791,7 +1792,7 @@ function Library:AddTab(Text)
 			end
 			Options.type = 'box'
 			Options.default = Options.value
-			
+
 			local Box = Instance.new('TextBox')
 			local Constraint = Instance.new('UITextSizeConstraint')
 			local BoxGradient = Instance.new('Frame')
@@ -1829,7 +1830,7 @@ function Library:AddTab(Text)
 			Border(BoxGradient).Transparency = 1
 			BoxGradient.UIStroke.Color = Color3.new(1, 1, 1)
 			Gradient(BoxGradient.UIStroke)
-			
+
 			local Hover
 			local Typing
 
@@ -1889,7 +1890,7 @@ function Library:AddTab(Text)
 			Library.options[Options.flag] = Options
 			return Options
 		end
-		
+
 		function Options:AddColor(Options)
 			Options = CheckTable(Options, {
 				text = 'New Color Picker',
@@ -1908,7 +1909,7 @@ function Library:AddTab(Text)
 			Options.open = false
 			Options.hovering = false
 			Options.default = Options.color
-			
+
 			local ColorButton = Instance.new('TextButton')
 			local ColorText = Instance.new('TextLabel')
 			local Container = Instance.new('Frame')
@@ -1980,7 +1981,7 @@ function Library:AddTab(Text)
 			Preview.BorderSizePixel = 0
 			Preview.Size = UDim2.new(2, 0, 1, 0)
 			Roundify(Preview).CornerRadius = UDim.new(0, 7)
-			
+
 			local ColorWindow = Instance.new('Frame')
 			local Hue = Instance.new('Frame')
 			local HueGradient = Instance.new('UIGradient')
@@ -2129,7 +2130,7 @@ function Library:AddTab(Text)
 			HexBoxConstraint.Name = 'HexBoxConstraint'
 			HexBoxConstraint.Parent = HexBox
 			HexBoxConstraint.MaxTextSize = 16
-			
+
 			ColorWindow.InputBegan:Connect(function(input)
 				if input.UserInputType == InputTypes.MouseMovement then
 					Options.hovering = true
@@ -2156,7 +2157,7 @@ function Library:AddTab(Text)
 
 			Library:AddConnection(ColorButton:GetPropertyChangedSignal('AbsolutePosition'), UpdateWindowPos)
 			UpdateWindowPos()
-			
+
 			local hue, sat, val = Color3.toHSV(Options.color)
 			hue, sat, val = hue == 0 and 1 or hue, sat + 0.005, val - 0.005
 			local editingHue
@@ -2239,7 +2240,7 @@ function Library:AddTab(Text)
 			end
 			buttonEffects(RainbowColor)
 			buttonEffects(ResetColor)
-			
+
 			function Options:SetColor(Color, Rainbow)
 				if typeof(Rainbow) == 'boolean' then
 					rainbowEnabled = Rainbow
@@ -2289,7 +2290,7 @@ function Library:AddTab(Text)
 				HexBox.Text = color2text(Color, true)
 				Options.callback(Color)
 			end
-			
+
 			ColorButton.MouseEnter:Connect(function()
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				QTween(Container, 0.3, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
@@ -2308,7 +2309,7 @@ function Library:AddTab(Text)
 				if TabsDisplayed or Library.warning or (Library.popup and Library.popup.hovering) then return end
 				QTween(Container, 0.3, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
 			end)
-			
+
 			ColorButton.MouseButton1Click:Connect(function()
 				if TabsDisplayed then return end
 				if Library.popup and Library.popup ~= Options and Library.popup.hovering then return end
@@ -2337,7 +2338,7 @@ function Library:AddTab(Text)
 				r, g, b = Library.round(currentColor)
 				HexBox.Text = string.format('#%02x%02x%02x', r, g, b)
 			end)
-			
+
 			Hue.InputBegan:Connect(function(input)
 				if input.UserInputType == InputTypes.MouseButton1 then
 					editingHue = true
@@ -2360,7 +2361,7 @@ function Library:AddTab(Text)
 					editingHue = false
 				end
 			end)
-			
+
 			SatVal.InputBegan:Connect(function(input)
 				if input.UserInputType == InputTypes.MouseButton1 then
 					editingSatVal = true
@@ -2387,7 +2388,7 @@ function Library:AddTab(Text)
 					editingSatVal = false
 				end
 			end)
-			
+
 			ResetColor.MouseButton1Click:Connect(function()
 				Options:SetColor(Options.default)
 			end)
@@ -2407,11 +2408,11 @@ function Library:AddTab(Text)
 			Library.options[Options.flag] = Options
 			return Options
 		end
-		
+
 		Tab.sections[Options.text] = Options
 		return Options
 	end
-	
+
 	Library.tabs[Text] = Tab
 	return Tab
 end
@@ -2793,7 +2794,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingInfo.Text = 'Initializing...'
 	LoadingInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
 	LoadingInfo.TextSize = 18.000
-	
+
 	BTween(LoadingBar, 0.3, {Position = UDim2.new(0.5, 0, 0, 10)})
 	wait(0.3)
 	local Options = {}
