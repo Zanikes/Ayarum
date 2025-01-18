@@ -202,137 +202,185 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		RecoilRemoved = true
 	end
 
-	local BoxESPRound = 5
-	local AutoCollectRound = 10
-	local ChamsRound = 25
-	local AccuracyRound = 30
-	local NoRecoilRound = 35
-	local KillAuraRound = 40
-	local KillAuraBuffRound = 45
-	local SilentAimRound = 50
+	local RoundBuffs = {
+		BoxESP = {false, 5, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Mystery Box ESP Enabled')
+			library.options['Mystery Box ESP']:SetState(true)
+		end, AddBuffInfo('Mystery Box ESP Enabled', 5)},
+		AutoCollect = {false, 10, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Auto-Collect Powerups Enabled')
+			library.options['collect']:SetState(true)
+		end, AddBuffInfo('Auto Collect Powerups Enabled', 10)},
+		Chams = {false, 25, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Zombie Chams Enabled')
+			library.options['Zombie Chams']:SetState(true)
+		end, AddBuffInfo('Zombie Chams Enabled', 25)},
+		Accuracy = {false, 30, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Perfect Accuracy Enabled')
+			PerfectAccuracy()
+		end, AddBuffInfo('Perfect Accuracy Enabled', 30)},
+		NoRecoil = {false, 35, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, No Recoil Enabled')
+			NoRecoil()
+		end, AddBuffInfo('No Recoil Enabled', 35)},
+		KillAura = {false, 40, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Defensive Aura Enabled')
+			library.options['Kill Aura']:SetState(true)
+		end, AddBuffInfo('Defensive Aura Enabled', 40)},
+		KillAuraBuff = {false, 45, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Defensive Aura Buffed')
+			library.options['Kill Aura Delay']:SetValue(0)
+		end, AddBuffInfo('Defensive Aura Buff', 45)},
+		SilentAim = {false, 50, function(Round)
+			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Silent Aim Enabled')
+			library.flags['Silent Aim']:SetState(true)
+			library.flags['sAimSize']:SetValue(1000)
+			library.flags['sAimTrans']:SetValue(1)
+		end, AddBuffInfo('Silent Aim', 50)}
+	}
 
 	local SpeedColaGot
-	local SpeedColaBuff1 = 5
-	local SpeedColaBuff2 = 15
-	local SpeedColaBuff3 = 35
 	local DoubleTapGot
-	local DoubleTapBuff1 = 30
 	local StaminUpGot
-	local WalkspeedEarned = false
 
-	local BoxESPInfo = AddBuffInfo('Mystery Box ESP Enabled', BoxESPRound)
-	local AutoCollectInfo = AddBuffInfo('Auto Collect Powerups Enabled', AutoCollectRound)
-	local ChamsInfo = AddBuffInfo('Zombie Chams Enabled', ChamsRound)
-	local AccuracyInfo = AddBuffInfo('Perfect Accuracy Enabled', AccuracyRound)
-	local NoRecoilInfo = AddBuffInfo('No Recoil Enabled', NoRecoilRound)
-	local KillAuraInfo = AddBuffInfo('Defensive Aura Enabled', KillAuraRound)
-	local KillAuraBuffInfo = AddBuffInfo('Defensive Aura Buff', KillAuraBuffRound)
-	local SilentAimInfo = AddBuffInfo('Silent Aim', SilentAimRound)
+	local SpeedColaBuffs = {
+		Buff1 = {false, 5},
+		Buff2 = {false, 15},
+		Buff3 = {false, 35}
+	}
+	local DoubleTapBuffs = {
+		Buff1 = {false, 30}
+	}
+
+	local SpeedColaInfo
 	local ReloadInfo1
 	local WalkSpeedInfo1
 	local ReloadInfo2
 	local FireRateInfo
+	local StaminUpInfo
 
-	library:AddConnection(ReplicatedStorage.MapSettings.RoundNumber:GetPropertyChangedSignal('Value'), function()
-		if not library.flags['Modded Gameplay'] then return end
-		local Round = ReplicatedStorage.MapSettings.RoundNumber.Value
-		if DoubleTapGot ~= nil and Round == DoubleTapGot + DoubleTapBuff1 then
-			Notify('[Modded Gameplay Info]\nDouble Tap Aquired ' .. tostring(DoubleTapBuff1) .. ' Rounds Ago, FireRate Increased')
-			FireRateInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['firerateMod']:SetState(true)
-			library.options['FireRate Modifier']:SetValue(80)
-		end
-		if SpeedColaGot ~= nil and Round == SpeedColaGot + SpeedColaBuff1 then
-			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff1) .. ' Rounds Ago, Reload Speed Increased')
-			ReloadInfo1.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['reloadMod']:SetState(true)
-			library.options['Choose Reload Speed']:SetValue('Fast')
-		end
-		if SpeedColaGot ~= nil and Round == SpeedColaGot + SpeedColaBuff2 then
-			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff2) .. ' Rounds Ago, WalkSpeed Increased')
-			WalkSpeedInfo1.TextColor3 = Color3.fromRGB(0, 255, 100)
-		end
-		if SpeedColaGot ~= nil and Round == SpeedColaGot + SpeedColaBuff3 then
-			Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuff3) .. ' Rounds Ago, Reload Speed Increased')
-			ReloadInfo2.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['reloadMod']:SetState(true)
-			library.options['Choose Reload Speed']:SetValue('Instant')
-		end
-		if Round == BoxESPRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(BoxESPRound) .. ' Reached, Mystery Box ESP Enabled')
-			BoxESPInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['Mystery Box ESP']:SetState(true)
-		end
-		if Round == NoRecoilRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(NoRecoilRound) .. ' Reached, No Recoil Enabled')
-			NoRecoilInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			NoRecoil()
-		end
-		if Round == KillAuraBuffRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(KillAuraBuffRound) .. ' Reached, Defensive Aura Buffed')
-			KillAuraBuffInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['Kill Aura Delay']:SetValue(0)
-		end
-		if Round == KillAuraRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(KillAuraRound) .. ' Reached, Defensive Aura Enabled')
-			KillAuraInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['Kill Aura']:SetState(true)
-		end
-		if Round == AutoCollectRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(AutoCollectRound) .. ' Reached, Auto-Collect Powerups Enabled')
-			AutoCollectInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['collect']:SetState(true)
-		end
-		if Round == ChamsRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(ChamsRound) .. ' Reached, Zombie Chams Enabled')
-			ChamsInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.options['Zombie Chams']:SetState(true)
-			library.options['chamHealth']:SetState(true)
-		end
-		if Round == AccuracyRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(AccuracyRound) .. ' Reached, Perfect Accuracy Enabled')
-			AccuracyInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			PerfectAccuracy()
-		end
-		if Round == SilentAimRound then
-			Notify('[Modded Gameplay Info]\nRound ' .. tostring(SilentAimRound) .. ' Reached, Silent Aim Enabled')
-			SilentAimInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
-			library.flags['Silent Aim']:SetState(true)
-			library.flags['sAimSize']:SetValue(1000)
-			library.flags['sAimTrans']:SetValue(1)
-		end
-	end)
+	local SpeedColaEarned = false
+	local DoubleTapEarned = false
+	local StaminUpEarned = false
 
 	spawn(function()
 		while wait(0.5) do
 			if library.flags['Modded Gameplay'] and Client.Character and Client.Character.CharStats.Perks then
-				if Client.Character.CharStats.Perks:FindFirstChild('SpeedCola') and SpeedColaGot == nil then
-					WalkspeedEarned = true
-					Notify('[Modded Gameplay Info]\nSpeed Cola Aquired, Small WalkSpeed Increase')
-					SpeedColaGot = ReplicatedStorage.MapSettings.RoundNumber.Value
-					ReloadInfo1 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff1 + SpeedColaGot)
-					WalkSpeedInfo1 = AddBuffInfo('WalkSpeed Increase', SpeedColaBuff2 + SpeedColaGot)
-					ReloadInfo2 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff3 + SpeedColaGot)
-				end
-				if Client.Character.CharStats.Perks:FindFirstChild('DoubleTap') and not Client.Character.CharStats.ShootBuffs:FindFirstChild('AyarumBuff') and DoubleTapGot == nil then
-					DoubleTapGot = ReplicatedStorage.MapSettings.RoundNumber.Value
-					FireRateInfo = AddBuffInfo('FireRate Increase', DoubleTapBuff1 + DoubleTapGot)
-				end
-				if Client.Character.CharStats.Perks:FindFirstChild('StaminUp') and StaminUpGot == nil then
-					WalkspeedEarned = true
-					Notify('[Modded Gameplay Info]\nStaminUp Aquired, WalkSpeed Increased')
-					StaminUpGot = ReplicatedStorage.MapSettings.RoundNumber.Value
+				local Round = ReplicatedStorage.MapSettings.RoundNumber.Value
+				for _, Data in pairs(RoundBuffs) do
+					if Round >= Data[2] and not Data[1] then
+						Data[1] = true
+						Data[4].TextColor3 = Color3.fromRGB(0, 255, 100)
+						Data[3](Round)
+					else
+						Data[1] = false
+						Data[4].TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
 				end
 
-				if WalkspeedEarned then
-					local Target = 16
-					if SpeedColaGot then Target += 4 end
-					if SpeedColaGot and ReplicatedStorage.MapSettings.RoundNumber.Value == SpeedColaGot + SpeedColaBuff2 then
-						Target += 10
+				if Client.Character.CharStats.Perks:FindFirstChild('SpeedCola') then
+					SpeedColaEarned = true
+					if not SpeedColaGot then
+						SpeedColaGot = Round
+						Notify('[Modded Gameplay Info]\nSpeed Cola Aquired, Small WalkSpeed Increase')
+						SpeedColaInfo = AddBuffInfo('Speed Cola Aquired', Round)
+						ReloadInfo1 = AddBuffInfo('Reload Speed Increase', SpeedColaBuffs.Buff1[2] + SpeedColaGot)
+						WalkSpeedInfo1 = AddBuffInfo('WalkSpeed Increase', SpeedColaBuffs.Buff2[2] + SpeedColaGot)
+						ReloadInfo2 = AddBuffInfo('Reload Speed Increase', SpeedColaBuffs.Buff3[2] + SpeedColaGot)
 					end
-					if StaminUpGot then Target += 10 end
+					SpeedColaInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
+				else
+					SpeedColaEarned = false
+					if SpeedColaInfo then
+						SpeedColaInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
+				end
+
+				if Client.Character.CharStats.Perks:FindFirstChild('StaminUp') then
+					StaminUpEarned = true
+					if not StaminUpGot then
+						StaminUpGot = Round
+						Notify('[Modded Gameplay Info]\nStaminUp Aquired, WalkSpeed Increased')
+						StaminUpInfo = AddBuffInfo('StaminUp Aquired', Round)
+					end
+					StaminUpInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
+				else
+					StaminUpEarned = false
+					if StaminUpInfo then
+						StaminUpInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
+				end
+
+				if SpeedColaEarned or StaminUpEarned then
+					local Target = 16
+					if SpeedColaEarned then Target += 4 end
+					if SpeedColaEarned and Round >= SpeedColaGot + SpeedColaBuffs.Buff2[2] then
+						if not SpeedColaBuffs.Buff2[1] then
+							SpeedColaBuffs.Buff2[1] = true
+							Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuffs.Buff1[2]) .. ' Rounds Ago, WalkSpeed Increased')
+							WalkSpeedInfo1.TextColor3 = Color3.fromRGB(0, 255, 100)
+						end
+						Target += 10
+					else
+						SpeedColaBuffs.Buff2[1] = false
+						WalkSpeedInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
+					if StaminUpEarned then Target += 10 end
 					library.options['WalkSpeed']:SetValue(Target)
 					library.options['Enable WalkSpeed']:SetState(true)
+				else
+					library.options['WalkSpeed']:SetValue(16)
+					library.options['Enable WalkSpeed']:SetState(false)
+					SpeedColaBuffs.Buff2[1] = false
+					if WalkSpeedInfo1 then
+						WalkSpeedInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
+				end
+
+				if SpeedColaEarned then
+					if not SpeedColaBuffs.Buff1[1] and Round >= SpeedColaGot + SpeedColaBuffs.Buff1[2] and Round < SpeedColaGot + SpeedColaBuffs.Buff3[2] then
+						SpeedColaBuffs.Buff1[1] = true
+						Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuffs.Buff1[2]) .. ' Rounds Ago, Reload Speed Increased')
+						ReloadInfo1.TextColor3 = Color3.fromRGB(0, 255, 100)
+						library.options['reloadMod']:SetState(true)
+						library.options['Choose Reload Speed']:SetValue('Fast')
+					elseif not SpeedColaBuffs.Buff3[1] and Round >= SpeedColaGot + SpeedColaBuffs.Buff3[2] then
+						SpeedColaBuffs.Buff3[1] = true
+						Notify('[Modded Gameplay Info]\nSpeed Cola Aquired ' .. tostring(SpeedColaBuffs.Buff3[2]) .. ' Rounds Ago, Reload Speed Increased')
+						ReloadInfo2.TextColor3 = Color3.fromRGB(0, 255, 100)
+						library.options['reloadMod']:SetState(true)
+						library.options['Choose Reload Speed']:SetValue('Instant')
+					end
+				else
+					ReloadInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
+					ReloadInfo2.TextColor3 = Color3.fromRGB(255, 255, 255)
+					library.options['reloadMod']:SetState(false)
+				end
+
+				DoubleTapEarned = Client.Character.CharStats.Perks:FindFirstChild('DoubleTap') and true or false
+				if DoubleTapEarned then
+					if not DoubleTapBuffs.Buff1[1] and Round >= DoubleTapGot + DoubleTapBuffs.Buff1[2] then
+						DoubleTapBuffs.Buff1[1] = true
+						Notify('[Modded Gameplay Info]\nDouble Tap Aquired ' .. tostring(DoubleTapBuffs.Buff1[2]) .. ' Rounds Ago, FireRate Increased')
+						FireRateInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
+						library.options['firerateMod']:SetState(true)
+						library.options['FireRate Modifier']:SetValue(80)
+					end
+				else
+					if FireRateInfo then
+						FireRateInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
+					library.options['firerateMod']:SetState(false)
+				end
+			else
+				for _, Data in pairs(RoundBuffs) do
+					Data[1] = false
+				end
+				for _, Data in pairs(SpeedColaBuffs) do
+					Data[1] = false
+				end
+				for _, Data in pairs(DoubleTapBuffs) do
+					Data[1] = false
 				end
 			end
 		end
