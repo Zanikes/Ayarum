@@ -268,10 +268,12 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			if library.flags['Modded Gameplay'] and Client.Character and Client.Character.CharStats.Perks then
 				local Round = ReplicatedStorage.MapSettings.RoundNumber.Value
 				for _, Data in pairs(RoundBuffs) do
-					if Round >= Data[2] and not Data[1] then
-						Data[1] = true
-						Data[4].TextColor3 = Color3.fromRGB(0, 255, 100)
-						Data[3](Round)
+					if Round >= Data[2] then
+						if not Data[1] then
+							Data[1] = true
+							Data[4].TextColor3 = Color3.fromRGB(0, 255, 100)
+							Data[3](Round)
+						end
 					else
 						Data[1] = false
 						Data[4].TextColor3 = Color3.fromRGB(255, 255, 255)
