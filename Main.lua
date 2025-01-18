@@ -445,6 +445,7 @@ local function Update()
 					end
 				else
 					Drawings.Name.Visible = false
+					Drawings.Info.Visible = false
 				end
 
 				if EspSettings.TracersEnabled then
@@ -924,7 +925,7 @@ Sections.Settings.UI:AddDivider()
 Sections.Settings.UI:AddToggle({text = 'Watermark', flag = 'showMark', state = true})
 Sections.Settings.UI:AddToggle({text = 'Show Memory Usage', flag = 'showMem', state = true})
 
-Sections.Settings.Credits:AddLabel('Zanikes ~ Script Developer\nZanikes ~ UI Library Developer\nDekkonot & moo1210 ~ Shaders\nErji ~ UI Library Inspiration')
+Sections.Settings.Credits:AddLabel('<b>Script Developer</b>\nZanikes\n\n<b>UI Library Developer</b>\nZanikes\n\n<b>Shaders</b>\nDekkonot & moo1210\n\n<b>UI Library Inspiration</b>\nErji')
 Sections.Settings.Configs:AddBox({text = 'Config Name', value = '', skipflag = true})
 Sections.Settings.Configs:AddButton({text = 'Create', callback = function()
 	if string.gsub(library.flags['Config Name'], ' ', '') == '' then
@@ -1132,3 +1133,9 @@ if getgenv().AyarumWatermark then
 	getgenv().AyarumWatermark = nil
 end
 RunService:UnbindFromRenderStep('UpdateEsp')
+for _, Player in pairs(RenderList) do
+	for _, v in pairs(Player) do
+		if type(v) == 'boolean' then continue end
+		v:Remove()
+	end
+end
