@@ -261,8 +261,8 @@ Holder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Holder.BackgroundTransparency = 1.000
 Holder.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Holder.BorderSizePixel = 0
-Holder.Position = UDim2.new(0, 30, 0, 40)
-Holder.Size = UDim2.new(1, -30, 1, -40)
+Holder.Position = UDim2.new(0, 30, 0, 45)
+Holder.Size = UDim2.new(1, -30, 1, -45)
 Holder.ClipsDescendants = true
 Holder.ZIndex = 0
 
@@ -2911,6 +2911,7 @@ function Library:AddWarning(Options)
 			WarningText.TextColor3 = Color3.fromRGB(255, 255, 255)
 			WarningText.TextSize = 18.000
 			WarningText.RichText = true
+			WarningText.TextWrapped = true
 
 			local function ButtonEffects(Button)
 				Button.MouseEnter:Connect(function()
