@@ -1186,7 +1186,7 @@ function Library:AddTab(Text)
 			BarColor.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 			BarColor.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			BarColor.BorderSizePixel = 0
-			BarColor.Size = UDim2.new(0, 202, 1, 0)
+			BarColor.Size = UDim2.new(0, SliderHolder.AbsoluteSize.X, 1, 0)
 			Roundify(BarColor)
 
 			BarGradient.Name = 'BarGradient'
@@ -2002,7 +2002,7 @@ function Library:AddTab(Text)
 			ColorWindow.BorderColor3 = Color3.fromRGB(30, 30, 30)
 			ColorWindow.ClipsDescendants = true
 			ColorWindow.Position = UDim2.new(0, 280, 0, 250)
-			ColorWindow.Size = UDim2.new(0, 207, 0, 0)
+			ColorWindow.Size = UDim2.new(0, ColorButton.AbsoluteSize.X + 10, 0, 0)
 			ColorWindow.ZIndex = 2
 			ColorWindow.Visible = false
 			Roundify(ColorWindow)
@@ -2315,7 +2315,7 @@ function Library:AddTab(Text)
 				if Library.popup and Library.popup ~= Options and Library.popup.hovering then return end
 				if Library.popup == Options then Library.popup:Close(); return end
 				if Library.popup and Library.popup.hovering == false then Library.popup:Close() end
-				QTween(ColorWindow, 0.3, {Size = UDim2.new(0, 207, 0, 162)})
+				QTween(ColorWindow, 0.3, {Size = UDim2.new(0, ColorButton.AbsoluteSize.X + 10, 0, 162)})
 				Options.open = true
 				Library.popup = Options
 			end)
@@ -2401,7 +2401,7 @@ function Library:AddTab(Text)
 
 			function Options:Close()
 				Library.popup = nil
-				QTween(ColorWindow, 0.3, {Size = UDim2.new(0, 207, 0, 0)})
+				QTween(ColorWindow, 0.3, {Size = UDim2.new(0, ColorButton.AbsoluteSize.X + 10, 0, 0)})
 				Options.open = false
 			end
 
