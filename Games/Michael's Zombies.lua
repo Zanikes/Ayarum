@@ -274,7 +274,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 							Data[1] = true
 							Data[4].TextColor3 = Color3.fromRGB(0, 255, 100)
 							spawn(function()
-								Data[3](Round)
+								Data[3](Data[2])
 							end)
 						end
 					else
@@ -371,6 +371,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					if not DoubleTapGot then
 						DoubleTapGot = Round
 						DoubleTapInfo = AddBuffInfo('DoubleTap Aquired', Round)
+						FireRateInfo = AddBuffInfo('Firerate Increase', DoubleTapBuffs.Buff1[2] + DoubleTapGot)
 					end
 					DoubleTapInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
 				else
@@ -612,6 +613,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end})
 	Sections.Main.Misc:AddToggle({text = 'Mystery Box ESP', state = false, callback = function(bool)
+		if MysteryBoxESP == bool then return end
 		MysteryBoxESP = bool
 		if MysteryBoxESP then
 			while MysteryBoxESP do
