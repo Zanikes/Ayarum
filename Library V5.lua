@@ -2012,8 +2012,8 @@ function Library:AddTab(Text)
 			Hue.Parent = ColorWindow
 			Hue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 			Hue.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			Hue.Position = UDim2.new(0, 5, 0, 137)
-			Hue.Size = UDim2.new(0, 127, 0, 20)
+			Hue.Size = UDim2.new(0, 182, 0, 20)
+			Hue.Position = UDim2.new(0, 5, 0, 192)
 			Roundify(Hue)
 			Border(Hue)
 
@@ -2035,7 +2035,7 @@ function Library:AddTab(Text)
 			SatVal.BorderColor3 = Color3.fromRGB(30, 30, 30)
 			SatVal.ClipsDescendants = true
 			SatVal.Position = UDim2.new(0, 5, 0, 5)
-			SatVal.Size = UDim2.new(0, 127, 0, 127)
+			SatVal.Size = UDim2.new(0, 182, 0, 182)
 			SatVal.Image = 'rbxassetid://4155801252'
 			Roundify(SatVal)
 			Border(SatVal)
@@ -2054,7 +2054,7 @@ function Library:AddTab(Text)
 			Visual.Parent = ColorWindow
 			Visual.BackgroundColor3 = Color3.fromRGB(255, 65, 65)
 			Visual.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			Visual.Position = UDim2.new(0, 137, 0, 5)
+			Visual.Position = UDim2.new(0, 192, 0, 5)
 			Visual.Size = UDim2.new(0, 65, 0, 52)
 			Roundify(Visual)
 			Border(Visual)
@@ -2063,7 +2063,7 @@ function Library:AddTab(Text)
 			RainbowColor.Parent = ColorWindow
 			RainbowColor.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 			RainbowColor.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			RainbowColor.Position = UDim2.new(0, 137, 0, 137)
+			RainbowColor.Position = UDim2.new(0, 192, 0, 137)
 			RainbowColor.Size = UDim2.new(0, 65, 0, 20)
 			RainbowColor.AutoButtonColor = false
 			RainbowColor.Font = Enum.Font.Code
@@ -2077,7 +2077,7 @@ function Library:AddTab(Text)
 			ResetColor.Parent = ColorWindow
 			ResetColor.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 			ResetColor.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			ResetColor.Position = UDim2.new(0, 137, 0, 112)
+			ResetColor.Position = UDim2.new(0, 192, 0, 112)
 			ResetColor.Size = UDim2.new(0, 65, 0, 20)
 			ResetColor.AutoButtonColor = false
 			ResetColor.Font = Enum.Font.Code
@@ -2091,7 +2091,7 @@ function Library:AddTab(Text)
 			ValueBox.Parent = ColorWindow
 			ValueBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 			ValueBox.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			ValueBox.Position = UDim2.new(0, 137, 0, 62)
+			ValueBox.Position = UDim2.new(0, 192, 0, 62)
 			ValueBox.Size = UDim2.new(0, 65, 0, 20)
 			ValueBox.ClearTextOnFocus = false
 			ValueBox.Font = Enum.Font.SourceSans
@@ -2113,7 +2113,7 @@ function Library:AddTab(Text)
 			HexBox.Parent = ColorWindow
 			HexBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 			HexBox.BorderColor3 = Color3.fromRGB(30, 30, 30)
-			HexBox.Position = UDim2.new(0, 137, 0, 87)
+			HexBox.Position = UDim2.new(0, 192, 0, 87)
 			HexBox.Size = UDim2.new(0, 65, 0, 20)
 			HexBox.ClearTextOnFocus = false
 			HexBox.Font = Enum.Font.SourceSans
@@ -2315,7 +2315,7 @@ function Library:AddTab(Text)
 				if Library.popup and Library.popup ~= Options and Library.popup.hovering then return end
 				if Library.popup == Options then Library.popup:Close(); return end
 				if Library.popup and Library.popup.hovering == false then Library.popup:Close() end
-				QTween(ColorWindow, 0.3, {Size = UDim2.new(0, ColorButton.AbsoluteSize.X + 10, 0, 162)})
+				QTween(ColorWindow, 0.3, {Size = UDim2.new(0, ColorButton.AbsoluteSize.X + 10, 0, 217)})
 				Options.open = true
 				Library.popup = Options
 			end)
