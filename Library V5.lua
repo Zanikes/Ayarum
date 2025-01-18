@@ -196,6 +196,7 @@ local TabButtonsLayout = Instance.new('UIListLayout')
 local TabsTitle = Instance.new('TextLabel')
 local Holder = Instance.new('Frame')
 local MouseUnlock = Instance.new('TextButton')
+local TitleHolder = Instance.new('Frame')
 local Title = Instance.new('TextLabel')
 local Darken = Instance.new('Frame')
 
@@ -277,15 +278,26 @@ MouseUnlock.Text = ''
 MouseUnlock.TextColor3 = Color3.fromRGB(0, 0, 0)
 MouseUnlock.TextSize = 14.000
 
+TitleHolder.Name = 'TitleHolder'
+TitleHolder.Parent = Mainframe
+TitleHolder.AnchorPoint = Vector2.new(0.5, 0)
+TitleHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TitleHolder.BorderColor3 = Color3.fromRGB(30, 30, 30)
+TitleHolder.BorderSizePixel = 1
+TitleHolder.Position = UDim2.new(0.5, 15, 0, 5)
+TitleHolder.Size = UDim2.new(1, -50, 0, 35)
+Roundify(TitleHolder)
+Border(TitleHolder)
+
 Title.Name = 'Title'
-Title.Parent = Mainframe
+Title.Parent = TitleHolder
 Title.AnchorPoint = Vector2.new(0.5, 0)
 Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Title.BackgroundTransparency = 1.000
 Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Title.BorderSizePixel = 0
-Title.Position = UDim2.new(0.5, 15, 0, 0)
-Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Position = UDim2.new(0.5, 0, 0, 0)
+Title.Size = UDim2.new(1, 0, 1, 0)
 Title.Font = Enum.Font.Code
 Title.RichText = true
 Title.Text = ''
@@ -307,7 +319,7 @@ Roundify(Darken)
 Library:AddConnection(Title:GetPropertyChangedSignal('Text'), function()
 	local SetText = Title.Text:gsub('<b>', ''):gsub('</b>', '')
 	local Size = GetTextSize(SetText, Title.TextSize, Title.Font).X
-	Title.Size = UDim2.new(0, Size, 0, 40)
+	Title.Size = UDim2.new(0, Size, 1, 0)
 end)
 Title.Text = '<b>Ayarum v5.0</b>'
 
