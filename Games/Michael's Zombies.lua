@@ -352,8 +352,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						library.options['Choose Reload Speed']:SetValue('Instant')
 					end
 				else
-					ReloadInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
-					ReloadInfo2.TextColor3 = Color3.fromRGB(255, 255, 255)
+					if ReloadInfo1 and ReloadInfo2 then
+						ReloadInfo1.TextColor3 = Color3.fromRGB(255, 255, 255)
+						ReloadInfo2.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
 					library.options['reloadMod']:SetState(false)
 				end
 
