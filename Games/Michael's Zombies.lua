@@ -256,6 +256,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local ReloadInfo1
 	local WalkSpeedInfo1
 	local ReloadInfo2
+	local DoubleTapInfo
 	local FireRateInfo
 	local StaminUpInfo
 
@@ -363,7 +364,19 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					library.options['reloadMod']:SetState(false)
 				end
 
-				DoubleTapEarned = Client.Character.CharStats.Perks:FindFirstChild('DoubleTap') and true or false
+				if Client.Character.CharStats.Perks:FindFirstChild('DoubleTap') then
+					DoubleTapEarned = true
+					if not DoubleTapGot then
+						DoubleTapGot = Round
+						DoubleTapInfo = AddBuffInfo('DoubleTap Aquired', Round)
+					end
+					DoubleTapInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
+				else
+					DoubleTapEarned = false
+					if DoubleTapInfo then
+						DoubleTapInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end
+				end
 				if DoubleTapEarned then
 					if not DoubleTapBuffs.Buff1[1] and Round >= DoubleTapGot + DoubleTapBuffs.Buff1[2] then
 						DoubleTapBuffs.Buff1[1] = true
