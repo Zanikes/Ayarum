@@ -308,7 +308,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			if library.flags['Modded Gameplay'] and Client.Character and Client.Character.CharStats.Perks then
 				if Client.Character.CharStats.Perks:FindFirstChild('SpeedCola') and SpeedColaGot == nil then
 					WalkspeedEarned = true
-					Notify('[Modded Gameplay Info]\nSpeed Cola Aquired, WalkSpeed Increased')
+					Notify('[Modded Gameplay Info]\nSpeed Cola Aquired, Small WalkSpeed Increase')
 					SpeedColaGot = ReplicatedStorage.MapSettings.RoundNumber.Value
 					ReloadInfo1 = AddBuffInfo('Reload Speed Increase', SpeedColaBuff1 + SpeedColaGot)
 					WalkSpeedInfo1 = AddBuffInfo('WalkSpeed Increase', SpeedColaBuff2 + SpeedColaGot)
@@ -320,6 +320,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				end
 				if Client.Character.CharStats.Perks:FindFirstChild('StaminUp') and StaminUpGot == nil then
 					WalkspeedEarned = true
+					Notify('[Modded Gameplay Info]\nStaminUp Aquired, WalkSpeed Increased')
 					StaminUpGot = ReplicatedStorage.MapSettings.RoundNumber.Value
 				end
 
