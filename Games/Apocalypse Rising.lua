@@ -2559,42 +2559,42 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 	Sections.Client = {
 		Character = Tabs.Client:AddSection({text = 'Character', column = 1}),
-		Other = Tabs.Client:AddSection({text = 'Other', column = 2}),
-		Camera = Tabs.Client:AddSection({text = 'Camera', column = 2})
+		Camera = Tabs.Client:AddSection({text = 'Camera', column = 1}),
+		Other = Tabs.Client:AddSection({text = 'Other', column = 1})
 	}
 	Sections.Players = {
 		Selection = Tabs.Players:AddSection({text = 'Selection', column = 1}),
+		Teleporting = Tabs.Players:AddSection({text = 'Teleporting', column = 1}),
 		Character = Tabs.Players:AddSection({text = 'Character', column = 1}),
-		Teleporting = Tabs.Players:AddSection({text = 'Teleporting', column = 2}),
+		Clothing = Tabs.Players:AddSection({text = 'Clothing', column = 1}),
+		Groups = Tabs.Players:AddSection({text = 'Groups', column = 1}),
 		Moderation = Tabs.Players:AddSection({text = 'Moderation', column = 2}),
-		Stats = Tabs.Players:AddSection({text = 'Stats', column = 2}),
-		Abusive = Tabs.Players:AddSection({text = 'Abusive', column = 3}),
-		Groups = Tabs.Players:AddSection({text = 'Groups', column = 3}),
-		Clothing = Tabs.Players:AddSection({text = 'Clothing', column = 3})
+		Abusive = Tabs.Players:AddSection({text = 'Abusive', column = 2}),
+		Stats = Tabs.Players:AddSection({text = 'Stats', column = 2})
 	}
 	Sections.Server = {
 		Selection = Tabs.Server:AddSection({text = 'Selection', column = 1}),
+		Bases = Tabs.Server:AddSection({text = 'Bases', column = 1}),
 		Map = Tabs.Server:AddSection({text = 'Map', column = 1}),
-		Bases = Tabs.Server:AddSection({text = 'Bases', column = 2}),
-		AntiLag = Tabs.Server:AddSection({text = 'Anti-Lag', column = 2}),
-		Other = Tabs.Server:AddSection({text = 'Other', column = 2})
+		AntiLag = Tabs.Server:AddSection({text = 'Anti-Lag', column = 1}),
+		Other = Tabs.Server:AddSection({text = 'Other', column = 1})
 	}
 	Sections.Vehicles = {
 		Selection = Tabs.Vehicles:AddSection({text = 'Selection', column = 1}),
 		Main = Tabs.Vehicles:AddSection({text = 'Main', column = 1}),
-		Abusive = Tabs.Vehicles:AddSection({text = 'Abusive', column = 2}),
-		Color = Tabs.Vehicles:AddSection({text = 'Coloring & Texturing', column = 2})
+		Abusive = Tabs.Vehicles:AddSection({text = 'Abusive', column = 1}),
+		Color = Tabs.Vehicles:AddSection({text = 'Coloring & Texturing', column = 1})
 	}
 	Sections.GunMods = {
 		Selection = Tabs.GunMods:AddSection({text = 'Selection', column = 1}),
 		Main = Tabs.GunMods:AddSection({text = 'Main', column = 1}),
-		Effects = Tabs.GunMods:AddSection({text = 'Effects', column = 2})
+		Effects = Tabs.GunMods:AddSection({text = 'Effects', column = 1})
 	}
 	Sections.Misc = {
 		Selection = Tabs.Misc:AddSection({text = 'Selection', column = 1}),
 		Spawning = Tabs.Misc:AddSection({text = 'Spawning', column = 1}),
-		Skins = Tabs.Misc:AddSection({text = 'Skins', column = 1}),
-		Kits = Tabs.Misc:AddSection({text = 'Kits', column = 2})
+		Kits = Tabs.Misc:AddSection({text = 'Kits', column = 1}),
+		Skins = Tabs.Misc:AddSection({text = 'Skins', column = 1})
 	}
 
 	local function ReturnPlayers()

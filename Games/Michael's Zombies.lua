@@ -441,9 +441,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 
 	Sections.Main = {
 		Client = Tabs.Main:AddSection({text = 'Client', column = 1}),
-		Misc = Tabs.Main:AddSection({text = 'Misc', column = 1}),
-		Chams = Tabs.Main:AddSection({text = 'Chams', column = 2}),
-		SilentAim = Tabs.Main:AddSection({text = 'Silent Aim', column = 2})
+		Chams = Tabs.Main:AddSection({text = 'Chams', column = 1}),
+		SilentAim = Tabs.Main:AddSection({text = 'Silent Aim', column = 1}),
+		Misc = Tabs.Main:AddSection({text = 'Misc', column = 1})
 	}
 
 	Sections.Main.Chams:AddToggle({text = 'Zombie Chams', state = false, callback = function(bool)

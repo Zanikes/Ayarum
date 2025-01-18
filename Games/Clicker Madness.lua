@@ -78,8 +78,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	Sections.Main = {
 		Clicking = Tabs.Main:AddSection({text = 'Clicking', column = 1}),
 		Eggs = Tabs.Main:AddSection({text = 'Eggs', column = 1}),
-		Teleports = Tabs.Main:AddSection({text = 'Teleports', column = 2}),
-		Other = Tabs.Main:AddSection({text = 'Other', column = 2})
+		Teleports = Tabs.Main:AddSection({text = 'Teleports', column = 1}),
+		Other = Tabs.Main:AddSection({text = 'Other', column = 1})
 	}
 
 	Sections.Main.Clicking:AddToggle({text = 'Spam Clicks', state = false, callback = function(bool)

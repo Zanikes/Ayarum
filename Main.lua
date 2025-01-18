@@ -681,13 +681,13 @@ Tabs.Aimbot = library:AddTab('Aimbot')
 Sections.ESP = {
 	NameESP = Tabs.ESP:AddSection({text = 'Name ESP', column = 1}),
 	BoxESP = Tabs.ESP:AddSection({text = 'Box ESP', column = 1}),
-	Tracers = Tabs.ESP:AddSection({text = 'Tracers', column = 2}),
+	Tracers = Tabs.ESP:AddSection({text = 'Tracers', column = 1}),
 	Chams = Tabs.ESP:AddSection({text = 'Chams', column = 1}),
-	All = Tabs.ESP:AddSection({text = 'All', column = 2})
+	All = Tabs.ESP:AddSection({text = 'All', column = 1})
 }
 Sections.Aimbot = {
 	Main = Tabs.Aimbot:AddSection({text = 'Main', column = 1}),
-	FOV = Tabs.Aimbot:AddSection({text = 'FOV', column = 2})
+	FOV = Tabs.Aimbot:AddSection({text = 'FOV', column = 1})
 }
 
 local PlayerNames = {}
@@ -907,8 +907,8 @@ Tabs.Settings = library:AddTab('Settings')
 Sections.Settings = {
 	Main = Tabs.Settings:AddSection({text = 'Main', column = 1}),
 	UI = Tabs.Settings:AddSection({text = 'UI', column = 1}),
-	Configs = Tabs.Settings:AddSection({text = 'Configs', column = 2}),
-	Credits = Tabs.Settings:AddSection({text = 'Credits', column = 2})
+	Configs = Tabs.Settings:AddSection({text = 'Configs', column = 1}),
+	Credits = Tabs.Settings:AddSection({text = 'Credits', column = 1})
 }
 
 Sections.Settings.UI:AddBind({text = 'Open / Close', flag = 'UI Toggle', nomouse = true, key = 'RightShift', callback = function() library:Toggle(not library.open) end})

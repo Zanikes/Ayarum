@@ -169,7 +169,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		ReplicatedStorage.CurrentGrav.Value = value
 	end})
 
-	Sections.SilentAim = Tabs.Arsenal:AddSection({text = 'Silent Aim', column = 2})
+	Sections.SilentAim = Tabs.Arsenal:AddSection({text = 'Silent Aim', column = 1})
 	Sections.SilentAim:AddToggle({text = 'Enabled', state = false, callback = function(bool)
 		if bool then
 			RunService:BindToRenderStep('SilentAim', 200, GetClosestHead)
