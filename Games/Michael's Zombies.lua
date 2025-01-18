@@ -581,7 +581,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		if choice == 'Instant' then
 			ReloadSpeed = 200
 		else
-			ReloadSpeed = 2
+			ReloadSpeed = 1.5
 		end
 		if Client.Character.CharStats.ReloadBuffs:FindFirstChild('AyarumBuff') then
 			Client.Character.CharStats.ReloadBuffs.AyarumBuff.Value = ReloadSpeed
