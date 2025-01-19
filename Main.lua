@@ -86,14 +86,26 @@ if isfile('Ayarum/AutoLoad.txt') and readfile('Ayarum/AutoLoad.txt') then
 	end
 end
 
+local SavedColor1
+local SavedColor2
+if Autoload then
+	local Content = HttpService:JSONDecode(readfile('Ayarum/Configs/' .. Autoload .. '.json'))
+	local Start = Content['Gradient Start Color']
+	local End = Content['Gradient End Color']
+	if Start and End then
+		SavedColor1 = Color3.new(Start[1], Start[2], Start[3])
+		SavedColor2 = Color3.new(End[1], End[2], End[3])
+	end
+end
+
 library:Settings({
 	name = 'Ayarum Hub v' .. AVer,
 	useconfigs = true,
 	foldername = 'Ayarum/Configs',
 	fileext = '.json',
 	autoload = Autoload,
-	themecolor1 = Color3.fromHex('#ff9966'),
-	themecolor2 = Color3.fromHex('#ff5e62')
+	themecolor1 = SavedColor1 and SavedColor1 or Color3.fromHex('#ff9966'),
+	themecolor2 = SavedColor2 and SavedColor2 or Color3.fromHex('#ff5e62')
 })
 
 local LoadingBar = library:AddLoadingBar('Ayarum Hub v' .. AVer .. ' - Loader')
