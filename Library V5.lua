@@ -2369,7 +2369,7 @@ function Library:AddTab(Text)
 					editingHue = false
 				end
 			end)
-			
+
 			SatVal.InputBegan:Connect(function(input)
 				if input.UserInputType == InputTypes.MouseButton1 then
 					editingSatVal = true
@@ -2726,11 +2726,10 @@ function Library:AddLoadingBar(LoadingBarText)
 	local LoadingBarTitle = Instance.new('TextLabel')
 	local BarHolder = Instance.new('Frame')
 	local Bar = Instance.new('Frame')
-	local LoadingInfo = Instance.new('TextLabel')
 
 	LoadingGui.Name = 'Loading Gui'
 	LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	LoadingGui.Parent = game.CoreGui
+	LoadingGui.Parent = RunService:IsStudio() and game.Players.LocalPlayer:WaitForChild('PlayerGui') or game.CoreGui
 	LoadingGui.DisplayOrder = 300
 	LoadingGui.ResetOnSpawn = false
 	LoadingGui.IgnoreGuiInset = true
@@ -2742,7 +2741,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	LoadingBar.BorderSizePixel = 0
 	LoadingBar.Position = UDim2.new(0.5, 0, 0, -115)
-	LoadingBar.Size = UDim2.new(0, 350, 0, 85)
+	LoadingBar.Size = UDim2.new(0, 350, 0, 60)
 	LoadingBar.ZIndex = 3
 	Roundify(LoadingBar)
 	Glow(LoadingBar, Color3.new(0, 0, 0))
@@ -2766,11 +2765,12 @@ function Library:AddLoadingBar(LoadingBarText)
 
 	BarHolder.Name = 'BarHolder'
 	BarHolder.Parent = LoadingBar
-	BarHolder.AnchorPoint = Vector2.new(0, 1)
+	BarHolder.AnchorPoint = Vector2.new(0, 0)
 	BarHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	BarHolder.BorderColor3 = Color3.fromRGB(30, 30, 30)
-	BarHolder.Position = UDim2.new(0, 10, 1, -10)
+	BarHolder.Position = UDim2.new(0, 10, 0, 30)
 	BarHolder.Size = UDim2.new(1, -20, 0, 25)
+	BarHolder.ZIndex = 2
 	Roundify(BarHolder)
 	Border(BarHolder)
 
@@ -2789,19 +2789,55 @@ function Library:AddLoadingBar(LoadingBarText)
 	Gradient(Bar.Glow)
 	Bar.UIStroke.Enabled = false
 
-	LoadingInfo.Name = 'LoadingInfo'
-	LoadingInfo.Parent = LoadingBar
-	LoadingInfo.AnchorPoint = Vector2.new(0.5, 0)
-	LoadingInfo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	LoadingInfo.BackgroundTransparency = 1.000
-	LoadingInfo.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	LoadingInfo.BorderSizePixel = 0
-	LoadingInfo.Position = UDim2.new(0.5, 0, 0, 25)
-	LoadingInfo.Size = UDim2.new(1, 0, 0, 18)
-	LoadingInfo.Font = Enum.Font.Code
-	LoadingInfo.Text = 'Initializing...'
-	LoadingInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
-	LoadingInfo.TextSize = 18.000
+	local function AddInfo(Text)
+		local InfoCount = 0
+		for _, v in pairs(LoadingBar:GetChildren()) do
+			if v.Name == 'LoadingInfo' then
+				InfoCount += 1
+				QTween(v, 0.3, {Position = UDim2.new(0.5, 0, 0, v.Position.Y.Offset + 20)})
+				QTween(v.LoadingInfoGradient, 0.3, {TextTransparency = 1})
+			end
+		end
+
+		local LoadingInfo = Instance.new('TextLabel')
+		local LoadingInfoGradient = Instance.new('TextLabel')
+
+		LoadingInfo.Name = 'LoadingInfo'
+		LoadingInfo.Parent = LoadingBar
+		LoadingInfo.AnchorPoint = Vector2.new(0.5, 0)
+		LoadingInfo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		LoadingInfo.BackgroundTransparency = 1.000
+		LoadingInfo.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		LoadingInfo.BorderSizePixel = 0
+		LoadingInfo.Position = UDim2.new(0.5, 0, 0, 60)
+		LoadingInfo.Size = UDim2.new(1, 0, 0, 20)
+		LoadingInfo.Font = Enum.Font.Code
+		LoadingInfo.Text = Text
+		LoadingInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
+		LoadingInfo.TextSize = 18.000
+		LoadingInfo.TextTransparency = 1
+
+		LoadingInfoGradient.Name = 'LoadingInfoGradient'
+		LoadingInfoGradient.Parent = LoadingInfo
+		LoadingInfoGradient.AnchorPoint = Vector2.new(0.5, 0.5)
+		LoadingInfoGradient.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		LoadingInfoGradient.BackgroundTransparency = 1.000
+		LoadingInfoGradient.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		LoadingInfoGradient.BorderSizePixel = 0
+		LoadingInfoGradient.Position = UDim2.new(0.5, 0, 0.5, 0)
+		LoadingInfoGradient.Size = UDim2.new(1, 0, 1, 0)
+		LoadingInfoGradient.Font = Enum.Font.Code
+		LoadingInfoGradient.Text = Text
+		LoadingInfoGradient.TextColor3 = Color3.fromRGB(255, 255, 255)
+		LoadingInfoGradient.TextSize = 18.000
+		LoadingInfoGradient.TextTransparency = 1
+		Gradient(LoadingInfoGradient)
+
+		QTween(LoadingBar, 0.3, {Size = UDim2.new(0, 350, 0, 85 + (InfoCount * 20))})
+		QTween(LoadingInfo, 0.3, {TextTransparency = 0})
+		QTween(LoadingInfoGradient, 0.3, {TextTransparency = 0})
+	end
+	AddInfo('Initializing...')
 
 	BTween(LoadingBar, 0.3, {Position = UDim2.new(0.5, 0, 0, 10)})
 	wait(0.3)
@@ -2809,13 +2845,13 @@ function Library:AddLoadingBar(LoadingBarText)
 	function Options:Update(Value, Max, Text)
 		Bar.UIStroke.Enabled = true
 		QTween(Bar, 0.3, {Size = UDim2.new(Value / Max, 0, 1, 0)})
-		LoadingInfo.Text = Text
+		AddInfo(Text)
 		if Value == Max then
 			wait(0.3)
 			QTween(Bar, 0.3, {BackgroundTransparency = 0})
 			QTween(Bar.Glow, 0.3, {ImageTransparency = 0})
 			wait(1.5)
-			QTween(LoadingBar, 0.3, {Position = UDim2.new(0.5, 0, 0, -115)}, true)
+			QTween(LoadingBar, 0.3, {Position = UDim2.new(0.5, 0, 0, -(LoadingBar.AbsoluteSize.Y + 30))}, true)
 			wait(0.3)
 			LoadingBar:Destroy()
 		end
