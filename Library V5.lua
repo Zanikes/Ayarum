@@ -2241,7 +2241,15 @@ function Library:AddTab(Text)
 			buttonEffects(RainbowColor)
 			buttonEffects(ResetColor)
 
-			function Options:SetColor(Color, Rainbow)
+			local ForceHue
+			local ForceSat
+			local ForceVal
+			function Options:SetColor(Color, Rainbow, ForceSets)
+				if ForceSets then
+					ForceHue = ForceSets.Hue and ForceSets.Hue or ForceHue
+					ForceSat = ForceSets.Sat and ForceSets.Sat or ForceSat
+					ForceVal = ForceSets.Val and ForceSets.Val or ForceVal
+				end
 				if typeof(Rainbow) == 'boolean' then
 					rainbowEnabled = Rainbow
 					Options.rainbow = Rainbow
@@ -2251,11 +2259,6 @@ function Library:AddTab(Text)
 				end
 				Color = typeof(Color) == 'Color3' and Color or currentColor
 				hue, sat, val = Color3.toHSV(Color)
-				local waszero = false
-				if sat == 0 then
-					sat = 0.005
-					waszero = true
-				end
 				hue, sat, val = clamp({hue, sat, val})
 				hue = hue == 0 and 1 or hue
 
@@ -2277,13 +2280,19 @@ function Library:AddTab(Text)
 					RainbowColor.TextColor3 = Color3.fromRGB(150, 150, 150)
 				end
 
-				STween(SatVal, 0.1, {BackgroundColor3 = Color3.fromHSV(hue, 1, 1)})
+				if ForceSets then
+					STween(HueSlider, 0.1, {Position = UDim2.new(ForceHue and ForceHue or (1 - hue), 0, 0, 2)})
+					STween(SatVal, 0.1, {BackgroundColor3 = Color3.fromHSV(ForceHue and (1 - ForceHue) or hue, 1, 1)})
+					STween(SatValSlider, 0.1, {Position = UDim2.new(ForceSat and ForceSat or sat, 0, 1 - val, 0)})
+				else
+					STween(HueSlider, 0.1, {Position = UDim2.new(1 - hue, 0, 0, 2)})
+					STween(SatVal, 0.1, {BackgroundColor3 = Color3.fromHSV(hue, 1, 1)})
+					STween(SatValSlider, 0.1, {Position = UDim2.new(sat, 0, 1 - val, 0)})
+					ForceHue, ForceSat, ForceVal = 1 - hue, sat, val
+				end
+
 				STween(Visual, 0.1, {BackgroundColor3 = Color})
 				STween(Preview, 0.1, {BackgroundColor3 = Color})
-				if not waszero then
-					STween(HueSlider, 0.1, {Position = UDim2.new(1 - hue, 0, 0, 2)})
-				end
-				STween(SatValSlider, 0.1, {Position = UDim2.new(sat, 0, 1 - val, 0)})
 
 				ValueBox.Text = color2text(Color)
 				HexBox.Text = color2text(Color, true)
@@ -2342,16 +2351,16 @@ function Library:AddTab(Text)
 				if input.UserInputType == InputTypes.MouseButton1 then
 					editingHue = true
 					local X = (Hue.AbsolutePosition.X + Hue.AbsoluteSize.X) - Hue.AbsolutePosition.X
-					X = math.clamp((input.Position.X - Hue.AbsolutePosition.X) / X, 0, 0.995)
-					Options:SetColor(Color3.fromHSV(1 - X, sat, val))
+					X = math.clamp((input.Position.X - Hue.AbsolutePosition.X) / X, 0, 1)
+					Options:SetColor(Color3.fromHSV(1 - X, sat, val), false, {Hue = X})
 				end
 			end)
 
 			Library:AddConnection(InputService.InputChanged, function(input)
 				if input.UserInputType == InputTypes.MouseMovement and editingHue then
 					local X = (Hue.AbsolutePosition.X + Hue.AbsoluteSize.X) - Hue.AbsolutePosition.X
-					X = math.clamp((input.Position.X - Hue.AbsolutePosition.X) / X, 0, 0.995)
-					Options:SetColor(Color3.fromHSV(1 - X, sat, val))
+					X = math.clamp((input.Position.X - Hue.AbsolutePosition.X) / X, 0, 1)
+					Options:SetColor(Color3.fromHSV(1 - X, sat, val), false, {Hue = X})
 				end
 			end)
 
@@ -2360,15 +2369,15 @@ function Library:AddTab(Text)
 					editingHue = false
 				end
 			end)
-
+			
 			SatVal.InputBegan:Connect(function(input)
 				if input.UserInputType == InputTypes.MouseButton1 then
 					editingSatVal = true
 					local X = (SatVal.AbsolutePosition.X + SatVal.AbsoluteSize.X) - SatVal.AbsolutePosition.X
 					local Y = (SatVal.AbsolutePosition.Y + SatVal.AbsoluteSize.Y) - SatVal.AbsolutePosition.Y
-					X = math.clamp((input.Position.X - SatVal.AbsolutePosition.X) / X, 0, 0.995)
-					Y = math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / Y, 0, 0.995)
-					Options:SetColor(Color3.fromHSV(hue, X, 1 - Y))
+					X = math.clamp((input.Position.X - SatVal.AbsolutePosition.X) / X, 0, 1)
+					Y = math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / Y, 0, 1)
+					Options:SetColor(Color3.fromHSV(ForceHue and 1 - ForceHue or hue, X, 1 - Y), false, {Sat = X, Val = Y})
 				end
 			end)
 
@@ -2376,9 +2385,9 @@ function Library:AddTab(Text)
 				if input.UserInputType == Enum.UserInputType.MouseMovement and editingSatVal then
 					local X = (SatVal.AbsolutePosition.X + SatVal.AbsoluteSize.X) - SatVal.AbsolutePosition.X
 					local Y = (SatVal.AbsolutePosition.Y + SatVal.AbsoluteSize.Y) - SatVal.AbsolutePosition.Y
-					X = math.clamp((input.Position.X - SatVal.AbsolutePosition.X) / X, 0, 0.995)
-					Y = math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / Y, 0, 0.995)
-					Options:SetColor(Color3.fromHSV(hue, X, 1 - Y))
+					X = math.clamp((input.Position.X - SatVal.AbsolutePosition.X) / X, 0, 1)
+					Y = math.clamp((input.Position.Y - SatVal.AbsolutePosition.Y) / Y, 0, 1)
+					Options:SetColor(Color3.fromHSV(ForceHue and 1 - ForceHue or hue, X, 1 - Y), false, {Sat = X, Val = Y})
 				end
 			end)
 
