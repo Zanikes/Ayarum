@@ -361,6 +361,10 @@ local function Update()
 	if (tick() - LastRefresh) < 0.005 then return end
 	LastRefresh = tick()
 
+	if not Camera or Camera.Parent == nil then
+		Camera = Workspace.CurrentCamera
+	end
+
 	local ClientChar = GetCharacter(Client)
 	local MousePos = Client:GetMouse()
 	local ClosestPlr
@@ -1134,8 +1138,11 @@ spawn(function()
 	end
 end)
 
-RunService:UnbindFromRenderStep('UpdateEsp')
-RunService:BindToRenderStep('UpdateEsp', 300, Update)
+--RunService:UnbindFromRenderStep('UpdateEsp')
+--RunService:BindToRenderStep('UpdateEsp', 300, Update)
+RunService.RenderStepped:Connect(function(deltaTime)
+	Update()
+end)
 
 Notify('Ayarum Hub Loaded Successfully,\nMade by Zanikes')
 Notify('Press ' .. library.options['UI Toggle'].key .. ' to toggle the UI')
@@ -1146,7 +1153,7 @@ if getgenv().AyarumWatermark then
 	getgenv().AyarumWatermark:Remove()
 	getgenv().AyarumWatermark = nil
 end
-RunService:UnbindFromRenderStep('UpdateEsp')
+--RunService:UnbindFromRenderStep('UpdateEsp')
 for _, Player in pairs(RenderList) do
 	for _, v in pairs(Player) do
 		if type(v) == 'boolean' then continue end
