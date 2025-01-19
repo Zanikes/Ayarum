@@ -2258,7 +2258,6 @@ function Library:AddTab(Text)
 				end
 				hue, sat, val = clamp({hue, sat, val})
 				hue = hue == 0 and 1 or hue
-				Color = Color3.fromHSV(hue, sat, val)
 
 				currentColor = Color
 				Options.color = Color
