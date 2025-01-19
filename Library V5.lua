@@ -2719,20 +2719,19 @@ function Library:Notify(Message, Duration)
 	end)
 end
 
-local LoadingGui
+local LoadingGui = Instance.new('ScreenGui')
+LoadingGui.Name = 'Loading Gui'
+LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+LoadingGui.Parent = RunService:IsStudio() and game.Players.LocalPlayer:WaitForChild('PlayerGui') or game.CoreGui
+LoadingGui.DisplayOrder = 300
+LoadingGui.ResetOnSpawn = false
+LoadingGui.IgnoreGuiInset = true
 function Library:AddLoadingBar(LoadingBarText)
-	LoadingGui = Instance.new('ScreenGui')
 	local LoadingBar = Instance.new('Frame')
 	local LoadingBarTitle = Instance.new('TextLabel')
 	local BarHolder = Instance.new('Frame')
 	local Bar = Instance.new('Frame')
-
-	LoadingGui.Name = 'Loading Gui'
-	LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	LoadingGui.Parent = RunService:IsStudio() and game.Players.LocalPlayer:WaitForChild('PlayerGui') or game.CoreGui
-	LoadingGui.DisplayOrder = 300
-	LoadingGui.ResetOnSpawn = false
-	LoadingGui.IgnoreGuiInset = true
+	local InfoHolder = Instance.new('Frame')
 
 	LoadingBar.Name = 'LoadingBar'
 	LoadingBar.Parent = LoadingGui
@@ -2741,7 +2740,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	LoadingBar.BorderSizePixel = 0
 	LoadingBar.Position = UDim2.new(0.5, 0, 0, -115)
-	LoadingBar.Size = UDim2.new(0, 350, 0, 60)
+	LoadingBar.Size = UDim2.new(0, 400, 0, 95)
 	LoadingBar.ZIndex = 3
 	Roundify(LoadingBar)
 	Glow(LoadingBar, Color3.new(0, 0, 0))
@@ -2754,7 +2753,6 @@ function Library:AddLoadingBar(LoadingBarText)
 	LoadingBarTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	LoadingBarTitle.BorderSizePixel = 0
 	LoadingBarTitle.Position = UDim2.new(0.5, 0, 0, 0)
-	LoadingBarTitle.Size = UDim2.new(1, 0, 0, 25)
 	LoadingBarTitle.Font = Enum.Font.Code
 	LoadingBarTitle.RichText = true
 	LoadingBarTitle.Text = '<b>' .. LoadingBarText .. '</b>'
@@ -2765,12 +2763,10 @@ function Library:AddLoadingBar(LoadingBarText)
 
 	BarHolder.Name = 'BarHolder'
 	BarHolder.Parent = LoadingBar
-	BarHolder.AnchorPoint = Vector2.new(0, 0)
 	BarHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	BarHolder.BorderColor3 = Color3.fromRGB(30, 30, 30)
 	BarHolder.Position = UDim2.new(0, 10, 0, 30)
 	BarHolder.Size = UDim2.new(1, -20, 0, 25)
-	BarHolder.ZIndex = 2
 	Roundify(BarHolder)
 	Border(BarHolder)
 
@@ -2789,55 +2785,73 @@ function Library:AddLoadingBar(LoadingBarText)
 	Gradient(Bar.Glow)
 	Bar.UIStroke.Enabled = false
 
-	local function AddInfo(Text)
-		local InfoCount = 0
-		for _, v in pairs(LoadingBar:GetChildren()) do
-			if v.Name == 'LoadingInfo' then
-				InfoCount += 1
-				QTween(v, 0.3, {Position = UDim2.new(0.5, 0, 0, v.Position.Y.Offset + 20)})
-				QTween(v.LoadingInfoGradient, 0.3, {TextTransparency = 1})
+	InfoHolder.Name = 'InfoHolder'
+	InfoHolder.Parent = LoadingBar
+	InfoHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	InfoHolder.BorderColor3 = Color3.fromRGB(30, 30, 30)
+	InfoHolder.Position = UDim2.new(0, 40, 0, 30)
+	InfoHolder.Size = UDim2.new(1, -80, 0, 0)
+	Roundify(InfoHolder)
+	Border(InfoHolder)
+
+	local InfoCount = 0
+	local function AddInfo(Text, Preloading)
+		InfoCount += 1
+		for _, v in pairs(InfoHolder:GetChildren()) do
+			if v.Name ~= 'LoadingInfo' then continue end
+			local MoveAmount = 25
+			for _, a in pairs(InfoHolder:GetChildren()) do
+				if a.Name ~= 'LoadingInfo' then continue end
+				if a.LayoutOrder > v.LayoutOrder then
+					MoveAmount += 20
+				end
 			end
+			QTween(v, 0.3, {Position = UDim2.new(0.5, 0, 0, MoveAmount)})
+			QTween(v.LoadingInfoGradient, 0.3, {TextTransparency = 1})
 		end
 
 		local LoadingInfo = Instance.new('TextLabel')
 		local LoadingInfoGradient = Instance.new('TextLabel')
 
 		LoadingInfo.Name = 'LoadingInfo'
-		LoadingInfo.Parent = LoadingBar
+		LoadingInfo.Parent = InfoHolder
 		LoadingInfo.AnchorPoint = Vector2.new(0.5, 0)
 		LoadingInfo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		LoadingInfo.BackgroundTransparency = 1.000
 		LoadingInfo.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		LoadingInfo.BorderSizePixel = 0
-		LoadingInfo.Position = UDim2.new(0.5, 0, 0, 60)
+		LoadingInfo.Position = UDim2.new(0.5, 0, 0, 5)
 		LoadingInfo.Size = UDim2.new(1, 0, 0, 20)
 		LoadingInfo.Font = Enum.Font.Code
 		LoadingInfo.Text = Text
 		LoadingInfo.TextColor3 = Color3.fromRGB(150, 150, 150)
 		LoadingInfo.TextSize = 18.000
-		LoadingInfo.TextTransparency = 1
+		LoadingInfo.TextTransparency = 1.000
+		LoadingInfo.LayoutOrder = InfoCount
 
 		LoadingInfoGradient.Name = 'LoadingInfoGradient'
 		LoadingInfoGradient.Parent = LoadingInfo
-		LoadingInfoGradient.AnchorPoint = Vector2.new(0.5, 0.5)
+		LoadingInfoGradient.AnchorPoint = Vector2.new(0.5, 0)
 		LoadingInfoGradient.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		LoadingInfoGradient.BackgroundTransparency = 1.000
 		LoadingInfoGradient.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		LoadingInfoGradient.BorderSizePixel = 0
-		LoadingInfoGradient.Position = UDim2.new(0.5, 0, 0.5, 0)
-		LoadingInfoGradient.Size = UDim2.new(1, 0, 1, 0)
+		LoadingInfoGradient.Position = UDim2.new(0.5, 0, 0, 0)
 		LoadingInfoGradient.Font = Enum.Font.Code
 		LoadingInfoGradient.Text = Text
 		LoadingInfoGradient.TextColor3 = Color3.fromRGB(255, 255, 255)
 		LoadingInfoGradient.TextSize = 18.000
-		LoadingInfoGradient.TextTransparency = 1
+		LoadingInfoGradient.TextTransparency = 1.000
+		LoadingInfoGradient.Size = UDim2.new(0, LoadingInfoGradient.TextBounds.X, 1, 0)
 		Gradient(LoadingInfoGradient)
 
-		QTween(LoadingBar, 0.3, {Size = UDim2.new(0, 350, 0, 85 + (InfoCount * 20))})
-		QTween(LoadingInfo, 0.3, {TextTransparency = 0})
-		QTween(LoadingInfoGradient, 0.3, {TextTransparency = 0})
+		QTween(LoadingBar, Preloading and 0 or 0.3, {Size = UDim2.new(0, 400, 0, 85 + (InfoCount * 20))})
+		QTween(InfoHolder, Preloading and 0 or 0.3, {Size = UDim2.new(1, -80, 0, 10 + (InfoCount * 20))})
+		QTween(BarHolder, Preloading and 0 or 0.3, {Position = UDim2.new(0, 10, 0, 50 + (InfoCount * 20))})
+		QTween(LoadingInfo, Preloading and 0 or 0.3, {TextTransparency = 0})
+		QTween(LoadingInfoGradient, Preloading and 0 or 0.3, {TextTransparency = 0})
 	end
-	AddInfo('Initializing...')
+	AddInfo('Initializing...', true)
 
 	BTween(LoadingBar, 0.3, {Position = UDim2.new(0.5, 0, 0, 10)})
 	wait(0.3)
