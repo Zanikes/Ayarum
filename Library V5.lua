@@ -2797,6 +2797,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	local InfoCount = 0
 	local function AddInfo(Text, Preloading)
 		InfoCount += 1
+		local LongestText = 0
 		for _, v in pairs(InfoHolder:GetChildren()) do
 			if v.Name ~= 'LoadingInfo' then continue end
 			local MoveAmount = 25
@@ -2808,6 +2809,10 @@ function Library:AddLoadingBar(LoadingBarText)
 			end
 			QTween(v, 0.3, {Position = UDim2.new(0.5, 0, 0, MoveAmount)})
 			QTween(v.LoadingInfoGradient, 0.3, {TextTransparency = 1})
+
+			if v.TextBounds.X > LongestText then
+				LongestText = v.TextBounds.X
+			end
 		end
 
 		local LoadingInfo = Instance.new('TextLabel')
@@ -2846,7 +2851,7 @@ function Library:AddLoadingBar(LoadingBarText)
 		Gradient(LoadingInfoGradient)
 
 		QTween(LoadingBar, Preloading and 0 or 0.3, {Size = UDim2.new(0, 400, 0, 85 + (InfoCount * 20))})
-		QTween(InfoHolder, Preloading and 0 or 0.3, {Size = UDim2.new(1, -80, 0, 10 + (InfoCount * 20))})
+		QTween(InfoHolder, Preloading and 0 or 0.3, {Size = UDim2.new(0, 10 + LongestText, 0, 10 + (InfoCount * 20))})
 		QTween(BarHolder, Preloading and 0 or 0.3, {Position = UDim2.new(0, 10, 0, 50 + (InfoCount * 20))})
 		QTween(LoadingInfo, Preloading and 0 or 0.3, {TextTransparency = 0})
 		QTween(LoadingInfoGradient, Preloading and 0 or 0.3, {TextTransparency = 0})
