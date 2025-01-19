@@ -4,10 +4,11 @@ local TweenService = game:GetService('TweenService')
 local RunService = game:GetService('RunService')
 local GuiService = game:GetService('GuiService')
 local Mouse = game.Players.LocalPlayer:GetMouse()
+local CoreGui = cloneref(game.CoreGui)
 
 local GuiInset = GuiService:GetGuiInset().Y
 
-if game.CoreGui:FindFirstChild('TobBarApp') then
+if CoreGui:FindFirstChild('TobBarApp') then
 	GuiInset = 58
 end
 
@@ -2722,7 +2723,7 @@ end
 local LoadingGui = Instance.new('ScreenGui')
 LoadingGui.Name = 'Loading Gui'
 LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-LoadingGui.Parent = RunService:IsStudio() and game.Players.LocalPlayer:WaitForChild('PlayerGui') or game.CoreGui
+LoadingGui.Parent = RunService:IsStudio() and game.Players.LocalPlayer:WaitForChild('PlayerGui') or CoreGui
 LoadingGui.DisplayOrder = 300
 LoadingGui.ResetOnSpawn = false
 LoadingGui.IgnoreGuiInset = true
@@ -3060,7 +3061,7 @@ function Library:Init(Tab)
 	if RunService:IsStudio() then
 		AyarumV5.Parent = game.Players.LocalPlayer:WaitForChild('PlayerGui')
 	else
-		AyarumV5.Parent = game.CoreGui
+		AyarumV5.Parent = CoreGui
 	end
 
 	if Library.useconfigs and Library.autoload and isfile(Library.foldername .. '/' .. Library.autoload .. Library.fileext) then

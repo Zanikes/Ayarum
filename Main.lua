@@ -13,6 +13,7 @@ local Players = game:GetService('Players')
 local Lighting = game:GetService('Lighting')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Stats = game:GetService('Stats')
+local CoreGui = cloneref(game.CoreGui)
 local Client = Players.LocalPlayer
 local Camera = Workspace.CurrentCamera
 local Mouse = Client:GetMouse()
@@ -126,7 +127,7 @@ end
 local Tabs = {}
 local Sections = {}
 
-if game.CoreGui:FindFirstChild('TobBarApp') then
+if CoreGui:FindFirstChild('TobBarApp') then
 	GuiInset = 58
 end
 
@@ -343,7 +344,7 @@ local function AddPlayer(Player)
 	Drawings.Line.Transparency = 1 - EspSettings.Transparency
 	Drawings.Line.Visible = false
 
-	Drawings.Cham.Parent = game.CoreGui
+	Drawings.Cham.Parent = CoreGui
 	Drawings.Cham.Enabled = false
 	Drawings.Cham.FillTransparency = EspSettings.ChamsFillTransparency
 	Drawings.Cham.OutlineColor = EspSettings.ChamsOutlineColor

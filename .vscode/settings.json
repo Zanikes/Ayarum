@@ -20,7 +20,8 @@
 		"delfile",
 		"getactors",
 		"syn",
-		"request"
+		"request",
+		"cloneref"
 	],
 	"robloxLsp.diagnostics.disable": [
 		"deprecated"
