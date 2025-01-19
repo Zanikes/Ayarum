@@ -1098,7 +1098,8 @@ Sections.Settings.Main:AddToggle({text = 'Shaders', state = false, callback = fu
 end})
 
 LoadInfo('Initializing UI...')
-library:Init()
+local SelectTab = GameName == 'Apocalypse Rising' and 'Client' or GameName == 'Universal' and 'ESP' or GameName
+library:Init(SelectTab)
 repeat wait() until library.fullloaded
 if getgenv().AyarumWatermark then getgenv().AyarumWatermark:Remove() end
 getgenv().AyarumWatermark = Drawing.new('Text')
@@ -1136,7 +1137,7 @@ end)
 RunService:UnbindFromRenderStep('UpdateEsp')
 RunService:BindToRenderStep('UpdateEsp', 300, Update)
 
-Notify('Ayarum Hub Loaded Successfully,\nMade by Zanikes#9131')
+Notify('Ayarum Hub Loaded Successfully,\nMade by Zanikes')
 Notify('Press ' .. library.options['UI Toggle'].key .. ' to toggle the UI')
 LoadInfo('Loading Complete (' .. GameName .. ')')
 repeat wait() until not library.loaded

@@ -3046,11 +3046,15 @@ function Library:AddWarning(Options)
 	return Options
 end
 
-function Library:Init()
+function Library:Init(Tab)
 	Library.loaded = true
-	for _, v in pairs(Library.tabs) do
-		if v.first then
-			v.Select()
+	if Tab then
+		Library.tabs[Tab].Select()
+	else
+		for i, v in pairs(Library.tabs) do
+			if v.first then
+				v.Select()
+			end
 		end
 	end
 	if RunService:IsStudio() then
