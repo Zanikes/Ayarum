@@ -587,10 +587,22 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		KillAuraSpeed = v
 	end})
 	Sections.Main.Misc:AddDivider()
-	Sections.Main.Misc:AddToggle({text = 'Auto-Collect Powerups', state = false, flag = 'collect', callback = function(bool)
+	Sections.Main.Misc:AddToggle({text = 'Auto-Repair Barriers', state = false, flag = 'repair', callback = function()
+		repeat
+			for _, v in pairs(Workspace._Barriers:GetChildren()) do
+				if v:IsA('Model') and Client.Character and (Client.Character.HumanoidRootPart.Position - v.FixBarrier.Position).Magnitude <= 20 then
+					Client.Character.Remotes.Interact:FireServer({v.FixBarrier})
+				end
+			end
+		until not library.flags['repair']
+	end})
+	Sections.Main.Misc:AddToggle({text = 'Auto-Collect Powerups', state = false, flag = 'collect', callback = function()
 		repeat
 			for _, v in pairs(Workspace.Ignore._Powerups:GetChildren()) do
 				if v:FindFirstChild('TouchInterest') then
+					if v:FindFirstChild('Grabbed') then continue end
+					Instance.new('StringValue', v).Name = 'Grabbed'
+					Notify('[Auto-Collect Powerups] Picked up ' .. v.Name)
 					firetouchinterest(Client.Character.Head, v, 0)
 				end
 			end
