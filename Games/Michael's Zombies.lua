@@ -594,6 +594,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					Client.Character.Remotes.Interact:FireServer({v.FixBarrier})
 				end
 			end
+			wait()
 		until not library.flags['repair']
 	end})
 	Sections.Main.Misc:AddToggle({text = 'Auto-Collect Powerups', state = false, flag = 'collect', callback = function()
