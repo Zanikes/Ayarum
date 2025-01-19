@@ -2787,9 +2787,10 @@ function Library:AddLoadingBar(LoadingBarText)
 
 	InfoHolder.Name = 'InfoHolder'
 	InfoHolder.Parent = LoadingBar
+	InfoHolder.AnchorPoint = Vector2.new(0.5, 0)
 	InfoHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	InfoHolder.BorderColor3 = Color3.fromRGB(30, 30, 30)
-	InfoHolder.Position = UDim2.new(0, 40, 0, 30)
+	InfoHolder.Position = UDim2.new(0.5, 0, 0, 30)
 	InfoHolder.Size = UDim2.new(1, -80, 0, 0)
 	Roundify(InfoHolder)
 	Border(InfoHolder)
@@ -2850,8 +2851,12 @@ function Library:AddLoadingBar(LoadingBarText)
 		LoadingInfoGradient.Size = UDim2.new(0, LoadingInfoGradient.TextBounds.X, 1, 0)
 		Gradient(LoadingInfoGradient)
 
+		if LoadingInfo.TextBounds.X > LongestText then
+			LongestText = LoadingInfo.TextBounds.X
+		end
+
 		QTween(LoadingBar, Preloading and 0 or 0.3, {Size = UDim2.new(0, 400, 0, 85 + (InfoCount * 20))})
-		QTween(InfoHolder, Preloading and 0 or 0.3, {Size = UDim2.new(0, 10 + LongestText, 0, 10 + (InfoCount * 20))})
+		QTween(InfoHolder, Preloading and 0 or 0.3, {Size = UDim2.new(0, 20 + LongestText, 0, 10 + (InfoCount * 20))})
 		QTween(BarHolder, Preloading and 0 or 0.3, {Position = UDim2.new(0, 10, 0, 50 + (InfoCount * 20))})
 		QTween(LoadingInfo, Preloading and 0 or 0.3, {TextTransparency = 0})
 		QTween(LoadingInfoGradient, Preloading and 0 or 0.3, {TextTransparency = 0})
@@ -2877,6 +2882,7 @@ function Library:AddLoadingBar(LoadingBarText)
 	end
 	return Options
 end
+
 
 function Library:AddWarning(Options)
 	Options = CheckTable(Options, {
