@@ -943,7 +943,7 @@ Sections.Settings.UI:AddDivider()
 Sections.Settings.UI:AddToggle({text = 'Watermark', flag = 'showMark', state = true})
 Sections.Settings.UI:AddToggle({text = 'Show Memory Usage', flag = 'showMem', state = true})
 
-Sections.Settings.Credits:AddLabel('<b>Script Developer</b>\nZanikes\n\n<b>UI Library Developer</b>\nZanikes\n\n<b>Shaders</b>\nDekkonot & moo1210\n\n<b>UI Library Inspiration</b>\nErji')
+Sections.Settings.Credits:AddLabel('<b>Script Developer</b>\nZanikes\n\n<b>UI Library Developer</b>\nZanikes\n\n<b>UI Library Inspiration</b>\nErji')
 Sections.Settings.Configs:AddBox({text = 'Config Name', value = '', skipflag = true})
 Sections.Settings.Configs:AddButton({text = 'Create', callback = function()
 	if string.gsub(library.flags['Config Name'], ' ', '') == '' then
@@ -1059,47 +1059,7 @@ local PrevLighting = {
 	Outlines = 0
 }
 Sections.Settings.Main:AddToggle({text = 'Shaders', state = false, callback = function(bool)
-	if not ReplicatedStorage:FindFirstChild('AyarumShaders') then
-		local AyarumShaders = Instance.new('Folder')
-		AyarumShaders.Name = 'AyarumShaders'
-		AyarumShaders.Parent = ReplicatedStorage
-	end
-	local ShadersInLighting = Lighting:FindFirstChild('AyarumShadersEnabled')
-	local ShadersInStorage = ReplicatedStorage.AyarumShaders:FindFirstChild('AyarumShadersEnabled')
-	if ShadersInStorage then
-		for _, v in pairs(ReplicatedStorage.AyarumShaders:GetChildren()) do
-			if v:IsA('BloomEffect') or v:IsA('Sky') or v:IsA('BlurEffect') or v:IsA('ColorCorrectionEffect') or v:IsA('SunRaysEffect') or v.Name == 'AyarumShadersEnabled' then
-				v:Destroy()
-			end
-		end
-	end
-	if bool then
-		if ShadersInLighting then return end
-		for Property, _ in pairs(PrevLighting) do
-			PrevLighting[Property] = Lighting[Property]
-		end
-		for _, v in pairs(Lighting:GetChildren()) do
-			if v:IsA('BloomEffect') or v:IsA('Sky') or v:IsA('BlurEffect') or v:IsA('ColorCorrectionEffect') or v:IsA('SunRaysEffect') then
-				v.Parent = ReplicatedStorage.AyarumShaders
-			end
-		end
-		AddShaders()
-	else
-		if ShadersInLighting then
-			for _, v in pairs(Lighting:GetChildren()) do
-				if v:IsA('BloomEffect') or v:IsA('Sky') or v:IsA('BlurEffect') or v:IsA('ColorCorrectionEffect') or v:IsA('SunRaysEffect') or v.Name == 'AyarumShadersEnabled' then
-					v:Destroy()
-				end
-			end
-			for Property, Value in pairs(PrevLighting) do
-				if typeof(Value) ~= typeof(Lighting[Property]) then continue end
-				Lighting[Property] = Value
-			end
-			for _, v in pairs(ReplicatedStorage.AyarumShaders:GetChildren()) do
-				v.Parent = Lighting
-			end
-		end
-	end
+	AddShaders(bool)
 end})
 
 LoadInfo('Initializing UI...')
