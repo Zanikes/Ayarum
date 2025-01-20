@@ -61,13 +61,13 @@ end
 
 local function AddShaders(State)
 	ShadersOn = State
-	if not ReplicatedStorage:FindFirstChild('AyarumShadersStorage') then
-		local AyarumShadersStorage = Instance.new('Folder')
-		AyarumShadersStorage.Name = 'AyarumShadersStorage'
-		AyarumShadersStorage.Parent = ReplicatedStorage
-	end
-
 	if ShadersOn then
+		if not ReplicatedStorage:FindFirstChild('AyarumShadersStorage') then
+			local AyarumShadersStorage = Instance.new('Folder')
+			AyarumShadersStorage.Name = 'AyarumShadersStorage'
+			AyarumShadersStorage.Parent = ReplicatedStorage
+		end
+
 		for Property, Value in pairs(LightingOptions) do
 			Lighting[Property] = Value
 		end
@@ -116,6 +116,7 @@ local function AddShaders(State)
 			NearIntensity = 0
 		})
 	else
+		if not ReplicatedStorage:FindFirstChild('AyarumShadersStorage') then return end
 		for Property, Value in pairs(OldLighting) do
 			Lighting[Property] = Value
 		end
