@@ -898,6 +898,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end)
 	end
 
+	local AddedChars = {}
 	local function SetPlayerInvis(Plr, Value)
 		local Storage = MakeStorage(Plr)
 		if Value == true and Plr.Character:FindFirstChild('Head') and Plr.Character.Head:FindFirstChild('face') then
@@ -969,7 +970,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				end
 			end)
 		end
-		AddInvisEvent(Plr.Character)
+		if not table.find(AddedChars, Plr.Character) then
+			table.insert(AddedChars, Plr.Character)
+			AddInvisEvent(Plr.Character)
+		end
 		if Plr == Client and Value then
 			spawn(function()
 				repeat wait() until Plr.Character.Head.Transparency == 1
