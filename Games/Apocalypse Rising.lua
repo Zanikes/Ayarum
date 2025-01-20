@@ -841,6 +841,36 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end
 
+	local function MakeInt(Name, Parent, Value)
+		Remote.GroupCreate:FireServer(Name)
+		local Int = Lighting.Groups:WaitForChild(Name)
+		ChangeValue(Int, tonumber(Value))
+		ChangeParent(Int, Parent)
+		repeat wait() until Int.Parent == Parent
+		for _, v in pairs(Int:GetChildren()) do
+			Delete(v)
+		end
+	end
+
+	local InvisPlayers = {}
+	local function AddInvisEvent(char)
+		char.ChildAdded:Connect(function(child)
+			if char.Head.Transparency == 1 and child:FindFirstChild('thisisbackpack') then
+				AddInstance('IsBackPack', child)
+				Delete(child.WeldScript)
+				Delete(child.thisisbackpack)
+				fireServer('VehichleLightsSet', child, 'Plastic', 1)
+				if char == Client.Character then
+					repeat wait() until child.Handle.Transparency == 1
+					for _, v in pairs(child:GetChildren()) do
+						if v:IsA('BasePart') then
+							v.Transparency = 0.8
+						end
+					end
+				end
+			end
+		end)
+	end
 	local function SetPlayerInvis(Plr, Value)
 		local Storage = MakeStorage(Plr)
 		if Value == true and Plr.Character:FindFirstChild('Head') and Plr.Character.Head:FindFirstChild('face') then
@@ -852,13 +882,32 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 		fireServer('VehichleLightsSet', Plr.Character, 'Plastic', Value == true and 1 or 0)
 		for _, v in pairs(Plr.Character:GetChildren()) do
-			if v:FindFirstChild('thisisarmor') then
-				Delete(v.thisisarmor)
-			end
 			if v:FindFirstChild('WeldScript') then
 				Delete(v.WeldScript)
 			end
-			fireServer('VehichleLightsSet', v, 'Plastic', Value == true and 1 or 0)
+
+			if Value then
+				if v:FindFirstChild('thisisarmor') then
+					AddInstance('IsVest', v)
+					Delete(v.thisisarmor)
+				end
+				if v:FindFirstChild('thisisbackpack') then
+					AddInstance('IsBackPack', v)
+					Delete(v.thisisbackpack)
+				end
+				fireServer('VehichleLightsSet', v, 'Plastic', Value == true and 1 or 0)
+			else
+				if v:FindFirstChild('IsBackPack') then
+					MakeInt('thisisbackpack', v, 0)
+				elseif v:FindFirstChild('IsVest') then
+					MakeInt('thisisarmor', v, 0)
+				end
+			end
+		end
+		if InvisPlayers[Plr.Name] == nil then
+			InvisPlayers[Plr.Name] = true
+			AddInvisEvent(Plr.Character)
+			Plr.CharacterAdded:Connect(AddInvisEvent)
 		end
 		if Plr == Client then
 			spawn(function()
@@ -868,10 +917,37 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					if table.find(Parts, v.Name) then
 						v.Transparency = 0.8
 					end
+					if v:FindFirstChild('IsVest') or v:FindFirstChild('IsBackPack') then
+						for _, a in pairs(v:GetChildren()) do
+							if a:IsA('BasePart') then
+								a.Transparency = 0.8
+							end
+						end
+					end
+				end
+				if Plr:FindFirstChild('AyarumStorage') and Plr.AyarumStorage:FindFirstChild('face') then
+					local NewFace = Plr.AyarumStorage.face:Clone()
+					NewFace.Parent = Plr.Character.Head
+					NewFace.Transparency = 0.8
 				end
 			end)
 		end
 	end
+
+	--[[
+	local function Invis(state)
+		if state then
+			fireServer('ChangeParent', Bag.WeldScript, nil)
+			fireServer('ChangeParent', Bag.thisisbackpack, nil)
+			fireServer('VehichleLightsSet', Bag, 'Plastic', 1)
+		else
+			MakeInt('thisisbackpack', Bag, 0)
+			fireServer('VehichleLightsSet', Bag, 'Plastic', 0)
+		end
+	end
+
+	Invis(false)
+]]
 
 	local function SpawnKit(Items, Player)
 		spawn(function()
