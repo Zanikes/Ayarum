@@ -863,18 +863,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		char.ChildAdded:Connect(function(child)
 			wait()
 			if char.Head.Transparency ~= 0 and child:FindFirstChild('thisisbackpack') then
-				for _, v in pairs(char:GetChildren()) do
-					if v:FindFirstChild('IsBackPack') then
-						Delete(v)
-					end
-				end
-
 				AddInstance('IsBackPack', child)
 				Delete(child.WeldScript)
 				Delete(child.thisisbackpack)
 				fireServer('VehichleLightsSet', child, 'Plastic', 1)
+				repeat wait() until child.Handle.Transparency == 1
+				MakeInt('thisisbackpack', child, 0)
+
 				if char == Client.Character then
-					repeat wait() until child.Handle.Transparency == 1
 					for _, v in pairs(child:GetChildren()) do
 						if not v:IsA('StringValue') and not v:IsA('IntValue') then
 							v.Transparency = 0.8
@@ -902,22 +898,31 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				Delete(v.WeldScript)
 			end
 
+			local ShouldFire = false
 			if Value then
-				if v:FindFirstChild('thisisarmor') then
-					AddInstance('IsVest', v)
-					Delete(v.thisisarmor)
-				end
 				if v:FindFirstChild('thisisbackpack') then
+					ShouldFire = true
 					AddInstance('IsBackPack', v)
 					Delete(v.thisisbackpack)
 				end
+				if v:FindFirstChild('thisisarmor') then
+					ShouldFire = true
+					AddInstance('IsVest', v)
+					Delete(v.thisisarmor)
+				end
+				if not ShouldFire then continue end
 				fireServer('VehichleLightsSet', v, 'Plastic', 1)
-			else
+				repeat wait() until v.Handle.Transparency == 1
 				if v:FindFirstChild('IsBackPack') then
 					MakeInt('thisisbackpack', v, 0)
 				elseif v:FindFirstChild('IsVest') then
 					MakeInt('thisisarmor', v, 0)
 				end
+			else
+				if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') then
+					ShouldFire = true
+				end
+				if not ShouldFire then continue end
 				fireServer('VehichleLightsSet', v, 'Plastic', 0)
 			end
 		end
@@ -926,7 +931,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			AddInvisEvent(Plr.Character)
 			Plr.CharacterAdded:Connect(AddInvisEvent)
 		end
-		if Plr == Client then
+		if Plr == Client and Value then
 			spawn(function()
 				repeat wait() until Plr.Character.Head.Transparency == 1
 				local Parts = {'Head', 'Left Arm', 'Right Arm', 'Torso', 'Left Leg', 'Right Leg'}
@@ -935,7 +940,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						v.Transparency = 0.8
 					end
 					if v:FindFirstChild('IsVest') or v:FindFirstChild('IsBackPack') then
-						repeat wait() until v.Handle.Transparency == 1
 						for _, a in pairs(v:GetChildren()) do
 							if not a:IsA('StringValue') and not a:IsA('IntValue') then
 								a.Transparency = 0.8
