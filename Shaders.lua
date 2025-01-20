@@ -25,7 +25,8 @@ local LightingOptions = {
 	ShadowSoftness = 0.2,
 	GeographicLatitude = 45,
 	ExposureCompensation = 0.5,
-	FogColor = Color3.fromRGB(94, 76, 106)
+	FogColor = Color3.fromRGB(94, 76, 106),
+	Technology = Enum.Technology.ShadowMap
 }
 local OldLighting = {}
 for Property, Value in pairs(LightingOptions) do
