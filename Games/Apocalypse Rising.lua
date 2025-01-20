@@ -915,7 +915,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				if v:FindFirstChild('WeldScript') then
 					Delete(v.WeldScript)
 				end
-	
+
 				local ShouldFire = false
 				if Value then
 					if v:FindFirstChild('thisisbackpack') then
@@ -950,6 +950,13 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						elseif v:FindFirstChild('IsAccessory') then
 							MakeInt('thisisaccessory', v, 0)
 						end
+						if Plr == Client then
+							for _, a in pairs(v:GetChildren()) do
+								if not a:IsA('StringValue') and not a:IsA('IntValue') then
+									a.Transparency = 0.8
+								end
+							end
+						end
 					end
 				else
 					if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') or v:FindFirstChild('IsHat') or v:FindFirstChild('IsAccessory') then
@@ -969,13 +976,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				for _, v in pairs(Plr.Character:GetChildren()) do
 					if table.find(Parts, v.Name) then
 						v.Transparency = 0.8
-					end
-					if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') or v:FindFirstChild('IsHat') or v:FindFirstChild('IsAccessory') then
-						for _, a in pairs(v:GetChildren()) do
-							if not a:IsA('StringValue') and not a:IsA('IntValue') then
-								a.Transparency = 0.8
-							end
-						end
 					end
 				end
 				if Plr:FindFirstChild('AyarumStorage') and Plr.AyarumStorage:FindFirstChild('face') then
