@@ -116,12 +116,12 @@ local function AddShaders(State)
 			Glare = 0.36,
 			Haze = 1.72
 		})
-		--[[AddProtectedInstance('DepthOfFieldEffect', {
-			FarIntensity = 0.2,
+		AddProtectedInstance('DepthOfFieldEffect', {
+			FarIntensity = 0.1,
 			FocusDistance = 0.05,
-			InFocusRadius = 20,
+			InFocusRadius = 200,
 			NearIntensity = 0
-		})]]
+		})
 	else
 		if not ReplicatedStorage:FindFirstChild('AyarumShadersStorage') then return end
 		for Property, Value in pairs(OldLighting) do
