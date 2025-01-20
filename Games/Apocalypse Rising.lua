@@ -4670,6 +4670,11 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				end
 				RunService.Stepped:Wait()
 			end
+		else
+			wait()
+			if Client.Character then
+				Client.Character.Torso.CanCollide = true
+			end
 		end
 	end})
 
