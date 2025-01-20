@@ -863,7 +863,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				if char == Client.Character then
 					repeat wait() until child.Handle.Transparency == 1
 					for _, v in pairs(child:GetChildren()) do
-						if v:IsA('BasePart') then
+						if not v:IsA('StringValue') and not v:IsA('IntValue') then
 							v.Transparency = 0.8
 						end
 					end
@@ -920,7 +920,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					end
 					if v:FindFirstChild('IsVest') or v:FindFirstChild('IsBackPack') then
 						for _, a in pairs(v:GetChildren()) do
-							if a:IsA('BasePart') then
+							if not a:IsA('StringValue') and not a:IsA('IntValue') then
 								a.Transparency = 0.8
 							end
 						end
