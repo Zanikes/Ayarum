@@ -861,7 +861,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local InvisPlayers = {}
 	local function AddInvisEvent(char)
 		char.ChildAdded:Connect(function(child)
-			if char.Head.Transparency == 1 and child:FindFirstChild('thisisbackpack') then
+			if char.Head.Transparency == 1 or char.Head.Transparency == 0.8 and child:FindFirstChild('thisisbackpack') then
 				AddInstance('IsBackPack', child)
 				Delete(child.WeldScript)
 				Delete(child.thisisbackpack)
@@ -944,21 +944,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end)
 		end
 	end
-
-	--[[
-	local function Invis(state)
-		if state then
-			fireServer('ChangeParent', Bag.WeldScript, nil)
-			fireServer('ChangeParent', Bag.thisisbackpack, nil)
-			fireServer('VehichleLightsSet', Bag, 'Plastic', 1)
-		else
-			MakeInt('thisisbackpack', Bag, 0)
-			fireServer('VehichleLightsSet', Bag, 'Plastic', 0)
-		end
-	end
-
-	Invis(false)
-]]
 
 	local function SpawnKit(Items, Player)
 		spawn(function()
