@@ -879,14 +879,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 	local function SetPlayerInvis(Plr, Value)
 		local Storage = MakeStorage(Plr)
-		if Value == false and Plr.Character.Head:FindFirstChild('face') then
-			Plr.Character.Head.face:Destroy()
-		end
 		if Value == true and Plr.Character:FindFirstChild('Head') and Plr.Character.Head:FindFirstChild('face') then
 			local PlrFace = Plr.Character.Head.face
 			ChangeParent(PlrFace, Storage)
 			repeat wait() until PlrFace.Parent == Storage
-		elseif Value == false and Plr.Character ~= nil and Plr.Character:FindFirstChild('Head') and not Plr.Character.Head:FindFirstChild('face') and Storage:FindFirstChild('face') then
+		elseif Value == false and Plr.Character ~= nil and Plr.Character:FindFirstChild('Head') and Storage:FindFirstChild('face') then
+			if Plr == Client and Plr.Character.Head:FindFirstChild('face') then
+				Plr.Character.Head.face:Destroy()
+			end
 			ChangeParent(Storage.face, Plr.Character.Head)
 		end
 		fireServer('VehichleLightsSet', Plr.Character, 'Plastic', Value == true and 1 or 0)
@@ -928,6 +928,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						v.Transparency = 0.8
 					end
 					if v:FindFirstChild('IsVest') or v:FindFirstChild('IsBackPack') then
+						repeat wait() until v.Handle.Transparency == 1
 						for _, a in pairs(v:GetChildren()) do
 							if not a:IsA('StringValue') and not a:IsA('IntValue') then
 								a.Transparency = 0.8
