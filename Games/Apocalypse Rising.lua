@@ -1082,7 +1082,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end)
 	library:AddConnection(Lighting:GetPropertyChangedSignal('Brightness'), function()
-		if Lighting.Brightness ~= 1 and FullBrightOn == true then
+		if Lighting.Brightness ~= 1 and FullBrightOn == true and not library.flags['Shaders'] then
 			Lighting.Brightness = 1
 		end
 	end)
