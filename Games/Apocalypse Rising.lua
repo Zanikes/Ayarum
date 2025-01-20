@@ -861,7 +861,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local InvisPlayers = {}
 	local function AddInvisEvent(char)
 		char.ChildAdded:Connect(function(child)
-			if char.Head.Transparency == 1 or char.Head.Transparency == 0.8 and child:FindFirstChild('thisisbackpack') then
+			wait()
+			if char.Head.Transparency ~= 0 and child:FindFirstChild('thisisbackpack') then
+				for _, v in pairs(char:GetChildren()) do
+					if v:FindFirstChild('IsBackPack') then
+						Delete(v)
+					end
+				end
+
 				AddInstance('IsBackPack', child)
 				Delete(child.WeldScript)
 				Delete(child.thisisbackpack)
