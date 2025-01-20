@@ -895,13 +895,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					AddInstance('IsBackPack', v)
 					Delete(v.thisisbackpack)
 				end
-				fireServer('VehichleLightsSet', v, 'Plastic', Value == true and 1 or 0)
+				fireServer('VehichleLightsSet', v, 'Plastic', 1)
 			else
 				if v:FindFirstChild('IsBackPack') then
 					MakeInt('thisisbackpack', v, 0)
 				elseif v:FindFirstChild('IsVest') then
 					MakeInt('thisisarmor', v, 0)
 				end
+				fireServer('VehichleLightsSet', v, 'Plastic', 0)
 			end
 		end
 		if InvisPlayers[Plr.Name] == nil then
