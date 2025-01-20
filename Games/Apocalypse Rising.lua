@@ -862,7 +862,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		char.ChildAdded:Connect(function(child)
 			wait()
 			if char.Head.Transparency ~= 0 and (child:FindFirstChild('thisisbackpack') or child:FindFirstChild('thisishat') or child:FindFirstChild('thisisaccessory')) then
-				Delete(child.WeldScript)
+				if child:FindFirstChild('WeldScript') then
+					Delete(child.WeldScript)
+				end
 				if child:FindFirstChild('thisisbackpack') then
 					AddInstance('IsBackPack', child)
 					Delete(child.thisisbackpack)
