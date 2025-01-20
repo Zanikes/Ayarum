@@ -911,51 +911,55 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 		fireServer('VehichleLightsSet', Plr.Character, 'Plastic', Value == true and 1 or 0)
 		for _, v in pairs(Plr.Character:GetChildren()) do
-			if v:FindFirstChild('WeldScript') then
-				Delete(v.WeldScript)
-			end
-
-			local ShouldFire = false
-			if Value then
-				if v:FindFirstChild('thisisbackpack') then
-					ShouldFire = true
-					AddInstance('IsBackPack', v)
-					Delete(v.thisisbackpack)
+			spawn(function()
+				if v:FindFirstChild('WeldScript') then
+					Delete(v.WeldScript)
 				end
-				if v:FindFirstChild('thisisarmor') then
-					ShouldFire = true
-					AddInstance('IsVest', v)
-					Delete(v.thisisarmor)
+	
+				local ShouldFire = false
+				if Value then
+					if v:FindFirstChild('thisisbackpack') then
+						ShouldFire = true
+						AddInstance('IsBackPack', v)
+						Delete(v.thisisbackpack)
+					end
+					if v:FindFirstChild('thisisarmor') then
+						ShouldFire = true
+						AddInstance('IsVest', v)
+						Delete(v.thisisarmor)
+					end
+					if v:FindFirstChild('thisishat') then
+						ShouldFire = true
+						AddInstance('IsHat', v)
+						Delete(v.thisishat)
+					end
+					if v:FindFirstChild('thisisaccessory') then
+						ShouldFire = true
+						AddInstance('IsAccessory', v)
+						Delete(v.thisisaccessory)
+					end
+					if ShouldFire then
+						fireServer('VehichleLightsSet', v, 'Plastic', 1)
+						repeat wait() until v.Handle.Transparency == 1
+						if v:FindFirstChild('IsBackPack') then
+							MakeInt('thisisbackpack', v, 0)
+						elseif v:FindFirstChild('IsVest') then
+							MakeInt('thisisarmor', v, 0)
+						elseif v:FindFirstChild('IsHat') then
+							MakeInt('thisishat', v, 0)
+						elseif v:FindFirstChild('IsAccessory') then
+							MakeInt('thisisaccessory', v, 0)
+						end
+					end
+				else
+					if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') or v:FindFirstChild('IsHat') or v:FindFirstChild('IsAccessory') then
+						ShouldFire = true
+					end
+					if ShouldFire then
+						fireServer('VehichleLightsSet', v, 'Plastic', 0)
+					end
 				end
-				if v:FindFirstChild('thisishat') then
-					ShouldFire = true
-					AddInstance('IsHat', v)
-					Delete(v.thisishat)
-				end
-				if v:FindFirstChild('thisisaccessory') then
-					ShouldFire = true
-					AddInstance('IsAccessory', v)
-					Delete(v.thisisaccessory)
-				end
-				if not ShouldFire then continue end
-				fireServer('VehichleLightsSet', v, 'Plastic', 1)
-				repeat wait() until v.Handle.Transparency == 1
-				if v:FindFirstChild('IsBackPack') then
-					MakeInt('thisisbackpack', v, 0)
-				elseif v:FindFirstChild('IsVest') then
-					MakeInt('thisisarmor', v, 0)
-				elseif v:FindFirstChild('IsHat') then
-					MakeInt('thisishat', v, 0)
-				elseif v:FindFirstChild('IsAccessory') then
-					MakeInt('thisisaccessory', v, 0)
-				end
-			else
-				if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') or v:FindFirstChild('IsHat') or v:FindFirstChild('IsAccessory') then
-					ShouldFire = true
-				end
-				if not ShouldFire then continue end
-				fireServer('VehichleLightsSet', v, 'Plastic', 0)
-			end
+			end)
 		end
 		AddInvisEvent(Plr.Character)
 		if Plr == Client and Value then
