@@ -39,6 +39,7 @@ end
 
 Lighting.ChildAdded:Connect(function(child)
 	if ShadersOn and child.Name ~= 'AyarumProtectedInstance' and table.find(Effects, child.ClassName) then
+		wait()
 		child:Destroy()
 	end
 end)
