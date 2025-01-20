@@ -858,17 +858,32 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end
 
-	local InvisPlayers = {}
 	local function AddInvisEvent(char)
 		char.ChildAdded:Connect(function(child)
 			wait()
-			if char.Head.Transparency ~= 0 and child:FindFirstChild('thisisbackpack') then
-				AddInstance('IsBackPack', child)
+			if char.Head.Transparency ~= 0 and (child:FindFirstChild('thisisbackpack') or child:FindFirstChild('thisishat') or child:FindFirstChild('thisisaccessory')) then
 				Delete(child.WeldScript)
-				Delete(child.thisisbackpack)
+				if child:FindFirstChild('thisisbackpack') then
+					AddInstance('IsBackPack', child)
+					Delete(child.thisisbackpack)
+				elseif child:FindFirstChild('thisishat') then
+					AddInstance('IsHat', child)
+					Delete(child.thisishat)
+				elseif child:FindFirstChild('thisisaccessory') then
+					AddInstance('IsAccessory', child)
+					Delete(child.thisisaccessory)
+				end
+
 				fireServer('VehichleLightsSet', child, 'Plastic', 1)
 				repeat wait() until child.Handle.Transparency == 1
-				MakeInt('thisisbackpack', child, 0)
+
+				if child:FindFirstChild('IsBackPack') then
+					MakeInt('thisisbackpack', child, 0)
+				elseif child:FindFirstChild('IsHat') then
+					MakeInt('thisishat', child, 0)
+				elseif child:FindFirstChild('IsAccessory') then
+					MakeInt('thisisaccessory', child, 0)
+				end
 
 				if char == Client.Character then
 					for _, v in pairs(child:GetChildren()) do
@@ -910,6 +925,16 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					AddInstance('IsVest', v)
 					Delete(v.thisisarmor)
 				end
+				if v:FindFirstChild('thisishat') then
+					ShouldFire = true
+					AddInstance('IsHat', v)
+					Delete(v.thisishat)
+				end
+				if v:FindFirstChild('thisisaccessory') then
+					ShouldFire = true
+					AddInstance('IsAccessory', v)
+					Delete(v.thisisaccessory)
+				end
 				if not ShouldFire then continue end
 				fireServer('VehichleLightsSet', v, 'Plastic', 1)
 				repeat wait() until v.Handle.Transparency == 1
@@ -917,20 +942,20 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					MakeInt('thisisbackpack', v, 0)
 				elseif v:FindFirstChild('IsVest') then
 					MakeInt('thisisarmor', v, 0)
+				elseif v:FindFirstChild('IsHat') then
+					MakeInt('thisishat', v, 0)
+				elseif v:FindFirstChild('IsAccessory') then
+					MakeInt('thisisaccessory', v, 0)
 				end
 			else
-				if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') then
+				if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') or v:FindFirstChild('IsHat') or v:FindFirstChild('IsAccessory') then
 					ShouldFire = true
 				end
 				if not ShouldFire then continue end
 				fireServer('VehichleLightsSet', v, 'Plastic', 0)
 			end
 		end
-		if InvisPlayers[Plr.Name] == nil then
-			InvisPlayers[Plr.Name] = true
-			AddInvisEvent(Plr.Character)
-			Plr.CharacterAdded:Connect(AddInvisEvent)
-		end
+		AddInvisEvent(Plr.Character)
 		if Plr == Client and Value then
 			spawn(function()
 				repeat wait() until Plr.Character.Head.Transparency == 1
@@ -939,7 +964,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					if table.find(Parts, v.Name) then
 						v.Transparency = 0.8
 					end
-					if v:FindFirstChild('IsVest') or v:FindFirstChild('IsBackPack') then
+					if v:FindFirstChild('IsBackPack') or v:FindFirstChild('IsVest') or v:FindFirstChild('IsHat') or v:FindFirstChild('IsAccessory') then
 						for _, a in pairs(v:GetChildren()) do
 							if not a:IsA('StringValue') and not a:IsA('IntValue') then
 								a.Transparency = 0.8
