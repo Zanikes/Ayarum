@@ -120,14 +120,12 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			Cham.Parent = Zombie
 
 			Zombie:WaitForChild('Humanoid')
-			local DiedFunction
 			local HealthFunction
-			DiedFunction = Zombie.Humanoid.Died:Connect(function()
-				Cham:Destroy()
-				DiedFunction:Disconnect()
-				HealthFunction:Disconnect()
-			end)
 			HealthFunction = Zombie.Humanoid.HealthChanged:Connect(function()
+				if Zombie.Humanoid.Health == 0 then
+					Cham:Destroy()
+					HealthFunction:Disconnect()
+				end
 				if ChamsSettings.HealthColored then
 					UpdateChamFromHealth(Zombie, Cham)
 				end
@@ -233,9 +231,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end, AddBuffInfo('Defensive Aura Buff', 45)},
 		SilentAim = {false, 50, function(Round)
 			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Silent Aim Enabled')
-			library.flags['Silent Aim']:SetState(true)
-			library.flags['sAimSize']:SetValue(1000)
-			library.flags['sAimTrans']:SetValue(1)
+			library.options['Silent Aim']:SetState(true)
+			library.options['sAimSize']:SetValue(1000)
+			library.options['sAimTrans']:SetValue(1)
 		end, AddBuffInfo('Silent Aim', 50)}
 	}
 
@@ -601,10 +599,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		repeat
 			for _, v in pairs(Workspace.Ignore._Powerups:GetChildren()) do
 				if v:FindFirstChild('TouchInterest') then
+					firetouchinterest(Client.Character.Head, v, 0)
 					if v:FindFirstChild('Grabbed') then continue end
 					Instance.new('StringValue', v).Name = 'Grabbed'
 					Notify('[Auto-Collect Powerups] Picked up ' .. v.Name)
-					firetouchinterest(Client.Character.Head, v, 0)
 				end
 			end
 			wait()
