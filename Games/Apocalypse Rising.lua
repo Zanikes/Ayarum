@@ -842,6 +842,12 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 
 	local function MakeInt(Name, Parent, Value)
+		if Parent:FindFirstChild(Name) and Parent[Name].ClassName == 'IntValue' then
+			if Parent[Name].Value ~= Value then
+				ChangeValue(Parent[Name], Value)
+			end
+			return
+		end
 		Remote.GroupCreate:FireServer(Name)
 		local Int = Lighting.Groups:WaitForChild(Name)
 		ChangeValue(Int, tonumber(Value))
@@ -873,6 +879,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 	local function SetPlayerInvis(Plr, Value)
 		local Storage = MakeStorage(Plr)
+		if Value == false and Plr.Character.Head:FindFirstChild('face') then
+			Plr.Character.Head.face:Destroy()
+		end
 		if Value == true and Plr.Character:FindFirstChild('Head') and Plr.Character.Head:FindFirstChild('face') then
 			local PlrFace = Plr.Character.Head.face
 			ChangeParent(PlrFace, Storage)
