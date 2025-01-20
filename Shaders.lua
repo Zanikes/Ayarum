@@ -37,6 +37,12 @@ for Property, Value in pairs(LightingOptions) do
 	end)
 end
 
+Lighting.ChildAdded:Connect(function(child)
+	if ShadersOn and child.Name ~= 'AyarumProtectedInstance' and table.find(Effects, child.ClassName) then
+		child:Destroy()
+	end
+end)
+
 local AddProtectedInstance
 AddProtectedInstance = function(Type, Properties)
 	local NewInstance = Instance.new(Type)
