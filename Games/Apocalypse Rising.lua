@@ -897,6 +897,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 		end)
 	end
+
 	local function SetPlayerInvis(Plr, Value)
 		local Storage = MakeStorage(Plr)
 		if Value == true and Plr.Character:FindFirstChild('Head') and Plr.Character.Head:FindFirstChild('face') then
@@ -941,6 +942,13 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					if ShouldFire then
 						fireServer('VehichleLightsSet', v, 'Plastic', 1)
 						repeat wait() until v.Handle.Transparency == 1
+						if Plr == Client then
+							for _, a in pairs(v:GetChildren()) do
+								if not a:IsA('StringValue') and not a:IsA('IntValue') then
+									a.Transparency = 0.8
+								end
+							end
+						end
 						if v:FindFirstChild('IsBackPack') then
 							MakeInt('thisisbackpack', v, 0)
 						elseif v:FindFirstChild('IsVest') then
@@ -949,13 +957,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 							MakeInt('thisishat', v, 0)
 						elseif v:FindFirstChild('IsAccessory') then
 							MakeInt('thisisaccessory', v, 0)
-						end
-						if Plr == Client then
-							for _, a in pairs(v:GetChildren()) do
-								if not a:IsA('StringValue') and not a:IsA('IntValue') then
-									a.Transparency = 0.8
-								end
-							end
 						end
 					end
 				else
