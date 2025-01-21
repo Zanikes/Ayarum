@@ -157,10 +157,10 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end)
 
-	local DefaultSpreadVals = {}
+	local DefaultGunVals = {}
 	for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
 		local Module = require(v.Module.Settings)
-		DefaultSpreadVals[v.Name] = {
+		DefaultGunVals[v.Name] = {
 			DEFUALT = Module.SPREAD.DEFUALT,
 			MIN = Module.SPREAD.MIN,
 			MAX = Module.SPREAD.MAX,
@@ -168,37 +168,18 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		}
 	end
 
-	local RecoilGlobal = Instance.new('BoolValue')
-	RecoilGlobal.Value = false
 	for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
 		local Module = require(v.Module.Settings)
 		for k, a in pairs(Module.CAMERA_RECOIL) do
 			local OldFunc = a
 			Module.CAMERA_RECOIL[k] = function()
-				if RecoilGlobal.Value == true then
+				if library.flags['No Recoil'] == true then
 					return Vector3.new(0, 0, 0)
 				else
 					return OldFunc()
 				end
 			end
 		end
-	end
-
-	local RecoilRemoved = false
-	local function NoRecoil()
-		RecoilGlobal.Value = true
-		if not RecoilRemoved then
-			library:AddConnection(RunService.RenderStepped, function()
-				if Client.Character and Client.Character:FindFirstChild('CharStats') then
-					for _, v in pairs(Client.Character.CharStats.GunInventory:GetChildren()) do
-						for _, a in pairs({'Underbarrel', 'Sight'}) do
-							v:SetAttribute(a, '')
-						end
-					end
-				end
-			end)
-		end
-		RecoilRemoved = true
 	end
 
 	local RoundBuffs = {
@@ -220,7 +201,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end, AddBuffInfo('Perfect Accuracy Enabled', 30)},
 		NoRecoil = {false, 35, function(Round)
 			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, No Recoil Enabled')
-			NoRecoil()
+			library.options['No Recoil']:SetState(true)
 		end, AddBuffInfo('No Recoil Enabled', 35)},
 		KillAura = {false, 40, function(Round)
 			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Defensive Aura Enabled')
@@ -706,25 +687,19 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end})
 	Sections.Main.Client:AddDivider()
-	local Warning = library:AddWarning()
 	Sections.Main.Client:AddToggle({text = 'Perfect Accuracy', state = false, callback = function(bool)
 		if bool then
-			Warning.text = 'Are you sure you want to enable Perfect Accuracy?\n\nThis cannot be disabled!'
-			if Warning:Show() then
-				for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
-					local Module = require(v.Module.Settings)
-					Module.SPREAD.DEFUALT = 0
-					Module.SPREAD.MIN = 0
-					Module.SPREAD.MAX = 0
-					Module.SPREAD.WALK_ADDITION = 0
-				end
-			else
-				library.options['Perfect Accuracy']:SetState(false)
+			for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
+				local Module = require(v.Module.Settings)
+				Module.SPREAD.DEFUALT = 0
+				Module.SPREAD.MIN = 0
+				Module.SPREAD.MAX = 0
+				Module.SPREAD.WALK_ADDITION = 0
 			end
 		else
 			for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
 				local Module = require(v.Module.Settings)
-				local Defaults = DefaultSpreadVals[v.Name]
+				local Defaults = DefaultGunVals[v.Name]
 				Module.SPREAD.DEFUALT = Defaults.DEFUALT
 				Module.SPREAD.MIN = Defaults.MIN
 				Module.SPREAD.MAX = Defaults.MAX
@@ -732,13 +707,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 		end
 	end})
-	Sections.Main.Client:AddButton({text = 'No Recoil', callback = function()
-		Warning.text = 'Are you sure you want to enable No Recoil?\n\nThis cannot be disabled,\nand all your attachments will be un-equipped to prevent bugs!'
-		if Warning:Show() then
-			NoRecoil()
-			Notify('Enabled No Recoil')
-		end
-	end})
+	Sections.Main.Client:AddToggle({text = 'No Recoil', state = false})
 	Sections.Main.Client:AddDivider()
 	Sections.Main.Client:AddToggle({text = 'Disable Aim Assist', state = false, callback = function(bool)
 			DisableAimAssist = bool
