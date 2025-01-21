@@ -1219,7 +1219,7 @@ function Library:AddTab(Text)
 			Circle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 			Circle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Circle.BorderSizePixel = 0
-			Circle.Size = UDim2.new(0, 4, 0, 4)
+			Circle.Size = UDim2.new(0, 0, 0, 0)
 			Roundify(Circle).CornerRadius = UDim.new(1, 0)
 
 			CircleGradient.Name = 'CircleGradient'
