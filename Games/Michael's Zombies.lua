@@ -229,7 +229,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			library.options['Silent Aim']:SetState(true)
 			library.options['sAimSize']:SetValue(1000)
 			library.options['sAimTrans']:SetValue(1)
-		end, AddBuffInfo('Silent Aim', 50)}
+		end, AddBuffInfo('Silent Aim Enabled', 50)}
 	}
 
 	local SpeedColaGot
@@ -242,7 +242,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		Buff3 = {false, 35}
 	}
 	local DoubleTapBuffs = {
-		Buff1 = {false, 30}
+		Buff1 = {false, 20},
+		Buff2 = {false, 30}
 	}
 
 	local SpeedColaInfo
@@ -251,6 +252,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local ReloadInfo2
 	local DoubleTapInfo
 	local FireRateInfo
+	local PenetrationInfo
 	local StaminUpInfo
 
 	local SpeedColaEarned = false
@@ -364,7 +366,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 					if not DoubleTapGot then
 						DoubleTapGot = Round
 						DoubleTapInfo = AddBuffInfo('DoubleTap Aquired', Round)
-						FireRateInfo = AddBuffInfo('Firerate Increase', DoubleTapBuffs.Buff1[2] + DoubleTapGot)
+						PenetrationInfo = AddBuffInfo('Increased Bullet Penetration', DoubleTapBuffs.Buff1[2] + DoubleTapGot)
+						FireRateInfo = AddBuffInfo('Firerate Increase', DoubleTapBuffs.Buff2[2] + DoubleTapGot)
 					end
 					DoubleTapInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
 				else
@@ -376,7 +379,13 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				if DoubleTapEarned then
 					if not DoubleTapBuffs.Buff1[1] and Round >= DoubleTapGot + DoubleTapBuffs.Buff1[2] then
 						DoubleTapBuffs.Buff1[1] = true
-						Notify('[Modded Gameplay Info]\nDouble Tap Aquired ' .. tostring(DoubleTapBuffs.Buff1[2]) .. ' Rounds Ago, FireRate Increased')
+						Notify('[Modded Gameplay Info]\nDouble Tap Aquired ' .. tostring(DoubleTapBuffs.Buff1[2]) .. ' Rounds Ago, Bullet Penetration Increased')
+						PenetrationInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
+						library.options['Bullet Penetration']:SetState(true)
+					end
+					if not DoubleTapBuffs.Buff2[1] and Round >= DoubleTapGot + DoubleTapBuffs.Buff2[2] then
+						DoubleTapBuffs.Buff2[1] = true
+						Notify('[Modded Gameplay Info]\nDouble Tap Aquired ' .. tostring(DoubleTapBuffs.Buff2[2]) .. ' Rounds Ago, FireRate Increased')
 						FireRateInfo.TextColor3 = Color3.fromRGB(0, 255, 100)
 						library.options['firerateMod']:SetState(true)
 						library.options['FireRate Modifier']:SetValue(80)
