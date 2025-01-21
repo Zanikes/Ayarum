@@ -903,9 +903,9 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	InvisHighlight.Parent = game.CoreGui
 	InvisHighlight.DepthMode = Enum.HighlightDepthMode.Occluded
 	InvisHighlight.FillColor = Color3.fromRGB(150, 150, 150)
-	InvisHighlight.FillTransparency = 0.8
+	InvisHighlight.FillTransparency = 0.9
 	InvisHighlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-	InvisHighlight.OutlineTransparency = 0.8
+	InvisHighlight.OutlineTransparency = 0.9
 
 	local AddedChars = {}
 	local function SetPlayerInvis(Plr, Value)
@@ -4219,6 +4219,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			Notify('Made ' .. Player.Name .. ' Visible')
 		end
 	end})
+	Sections.Players.Character:AddLabel('If you make yourself invisible, you will be slightly visible to yourself, but not to others.')
+	Sections.Players.Character:AddDivider()
 	Sections.Players.Character:AddButton({text = 'Make Zombie Invisible', callback = function()
 		for _, Player in pairs(ReturnPlayers()) do
 			if Notloaded(Player) then continue end
