@@ -955,7 +955,7 @@ Sections.Settings.UI:AddButton({text = 'Set Theme', callback = function()
 	end
 end})
 Sections.Settings.UI:AddDivider()
-Sections.Settings.UI:AddList({text = 'Background', values = Backgrounds, callback = function(choice)
+Sections.Settings.UI:AddList({text = 'Background', values = {'Floral', 'Flowers', 'Circles', 'Hearts', 'Polka dots', 'Mountains', 'Zigzag', 'Zigzag 2', 'Tartan', 'Roses', 'Hexagons', 'Leopard print'}, callback = function(choice)
 	library.mainframe.Image = 'rbxassetid://' .. tostring(Backgrounds[choice])
 end})
 Sections.Settings.UI:AddSlider({text = 'Tile Size', value = library.mainframe.TileSize.Height.Offset, min = 50, max = 500, callback = function(value)
