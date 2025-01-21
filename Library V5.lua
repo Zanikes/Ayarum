@@ -190,7 +190,7 @@ function Library:AddConnection(connection, name, callback)
 end
 
 local AyarumV5 = Instance.new('ScreenGui')
-local Mainframe = Instance.new('Frame')
+local Mainframe = Instance.new('ImageLabel')
 local TabButtons = Instance.new('Frame')
 local TabButtonsHolder = Instance.new('Frame')
 local TabButtonsLayout = Instance.new('UIListLayout')
@@ -214,8 +214,13 @@ Mainframe.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Mainframe.BorderSizePixel = 0
 Mainframe.Size = UDim2.new(0, 500, 1, 0)
 Mainframe.Position = UDim2.new(0, 0, 0, 0)
+Mainframe.Image = ''
+Mainframe.ImageColor3 = Color3.new(0, 0, 0)
+Mainframe.ScaleType = Enum.ScaleType.Tile
+Mainframe.TileSize = UDim2.new(0, 200, 0, 200)
 Roundify(Mainframe)
 Glow(Mainframe, Color3.new(0, 0, 0))
+Library.mainframe = Mainframe
 
 TabButtons.Name = 'TabButtons'
 TabButtons.Parent = Mainframe

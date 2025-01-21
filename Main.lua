@@ -139,6 +139,21 @@ if game.PlaceId == 286090429 then
 	end
 end
 
+local Backgrounds = {
+	['Floral'] = 5553946656,
+	['Flowers'] = 6071575925,
+	['Circles'] = 6071579801,
+	['Hearts'] = 6073763717,
+	['Polka dots'] = 6214418014,
+	['Mountains'] = 6214412460,
+	['Zigzag'] = 6214416834,
+	['Zigzag 2'] = 6214375242,
+	['Tartan'] = 6214404863,
+	['Roses'] = 6214374619,
+	['Hexagons'] = 6214320051,
+	['Leopard print'] = 6214318622
+}
+
 local EspSettings = {
 	Enabled = false,
 	ShowDistance = false,
@@ -938,6 +953,16 @@ Sections.Settings.UI:AddButton({text = 'Set Theme', callback = function()
 	for _, v in pairs(library.theme) do
 		v.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, library.themecolor1), ColorSequenceKeypoint.new(1, library.themecolor2)})
 	end
+end})
+Sections.Settings.UI:AddDivider()
+Sections.Settings.UI:AddList({text = 'Background', values = Backgrounds, callback = function(choice)
+	library.mainframe.Image = 'rbxassetid://' .. tostring(Backgrounds[choice])
+end})
+Sections.Settings.UI:AddSlider({text = 'Tile Size', value = library.mainframe.TileSize.Height.Offset, min = 50, max = 500, callback = function(value)
+	library.mainframe.TileSize = UDim2.new(0, value, 0, value)
+end})
+Sections.Settings.UI:AddColor({text = 'Image Color', color = library.mainframe.ImageColor3, callback = function(color)
+	library.mainframe.ImageColor3 = color
 end})
 Sections.Settings.UI:AddDivider()
 Sections.Settings.UI:AddToggle({text = 'Watermark', flag = 'showMark', state = true})
