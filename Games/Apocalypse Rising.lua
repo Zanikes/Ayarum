@@ -890,13 +890,22 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				if char == Client.Character then
 					for _, v in pairs(child:GetChildren()) do
 						if not v:IsA('StringValue') and not v:IsA('IntValue') then
-							v.Transparency = 0.8
+							v.Transparency = 0.9
 						end
 					end
 				end
 			end
 		end)
 	end
+
+	local InvisHighlight = Instance.new('Highlight')
+	InvisHighlight.Name = 'Invisibility Highlight'
+	InvisHighlight.Parent = game.CoreGui
+	InvisHighlight.DepthMode = Enem.DepthMode.Occluded
+	InvisHighlight.FillColor = Color3.fromRGB(150, 150, 150)
+	InvisHighlight.FillTransparency = 0.8
+	InvisHighlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+	InvisHighlight.OutlineTransparency = 0.8
 
 	local AddedChars = {}
 	local function SetPlayerInvis(Plr, Value)
@@ -946,7 +955,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 						if Plr == Client then
 							for _, a in pairs(v:GetChildren()) do
 								if not a:IsA('StringValue') and not a:IsA('IntValue') then
-									a.Transparency = 0.8
+									a.Transparency = 0.9
 								end
 							end
 						end
@@ -980,15 +989,18 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				local Parts = {'Head', 'Left Arm', 'Right Arm', 'Torso', 'Left Leg', 'Right Leg'}
 				for _, v in pairs(Plr.Character:GetChildren()) do
 					if table.find(Parts, v.Name) then
-						v.Transparency = 0.8
+						v.Transparency = 0.9
 					end
 				end
 				if Plr:FindFirstChild('AyarumStorage') and Plr.AyarumStorage:FindFirstChild('face') then
 					local NewFace = Plr.AyarumStorage.face:Clone()
 					NewFace.Parent = Plr.Character.Head
-					NewFace.Transparency = 0.8
+					NewFace.Transparency = 0.9
 				end
 			end)
+			InvisHighlight.Adornee = Plr.Character
+		elseif Plr == Client and not Value then
+			InvisHighlight.Adornee = nil
 		end
 	end
 
