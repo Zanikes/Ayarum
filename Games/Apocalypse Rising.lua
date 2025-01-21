@@ -901,7 +901,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local InvisHighlight = Instance.new('Highlight')
 	InvisHighlight.Name = 'Invisibility Highlight'
 	InvisHighlight.Parent = game.CoreGui
-	InvisHighlight.DepthMode = Enum.DepthMode.Occluded
+	InvisHighlight.DepthMode = Enum.HighlightDepthMode.Occluded
 	InvisHighlight.FillColor = Color3.fromRGB(150, 150, 150)
 	InvisHighlight.FillTransparency = 0.8
 	InvisHighlight.OutlineColor = Color3.fromRGB(255, 255, 255)
