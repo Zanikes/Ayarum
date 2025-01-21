@@ -4219,8 +4219,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			Notify('Made ' .. Player.Name .. ' Visible')
 		end
 	end})
-	Sections.Players.Character:AddLabel('If you make yourself invisible, you will be slightly visible to yourself, but not to others.')
-	Sections.Players.Character:AddDivider()
 	Sections.Players.Character:AddButton({text = 'Make Zombie Invisible', callback = function()
 		for _, Player in pairs(ReturnPlayers()) do
 			if Notloaded(Player) then continue end

@@ -702,12 +702,8 @@ function Library:AddTab(Text)
 				NewText = typeof(NewText) == 'string' and NewText or Options.text
 				Options.text = NewText
 				Label.Text = Options.text
-				Label.Size = UDim2.new(1, 0, 0, Label.TextBounds.Y + 2)
+				Label.Size = UDim2.new(1, 0, 0, GetTextSize(Label.Text, Label.TextSize, Label.Font).Y + 2)
 			end
-
-			Label.AncestryChanged:Connect(function()
-				Label.Size = UDim2.new(1, 0, 0, Label.TextBounds.Y + 2)
-			end)
 
 			function Options:GetText()
 				return Options.text
