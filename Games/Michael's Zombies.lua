@@ -166,7 +166,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			MAX = Module.SPREAD.MAX,
 			CROUCH_REDUCTION = Module.SPREAD.CROUCH_REDUCTION,
 			AIM_REDUCTION = Module.SPREAD.AIM_REDUCTION,
-			WALK_ADDITION = Module.SPREAD.WALK_ADDITION
+			WALK_ADDITION = Module.SPREAD.WALK_ADDITION,
+			PENETRATION = Module.PENETRATION
 		}
 	end
 
@@ -699,6 +700,20 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end})
 	Sections.Main.Client:AddDivider()
+	Sections.Main.Client:AddToggle({text = 'Bullet Penetration', state = false, callback = function(bool)
+		if bool then
+			for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
+				local Module = require(v.Module.Settings)
+				Module.PENETRATION = 9e9
+			end
+		else
+			for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
+				local Module = require(v.Module.Settings)
+				local Defaults = DefaultGunVals[v.Name]
+				Module.PENETRATION = Defaults.PENETRATION
+			end
+		end
+	end})
 	Sections.Main.Client:AddToggle({text = 'Perfect Accuracy', state = false, callback = function(bool)
 		if bool then
 			for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
