@@ -157,14 +157,15 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end
 	end)
 
-	local function PerfectAccuracy()
-		for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
-			local Module = require(v.Module.Settings)
-			Module.SPREAD.DEFUALT = 0
-			Module.SPREAD.MIN = 0
-			Module.SPREAD.MAX = 0
-			Module.SPREAD.WALK_ADDITION = 0
-		end
+	local DefaultSpreadVals = {}
+	for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
+		local Module = require(v.Module.Settings)
+		DefaultSpreadVals[v.Name] = {
+			DEFUALT = Module.SPREAD.DEFUALT,
+			MIN = Module.SPREAD.MIN,
+			MAX = Module.SPREAD.MAX,
+			WALK_ADDITION = Module.SPREAD.WALK_ADDITION
+		}
 	end
 
 	local RecoilGlobal = Instance.new('BoolValue')
@@ -215,7 +216,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		end, AddBuffInfo('Zombie Chams Enabled', 25)},
 		Accuracy = {false, 30, function(Round)
 			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, Perfect Accuracy Enabled')
-			PerfectAccuracy()
+			library.options['Perfect Accuracy']:SetState(true)
 		end, AddBuffInfo('Perfect Accuracy Enabled', 30)},
 		NoRecoil = {false, 35, function(Round)
 			Notify('[Modded Gameplay Info]\nRound ' .. tostring(Round) .. ' Reached, No Recoil Enabled')
@@ -706,11 +707,29 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end})
 	Sections.Main.Client:AddDivider()
 	local Warning = library:AddWarning()
-	Sections.Main.Client:AddButton({text = 'Perfect Accuracy', callback = function()
-		Warning.text = 'Are you sure you want to enable Perfect Accuracy?\n\nThis cannot be disabled!'
-		if Warning:Show() then
-			PerfectAccuracy()
-			Notify('Enabled Perfect Accuracy')
+	Sections.Main.Client:AddToggle({text = 'Perfect Accuracy', state = false, callback = function(bool)
+		if bool then
+			Warning.text = 'Are you sure you want to enable Perfect Accuracy?\n\nThis cannot be disabled!'
+			if Warning:Show() then
+				for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
+					local Module = require(v.Module.Settings)
+					Module.SPREAD.DEFUALT = 0
+					Module.SPREAD.MIN = 0
+					Module.SPREAD.MAX = 0
+					Module.SPREAD.WALK_ADDITION = 0
+				end
+			else
+				library.options['Perfect Accuracy']:SetState(false)
+			end
+		else
+			for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
+				local Module = require(v.Module.Settings)
+				local Defaults = DefaultSpreadVals[v.Name]
+				Module.SPREAD.DEFUALT = Defaults.DEFUALT
+				Module.SPREAD.MIN = Defaults.MIN
+				Module.SPREAD.MAX = Defaults.MAX
+				Module.SPREAD.WALK_ADDITION = Defaults.WALK_ADDITION
+			end
 		end
 	end})
 	Sections.Main.Client:AddButton({text = 'No Recoil', callback = function()
