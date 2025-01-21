@@ -164,8 +164,20 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			DEFUALT = Module.SPREAD.DEFUALT,
 			MIN = Module.SPREAD.MIN,
 			MAX = Module.SPREAD.MAX,
+			CROUCH_REDUCTION = Module.SPREAD.CROUCH_REDUCTION,
+			AIM_REDUCTION = Module.SPREAD.AIM_REDUCTION,
 			WALK_ADDITION = Module.SPREAD.WALK_ADDITION
 		}
+	end
+
+	local GunManagerModule = require(ReplicatedStorage.Game.Modules.GunManagerModule)
+	local OldIgnoresFunc = GunManagerModule.gunIgnoresAttachmentType
+	GunManagerModule.gunIgnoresAttachmentType = function(...)
+		if library.flags['No Recoil'] or library.flags['Perfect Accuracy'] then
+			return true
+		else
+			return OldIgnoresFunc(...)
+		end
 	end
 
 	for _, v in pairs(ReplicatedStorage.Framework.Guns:GetChildren()) do
@@ -694,6 +706,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				Module.SPREAD.DEFUALT = 0
 				Module.SPREAD.MIN = 0
 				Module.SPREAD.MAX = 0
+				Module.SPREAD.CROUCH_REDUCTION = 0
+				Module.SPREAD.AIM_REDUCTION = 0
 				Module.SPREAD.WALK_ADDITION = 0
 			end
 		else
@@ -703,6 +717,8 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 				Module.SPREAD.DEFUALT = Defaults.DEFUALT
 				Module.SPREAD.MIN = Defaults.MIN
 				Module.SPREAD.MAX = Defaults.MAX
+				Module.SPREAD.CROUCH_REDUCTION = Defaults.CROUCH_REDUCTION
+				Module.SPREAD.AIM_REDUCTION = Defaults.AIM_REDUCTION
 				Module.SPREAD.WALK_ADDITION = Defaults.WALK_ADDITION
 			end
 		end
