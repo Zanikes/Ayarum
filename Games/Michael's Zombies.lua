@@ -174,7 +174,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	local GunManagerModule = require(ReplicatedStorage.Game.Modules.GunManagerModule)
 	local OldIgnoresFunc = GunManagerModule.gunIgnoresAttachmentType
 	GunManagerModule.gunIgnoresAttachmentType = function(...)
-		if library.flags['No Recoil'] or library.flags['Perfect Accuracy'] then
+		if library.flags['No Recoil'] then
 			return true
 		else
 			return OldIgnoresFunc(...)
