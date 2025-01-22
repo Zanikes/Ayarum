@@ -21,7 +21,7 @@ local LightingOptions = {
 	EnvironmentDiffuseScale = 0.2,
 	EnvironmentSpecularScale = 0.2,
 	GlobalShadows = true,
-	OutdoorAmbient = Color3.fromRGB(34, 0, 49),
+	OutdoorAmbient = Color3.fromRGB(94, 60, 109),
 	ShadowSoftness = 0.2,
 	GeographicLatitude = 45,
 	ExposureCompensation = 0.5,
@@ -91,8 +91,8 @@ local function AddShaders(State)
 			Threshold = 0.8
 		})
 		AddProtectedInstance('ColorCorrectionEffect', {
-			Brightness = 0.2,
-			Contrast = 0.5,
+			Brightness = 0.225,
+			Contrast = 0.575,
 			Saturation = -0.3,
 			TintColor = Color3.fromRGB(255, 235, 203)
 		})
