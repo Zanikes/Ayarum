@@ -91,8 +91,8 @@ local function AddShaders(State)
 			Threshold = 0.8
 		})
 		AddProtectedInstance('ColorCorrectionEffect', {
-			Brightness = 0.1,
-			Contrast = 0.35,
+			Brightness = 0.2,
+			Contrast = 0.5,
 			Saturation = -0.3,
 			TintColor = Color3.fromRGB(255, 235, 203)
 		})
