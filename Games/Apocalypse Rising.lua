@@ -859,7 +859,7 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 	end
 
 	local function AddInvisEvent(char)
-		char.ChildAdded:Connect(function(child)
+		library:AddConnection(char.ChildAdded, function(child)
 			wait()
 			if char.Head.Transparency ~= 0 and (child:FindFirstChild('thisisbackpack') or child:FindFirstChild('thisishat') or child:FindFirstChild('thisisaccessory')) then
 				if child:FindFirstChild('WeldScript') then
@@ -1160,7 +1160,6 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 		ChangeParent(Zombie.Humanoid, Zombie.Head)
 		repeat wait() until Zombie.Head:FindFirstChild('Humanoid')
 
-		local AmountSpawned = 0
 		local ChildAddedFunc
 		local AddedZombies = {}
 		ChildAddedFunc = Workspace.ChildAdded:Connect(function(Child)
@@ -1190,13 +1189,14 @@ return function(library, HttpGet, QTween, LoadInfo, Tabs, Sections, Notify, IsDe
 			end
 		end)
 
-		for i = 1, Amount do
+		for _ = 1, Amount do
 			if not Player.Character or not Player.Character.Head then break end
 			Remote.PlaceMaterial:FireServer('Zombie', Player.Character.Head.Position + Vector3.new(math.random(-15, 15), 5, math.random(-15, 15)))
 			wait(0.1)
 		end
 
 		wait(1)
+		ChildAddedFunc:Disconnect()
 
 		Delete(Zombie)
 		if OldZomb then

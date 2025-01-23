@@ -1102,7 +1102,7 @@ getgenv().AyarumWatermark.Outline = true
 getgenv().AyarumWatermark.OutlineColor = Color3.new()
 getgenv().AyarumWatermark.Color = Color3.new(1, 1, 1)
 
-Camera:GetPropertyChangedSignal('ViewportSize'):Connect(function()
+library:AddConnection(Camera:GetPropertyChangedSignal('ViewportSize'), function()
 	getgenv().AyarumWatermark.Position = Vector2.new(5, Camera.ViewportSize.Y - 20)
 end)
 
@@ -1124,11 +1124,8 @@ spawn(function()
 	end
 end)
 
---RunService:UnbindFromRenderStep('UpdateEsp')
---RunService:BindToRenderStep('UpdateEsp', 300, Update)
-RunService.RenderStepped:Connect(function(deltaTime)
-	Update()
-end)
+RunService:UnbindFromRenderStep('UpdateEsp')
+RunService:BindToRenderStep('UpdateEsp', 300, Update)
 
 Notify('Ayarum Hub Loaded Successfully,\nMade by Zanikes')
 Notify('Press ' .. library.options['UI Toggle'].key .. ' to toggle the UI')
@@ -1139,7 +1136,7 @@ if getgenv().AyarumWatermark then
 	getgenv().AyarumWatermark:Remove()
 	getgenv().AyarumWatermark = nil
 end
---RunService:UnbindFromRenderStep('UpdateEsp')
+RunService:UnbindFromRenderStep('UpdateEsp')
 for _, Player in pairs(RenderList) do
 	for _, v in pairs(Player) do
 		if type(v) == 'boolean' then continue end
